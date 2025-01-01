@@ -178,7 +178,7 @@ def getJobData(job_id):
 
 
 # Extract nodes (poles, anchors, etc.) from job data
-def extractNodes(job_data, job_name, job_id):
+def extractNodes(job_data, job_name, job_id, user_map):
     nodes = job_data.get("nodes", {})
     if not nodes:
         print("No nodes found.")
@@ -212,6 +212,26 @@ def extractNodes(job_data, job_name, job_id):
     for node_id, node_data in nodes.items():
         try:
             attributes = node_data.get('attributes', {})
+            
+            # Extract editor tracking information
+            last_editor = "Unknown"
+            last_edit_time = None
+            
+            # Check photos associated with the node for editor information
+            node_photos = node_data.get('photos', {})
+            for photo_id in node_photos:
+                if photo_id in photo_data:
+                    photo_editors = photo_data[photo_id].get('photofirst_data', {}).get('_editors', {})
+                    if photo_editors:
+                        # Get the most recent edit
+                        latest_edit = max(photo_editors.items(), key=lambda x: x[1])
+                        editor_id = latest_edit[0]
+                        last_editor = user_map.get(editor_id, "Unknown User")  # Use the user map to get the full name
+                        last_edit_time = datetime.fromtimestamp(latest_edit[1]/1000).strftime('%Y-%m-%d %H:%M:%S')
+                        print(f"Found editor tracking info for node {node_id}:")
+                        print(f"  Editor: {last_editor}")
+                        print(f"  Last Edit: {last_edit_time}")
+                        break
             
             # Check if node is a pole
             node_type = 'Unknown'
@@ -348,7 +368,9 @@ def extractNodes(job_data, job_name, job_id):
                     "tag": tag,
                     "scid": scid,
                     "POA_Height": poa_height,
-                    "conversation": conversation
+                    "conversation": conversation,
+                    "last_editor": last_editor,
+                    "last_edit": last_edit_time
                 })
         except Exception as e:
             print(f"Error processing node {node_id}: {str(e)}")
@@ -1076,7 +1098,9 @@ def saveToShapefiles(nodes, connections, anchors, workspace_path):
         'tag': 'pole_tag',
         'POA_Height': 'poa_ht',
         'conversation': 'conv',
-        'scid': 'scid'
+        'scid': 'scid',
+        'last_editor': 'editor',
+        'last_edit': 'edit_time'
     }
     
     connection_fields = {
@@ -1220,11 +1244,57 @@ def saveToShapefiles(nodes, connections, anchors, workspace_path):
     print(f"Anchors: {len(anchors)}")
     print("------------------------")
 
+# Function to get user list from KatapultPro API
+def getUserList():
+    URL_PATH = '/api/v2/users'
+    headers = {}
+    user_map = {}
+
+    for attempt in range(5):
+        conn = None
+        try:
+            conn = http.client.HTTPSConnection("katapultpro.com", timeout=10)
+            conn.request("GET", f"{URL_PATH}?api_key={CONFIG['API_KEY']}", headers=headers)
+            res = conn.getresponse()
+            data = res.read().decode("utf-8")
+            users_dict = json.loads(data)
+
+            if not isinstance(users_dict, dict):
+                raise TypeError(f"Expected a dictionary but received {type(users_dict)}: {users_dict}")
+
+            # Create a mapping of user IDs to full names
+            for user_id, user_data in users_dict.items():
+                name = user_data.get('name', {})
+                full_name = f"{name.get('first', '')} {name.get('last', '')}".strip()
+                if not full_name:
+                    full_name = user_data.get('email', 'Unknown User')
+                user_map[user_id] = full_name
+
+            logging.info(f"Retrieved {len(user_map)} users")
+            break
+
+        except (socket.error, OSError) as e:
+            print(f"Socket error while getting user list: {e}. Retrying...")
+            time.sleep(5)
+        except Exception as e:
+            print(f"Failed to retrieve user list: {e}")
+            break
+        finally:
+            if conn:
+                conn.close()
+
+    return user_map
+
 # Main function to run the job for testing
 def main(email_list):
     """Main function to process jobs and generate reports."""
     print("Starting main function...")
     all_jobs = []
+    
+    # Get user list first
+    print("Getting user list...")
+    user_map = getUserList()
+    print(f"Retrieved {len(user_map)} users")
     
     if TEST_ONLY_SPECIFIC_JOB:
         print(f"Testing specific job with ID: {TEST_JOB_ID}")
@@ -1262,7 +1332,7 @@ def main(email_list):
             connections = job_data.get('connections', {})
             
             print("Extracting nodes...")
-            nodes_data = extractNodes(job_data, job_name, job_id)
+            nodes_data = extractNodes(job_data, job_name, job_id, user_map)  # Pass user_map to extractNodes
             print(f"Found {len(nodes_data)} nodes")
             
             print("Extracting connections...")
