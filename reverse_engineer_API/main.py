@@ -28,6 +28,7 @@ import requests
 import base64
 import warnings
 import zipfile
+from io import BytesIO
 warnings.filterwarnings('ignore')
 
 # Add at start of script
@@ -822,7 +823,153 @@ def saveMasterGeoPackage(all_nodes, all_connections, all_anchors, filename):
 
     print("Master GeoPackage saved successfully")
 
-# Function to create a report of MR Status counts per job
+def update_sharepoint_spreadsheet(df, site_url, drive_path):
+    """
+    Update or create a spreadsheet in SharePoint with the provided DataFrame
+    """
+    try:
+        print("\nUpdating SharePoint spreadsheet...")
+        
+        # Initialize the Graph client
+        graph_client = initialize_graph_client()
+        
+        if not graph_client:
+            print("Failed to initialize Graph client")
+            return False
+            
+        # Get the site ID
+        site_response = graph_client.get(f"sites/deeplydigital.sharepoint.com:/sites/GISEngineeringTeam")
+        if site_response.status_code != 200:
+            print(f"Failed to get site. Status code: {site_response.status_code}")
+            print(f"Response: {site_response.text}")
+            return False
+            
+        site_id = site_response.json()['id']
+        
+        # Get the drive ID
+        drives_response = graph_client.get(f"sites/{site_id}/drives")
+        if drives_response.status_code != 200:
+            print(f"Failed to get drives. Status code: {drives_response.status_code}")
+            print(f"Response: {drives_response.text}")
+            return False
+            
+        # Find the Documents drive
+        documents_drive = None
+        for drive in drives_response.json()['value']:
+            if drive['name'] == 'Documents':
+                documents_drive = drive
+                break
+                
+        if not documents_drive:
+            print("Could not find Documents drive")
+            return False
+            
+        drive_id = documents_drive['id']
+        
+        # Create a new workbook with formatting
+        wb = Workbook()
+        ws = wb.active
+        ws.title = "Aerial Status Report"
+
+        # Add merged header with title in the first row
+        ws.merge_cells('A1:G1')
+        title_cell = ws.cell(row=1, column=1)
+        title_cell.value = "Aerial Status Report"
+        title_cell.font = Font(size=18, bold=True)
+        title_cell.alignment = Alignment(horizontal="center", vertical="center")
+
+        # Add the date/time in the second row
+        ws.merge_cells('A2:G2')
+        date_cell = ws.cell(row=2, column=1)
+        date_cell.value = datetime.now().strftime('%m/%d/%Y %I:%M:%p')
+        date_cell.font = Font(size=12)
+        date_cell.alignment = Alignment(horizontal="center", vertical="center")
+
+        ws.row_dimensions[1].height = 30  # Title row
+        ws.row_dimensions[2].height = 20  # Date row
+        ws.row_dimensions[3].height = 25  # Column headers row
+
+        # Add DataFrame content starting from row 3
+        for r_idx, row in enumerate(dataframe_to_rows(df, index=False), 3):
+            for c_idx, value in enumerate(row, 1):
+                cell = ws.cell(row=r_idx, column=c_idx, value=value)
+                cell.alignment = Alignment(horizontal="center", vertical="center")
+                
+                # Add header formatting for the first row of data
+                if r_idx == 3:
+                    cell.font = Font(bold=True)
+                    if c_idx <= 7:  # Green headers
+                        cell.fill = PatternFill(start_color="CCFFCC", end_color="CCFFCC", fill_type="solid")
+                    elif c_idx == 8:  # Gray header
+                        cell.fill = PatternFill(start_color="D9D9D9", end_color="D9D9D9", fill_type="solid")
+                    elif c_idx == 9:  # Yellow header
+                        cell.fill = PatternFill(start_color="FFFF00", end_color="FFFF00", fill_type="solid")
+                    elif c_idx == 10:  # Orange header
+                        cell.fill = PatternFill(start_color="FFC000", end_color="FFC000", fill_type="solid")
+                    elif c_idx == 11:  # Red header
+                        cell.fill = PatternFill(start_color="FF0000", end_color="FF0000", fill_type="solid")
+                    elif c_idx == 12:  # Green header
+                        cell.fill = PatternFill(start_color="CCFFCC", end_color="CCFFCC", fill_type="solid")
+
+        # Set column widths
+        column_widths = {
+            "A": 44,  # Job Name
+            "B": 23.71,  # Job Status
+            "C": 30,  # Last Editor
+            "D": 20,  # Last Edit
+            "E": 15,  # Utility
+            "F": 10,  # Field %
+            "G": 10,  # Trace %
+            "H": 10,  # No MR
+            "I": 10,  # Comm MR
+            "J": 12,  # Electric MR
+            "K": 12,  # PCO Required
+            "L": 12,  # Pole Count
+        }
+        
+        for col_letter, width in column_widths.items():
+            ws.column_dimensions[col_letter].width = width
+
+        # Convert workbook to bytes
+        excel_buffer = BytesIO()
+        wb.save(excel_buffer)
+        excel_buffer.seek(0)
+        
+        # Get the file from the Katapult folder
+        file_path = "Katapult/Aerial_Status_Tracker.xlsx"
+        file_response = graph_client.get(f"sites/{site_id}/drives/{drive_id}/root:/{file_path}")
+        
+        if file_response.status_code == 200:
+            print("File found. Attempting to update...")
+            file_id = file_response.json()['id']
+            
+            # Use direct update with co-authoring support
+            update_response = graph_client.put(
+                f"sites/{site_id}/drives/{drive_id}/items/{file_id}/content",
+                data=excel_buffer.getvalue(),
+                headers={
+                    'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    'prefer': 'bypass-shared-lock'  # This header enables co-authoring update
+                }
+            )
+            
+            if update_response.status_code in [200, 201]:
+                print("File updated successfully")
+                return True
+            else:
+                print(f"Failed to update file. Status code: {update_response.status_code}")
+                print(f"Response: {update_response.text}")
+                return False
+        else:
+            print(f"Failed to find file. Status code: {file_response.status_code}")
+            print(f"Response: {file_response.text}")
+            return False
+            
+    except Exception as e:
+        print(f"Error updating SharePoint spreadsheet: {str(e)}")
+        return False
+
+# Modify create_report function to include SharePoint update
 def create_report(jobs_summary):
     report_data = []
 
@@ -832,16 +979,18 @@ def create_report(jobs_summary):
         mr_status_counts = job['mr_status_counts']
         pole_count = sum(mr_status_counts.values())
         
-        # Get the new fields from job summary
-        last_modified = job.get('last_modified', 'Unknown')
+        # Get the fields from job summary
         field_complete_pct = job.get('field_complete_pct', 0)
         trace_complete_pct = job.get('trace_complete_pct', 0)
         utility = job.get('utility', 'Unknown')
+        most_recent_editor = job.get('most_recent_editor', 'Unknown')
+        last_edit_time = job.get('last_edit_time', 'Unknown')
 
         report_data.append({
             'Job Name': job_name,
             'Job Status': job_status,
-            'Last Modified': last_modified,
+            'Last Editor': most_recent_editor,
+            'Last Edit': last_edit_time,
             'Utility': utility,
             'Field %': f"{field_complete_pct:.1f}%",
             'Trace %': f"{trace_complete_pct:.1f}%",
@@ -902,7 +1051,8 @@ def create_report(jobs_summary):
         column_widths = {
             "Job Name": 44,
             "Job Status": 23.71,
-            "Last Modified": 15,
+            "Last Editor": 30,
+            "Last Edit": 20,
             "Utility": 15,
             "Field %": 10,
             "Trace %": 10,
@@ -916,7 +1066,8 @@ def create_report(jobs_summary):
         header_colors = {
             "Job Name": "CCFFCC",
             "Job Status": "CCFFCC",
-            "Last Modified": "CCFFCC",
+            "Last Editor": "CCFFCC",
+            "Last Edit": "CCFFCC",
             "Utility": "CCFFCC",
             "Field %": "CCFFCC",
             "Trace %": "CCFFCC",
@@ -979,10 +1130,10 @@ def create_report(jobs_summary):
             if job_status in job_status_counts:
                 job_status_counts[job_status] += 1
 
-        # Add status headers and counts in two rows, starting from column L (12)
+        # Add status headers and counts in two rows, starting from column N (14)
         for idx, (status, color) in enumerate(job_statuses[:4]):
-            header_cell = ws.cell(row=status_summary_start_row, column=idx + 12)
-            count_cell = ws.cell(row=status_summary_start_row + 1, column=idx + 12)
+            header_cell = ws.cell(row=status_summary_start_row, column=idx + 14)
+            count_cell = ws.cell(row=status_summary_start_row + 1, column=idx + 14)
             
             header_cell.value = status
             header_cell.font = Font(bold=True)
@@ -996,8 +1147,8 @@ def create_report(jobs_summary):
 
         # Add second row of statuses
         for idx, (status, color) in enumerate(job_statuses[4:]):
-            header_cell = ws.cell(row=status_summary_start_row + 3, column=idx + 12)
-            count_cell = ws.cell(row=status_summary_start_row + 4, column=idx + 12)
+            header_cell = ws.cell(row=status_summary_start_row + 3, column=idx + 14)
+            count_cell = ws.cell(row=status_summary_start_row + 4, column=idx + 14)
             
             header_cell.value = status
             header_cell.font = Font(bold=True)
@@ -1010,7 +1161,7 @@ def create_report(jobs_summary):
         # Add borders to status summary
         for row in ws.iter_rows(min_row=status_summary_start_row,
                               max_row=status_summary_start_row + 4,
-                              min_col=12, max_col=15):
+                              min_col=14, max_col=17):
             for cell in row:
                 cell.border = thin_border
 
@@ -1020,6 +1171,22 @@ def create_report(jobs_summary):
     except Exception as e:
         print(f"Error creating report: {e}")
 
+    try:
+        # After creating the local Excel file
+        print("\nUpdating SharePoint spreadsheet...")
+        sharepoint_update_success = update_sharepoint_spreadsheet(
+            df_report,
+            "deeplydigital.sharepoint.com:/sites/GISEngineeringTeam",
+            "Documents/Katapult"
+        )
+        if sharepoint_update_success:
+            print("SharePoint spreadsheet updated successfully")
+        else:
+            print("Failed to update SharePoint spreadsheet")
+            
+    except Exception as e:
+        print(f"Error in SharePoint update: {str(e)}")
+    
     return report_path
 
 # Function to send email notification with attachment
@@ -1139,8 +1306,11 @@ def saveToShapefiles(nodes, connections, anchors, workspace_path):
     }
     
     try:
-        # Create a timestamp for the zip files
+        # Create a timestamp for the master zip file
         timestamp = datetime.now().strftime("%Y%m%d_%H%M")
+        master_zip_path = os.path.join(workspace_path, f"KatapultMaster_{timestamp}.zip")
+        
+        shapefile_components = []  # List to track all shapefile components
         
         # Save and analyze nodes
         if nodes:
@@ -1163,15 +1333,11 @@ def saveToShapefiles(nodes, connections, anchors, workspace_path):
             gdf_nodes.to_file(nodes_shp, driver="ESRI Shapefile")
             print(f"\nPoles shapefile saved successfully with {len(gdf_nodes)} features")
             
-            # Zip poles shapefile components
-            poles_zip = os.path.join(workspace_path, f"poles_{timestamp}.zip")
-            with zipfile.ZipFile(poles_zip, 'w') as zipf:
-                for ext in ['.shp', '.shx', '.dbf', '.prj', '.cpg']:
-                    file_path = nodes_shp.replace('.shp', ext)
-                    if os.path.exists(file_path):
-                        zipf.write(file_path, os.path.basename(file_path))
-                        os.remove(file_path)
-            print(f"Poles shapefile components zipped to: {poles_zip}")
+            # Track shapefile components
+            for ext in ['.shp', '.shx', '.dbf', '.prj', '.cpg']:
+                file_path = nodes_shp.replace('.shp', ext)
+                if os.path.exists(file_path):
+                    shapefile_components.append(file_path)
     
         # Save and analyze connections
         if connections:
@@ -1216,15 +1382,11 @@ def saveToShapefiles(nodes, connections, anchors, workspace_path):
                 gdf_connections.to_file(connections_shp, driver="ESRI Shapefile")
                 print(f"\nConnections shapefile saved successfully with {len(gdf_connections)} features")
                 
-                # Zip connections shapefile components
-                connections_zip = os.path.join(workspace_path, f"connections_{timestamp}.zip")
-                with zipfile.ZipFile(connections_zip, 'w') as zipf:
-                    for ext in ['.shp', '.shx', '.dbf', '.prj', '.cpg']:
-                        file_path = connections_shp.replace('.shp', ext)
-                        if os.path.exists(file_path):
-                            zipf.write(file_path, os.path.basename(file_path))
-                            os.remove(file_path)
-                print(f"Connections shapefile components zipped to: {connections_zip}")
+                # Track shapefile components
+                for ext in ['.shp', '.shx', '.dbf', '.prj', '.cpg']:
+                    file_path = connections_shp.replace('.shp', ext)
+                    if os.path.exists(file_path):
+                        shapefile_components.append(file_path)
     
         # Save and analyze anchors
         if anchors:
@@ -1246,15 +1408,20 @@ def saveToShapefiles(nodes, connections, anchors, workspace_path):
             gdf_anchors.to_file(anchors_shp, driver="ESRI Shapefile")
             print(f"\nAnchors shapefile saved successfully with {len(gdf_anchors)} features")
             
-            # Zip anchors shapefile components
-            anchors_zip = os.path.join(workspace_path, f"anchors_{timestamp}.zip")
-            with zipfile.ZipFile(anchors_zip, 'w') as zipf:
-                for ext in ['.shp', '.shx', '.dbf', '.prj', '.cpg']:
-                    file_path = anchors_shp.replace('.shp', ext)
-                    if os.path.exists(file_path):
-                            zipf.write(file_path, os.path.basename(file_path))
-                            os.remove(file_path)
-            print(f"Anchors shapefile components zipped to: {anchors_zip}")
+            # Track shapefile components
+            for ext in ['.shp', '.shx', '.dbf', '.prj', '.cpg']:
+                file_path = anchors_shp.replace('.shp', ext)
+                if os.path.exists(file_path):
+                    shapefile_components.append(file_path)
+        
+        # Create master zip file containing all shapefile components
+        with zipfile.ZipFile(master_zip_path, 'w') as master_zip:
+            for file_path in shapefile_components:
+                if os.path.exists(file_path):
+                    master_zip.write(file_path, os.path.basename(file_path))
+                    os.remove(file_path)  # Remove the original file after adding to zip
+        
+        print(f"\nAll shapefiles have been consolidated into: {master_zip_path}")
             
     except Exception as e:
         print(f"Error saving shapefiles: {str(e)}")
@@ -1308,6 +1475,112 @@ def getUserList():
 
     return user_map
 
+def test_sharepoint_access():
+    """Test SharePoint access using existing credentials."""
+    try:
+        # Load environment variables
+        load_dotenv()
+        client_id = os.getenv('AZURE_CLIENT_ID')
+        client_secret = os.getenv('AZURE_CLIENT_SECRET')
+        tenant_id = os.getenv('AZURE_TENANT_ID')
+        user_email = os.getenv('EMAIL_USER')
+
+        # Initialize MSAL client
+        authority = f"https://login.microsoftonline.com/{tenant_id}"
+        app = msal.ConfidentialClientApplication(
+            client_id,
+            authority=authority,
+            client_credential=client_secret
+        )
+
+        # Get access token with SharePoint scope
+        scopes = ['https://graph.microsoft.com/.default']
+        result = app.acquire_token_silent(scopes, account=None)
+        if not result:
+            result = app.acquire_token_for_client(scopes)
+
+        if 'access_token' in result:
+            # Test SharePoint access using Microsoft Graph API
+            headers = {
+                'Authorization': f"Bearer {result['access_token']}",
+                'Content-Type': 'application/json'
+            }
+            
+            # Make a test request to SharePoint
+            graph_endpoint = 'https://graph.microsoft.com/v1.0'
+            response = requests.get(
+                f"{graph_endpoint}/sites",
+                headers=headers
+            )
+            
+            if response.status_code == 200:
+                print("Successfully connected to SharePoint")
+                return True
+            else:
+                print(f"Failed to access SharePoint. Status code: {response.status_code}")
+                print(f"Response: {response.text}")
+                return False
+        else:
+            print(f"Error getting access token: {result.get('error_description')}")
+            return False
+            
+    except Exception as e:
+        print(f"Error testing SharePoint access: {str(e)}")
+        return False
+
+def initialize_graph_client():
+    """Initialize and return a Microsoft Graph API client"""
+    try:
+        # Load environment variables
+        load_dotenv()
+        client_id = os.getenv('AZURE_CLIENT_ID')
+        client_secret = os.getenv('AZURE_CLIENT_SECRET')
+        tenant_id = os.getenv('AZURE_TENANT_ID')
+        
+        # Initialize MSAL client
+        authority = f"https://login.microsoftonline.com/{tenant_id}"
+        app = msal.ConfidentialClientApplication(
+            client_id,
+            authority=authority,
+            client_credential=client_secret
+        )
+        
+        # Get access token
+        scopes = ['https://graph.microsoft.com/.default']
+        result = app.acquire_token_silent(scopes, account=None)
+        if not result:
+            result = app.acquire_token_for_client(scopes)
+            
+        if 'access_token' not in result:
+            print(f"Error getting access token: {result.get('error_description')}")
+            return None
+            
+        # Create a requests Session with the token
+        session = requests.Session()
+        session.headers.update({
+            'Authorization': f"Bearer {result['access_token']}",
+            'Accept': 'application/json'
+        })
+        session.base_url = 'https://graph.microsoft.com/v1.0'
+        
+        # Add method to handle full URLs
+        def request_with_base_url(method, url, **kwargs):
+            if not url.startswith('http'):
+                url = f"{session.base_url}/{url}"
+            return session.request(method, url, **kwargs)
+            
+        session.get = lambda url, **kwargs: request_with_base_url('GET', url, **kwargs)
+        session.post = lambda url, **kwargs: request_with_base_url('POST', url, **kwargs)
+        session.put = lambda url, **kwargs: request_with_base_url('PUT', url, **kwargs)
+        session.patch = lambda url, **kwargs: request_with_base_url('PATCH', url, **kwargs)
+        session.delete = lambda url, **kwargs: request_with_base_url('DELETE', url, **kwargs)
+        
+        return session
+        
+    except Exception as e:
+        print(f"Error initializing Graph client: {str(e)}")
+        return None
+
 # Main function to run the job for testing
 def main(email_list):
     """Main function to process jobs and generate reports."""
@@ -1337,6 +1610,12 @@ def main(email_list):
         
     total_jobs = len(all_jobs)
     print(f"Found {total_jobs} jobs to process")
+    
+    # Test SharePoint access first
+    print("\nTesting SharePoint access...")
+    sharepoint_access = test_sharepoint_access()
+    if not sharepoint_access:
+        print("Warning: Could not access SharePoint. Will generate local report only.")
     
     for index, job in enumerate(all_jobs, 1):
         print(f"\n{'='*50}")
@@ -1374,6 +1653,27 @@ def main(email_list):
                 field_completed = sum(1 for node in job_data.get('nodes', {}).values() 
                                    if node.get('attributes', {}).get('field_completed', {}).get('value') == True)
                 field_complete_pct = (field_completed / total_nodes * 100) if total_nodes > 0 else 0
+                
+                # Find most recent editor and edit time
+                most_recent_editor = 'Unknown'
+                last_edit_time = 'Unknown'
+                latest_timestamp = 0
+                
+                for node in nodes_data:
+                    if node.get('last_editor') and node.get('last_edit'):
+                        # Parse the timestamp from the format "YYYY-MM-DD HH:MM AM/PM MST"
+                        try:
+                            edit_time = node['last_edit'].replace(' MST', '')
+                            edit_dt = datetime.strptime(edit_time, '%Y-%m-%d %I:%M %p')
+                            timestamp = edit_dt.timestamp()
+                            
+                            if timestamp > latest_timestamp:
+                                latest_timestamp = timestamp
+                                most_recent_editor = node['last_editor']
+                                last_edit_time = node['last_edit']
+                        except Exception as e:
+                            print(f"Error parsing edit time: {e}")
+                            continue
                 
                 # Calculate trace completion percentage by checking all connections
                 total_traces = 0
@@ -1428,7 +1728,9 @@ def main(email_list):
                     'last_modified': last_modified,
                     'field_complete_pct': field_complete_pct,
                     'trace_complete_pct': trace_complete_pct,
-                    'utility': utility
+                    'utility': utility,
+                    'most_recent_editor': most_recent_editor,
+                    'last_edit_time': last_edit_time
                 })
                 print(f"Job summary updated with MR status counts: {mr_status_counts}")
             
