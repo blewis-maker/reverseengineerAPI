@@ -1,5 +1,8 @@
-geopandas>=0.13.0
-shapely>=2.0.0
-arcgis>=2.1.0
-pandas>=1.5.0
-openpyxl>=3.1.0 
+pandas>=2.0.0
+geopandas>=0.13.2
+shapely>=2.0.1
+openpyxl>=3.1.2
+python-dotenv>=1.0.0
+msal>=1.20.0
+requests>=2.31.0
+O365>=2.0.26 

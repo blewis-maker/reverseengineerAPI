@@ -2,9 +2,7 @@ import json
 import http.client
 import geopandas as gpd
 from shapely.geometry import Point, LineString
-from arcgis.gis import GIS
-from arcgis.features import FeatureLayer
-from arcgis.features import GeoAccessor
+from shapely.geometry import mapping
 import os
 import time
 import socket
@@ -23,6 +21,14 @@ from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
 import logging
+from dotenv import load_dotenv
+import msal
+from O365 import Account, FileSystemTokenBackend
+import requests
+import base64
+import warnings
+import zipfile
+warnings.filterwarnings('ignore')
 
 # Add at start of script
 logging.basicConfig(
@@ -31,8 +37,11 @@ logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
 
+# Load environment variables from .env file
+load_dotenv()
+
 # Toggle to enable/disable testing a specific job
-TEST_ONLY_SPECIFIC_JOB = False
+TEST_ONLY_SPECIFIC_JOB = True
 
 # ID of the specific job to test
 TEST_JOB_ID = "-O-nlOLQbPIYhHwJCPDN"
@@ -40,14 +49,16 @@ TEST_JOB_ID = "-O-nlOLQbPIYhHwJCPDN"
 # Add at top of script
 CONFIG = {
     'API_KEY': 'rt2JR8Rds03Ry03hQTpD9j0N01gWEULJnuY3l1_GeXA8uqUVLtXsKHUQuW5ra0lt-FklrA40qq6_J04yY0nPjlfKG1uPerclUX2gf6axkIioJadYxzOG3cPZJLRcZ2_vHPdipZWvQdICAL2zRnqnOUCGjfq4Q8aMdmA7H6z7xK7W9MEKnIiEALokmtChLtr-s6hDFko17M7xihPpNlfGN7N8D___wn55epkLMtS2eFF3JPlj_SjpFIGXYK15PJFta-BmPqCFvEwXlZEYfEf8uYOpAvCEdBn3NOMoB-P28owOJ7ZeBQf5VMFi3J5_RV2fE_XDR2LTD469Qq0y3946LQ',
-    'PORTAL_URL': 'https://gis.clearnetworx.com/portal',
-    'USERNAME': 'brandan.lewis',
-    'LAYER_URLS': {
-        'poles': 'https://gis.clearnetworx.com/server/rest/services/Hosted/Katapult_Auto_Test/FeatureServer/0',
-        'anchors': 'https://gis.clearnetworx.com/server/rest/services/Hosted/Katapult_Auto_Test/FeatureServer/1',
-        'connections': 'https://gis.clearnetworx.com/server/rest/services/Hosted/Katapult_Auto_Test/FeatureServer/2'
-    },
-    'WORKSPACE_PATH': r"C:\Users\lewis\Documents\Deeply_Digital\Katapult_Automation\workspace"
+    'WORKSPACE_PATH': os.path.expanduser('~/reverseengineerAPI/reverse_engineer_API/workspace')
+}
+
+# Email configuration
+EMAIL_CONFIG = {
+    'client_id': os.getenv('AZURE_CLIENT_ID'),
+    'client_secret': os.getenv('AZURE_CLIENT_SECRET'),
+    'tenant_id': os.getenv('AZURE_TENANT_ID'),
+    'user_email': 'brandan.lewis@deeplydigital.com',
+    'default_recipients': ['brandan.lewis@deeplydigital.com']
 }
 
 # Function to get list of jobs from KatapultPro API
@@ -173,6 +184,32 @@ def extractNodes(job_data, job_name, job_id):
         print("No nodes found.")
         return []
 
+    # Analyze node types first
+    node_type_counts = {}
+    for node_id, node_data in nodes.items():
+        attributes = node_data.get('attributes', {})
+        node_type = 'Unknown'
+        
+        # Check all possible ways a node could be typed
+        for type_source in ['node_type', 'pole_type']:
+            for source_type in ['-Imported', 'button_added', 'value', 'auto_calced']:
+                type_value = attributes.get(type_source, {}).get(source_type)
+                if type_value:
+                    node_type = type_value
+                    break
+            if node_type != 'Unknown':
+                break
+        
+        if node_type not in node_type_counts:
+            node_type_counts[node_type] = 0
+        node_type_counts[node_type] += 1
+    
+    print("\nNode Type Analysis:")
+    print("------------------------")
+    for node_type, count in node_type_counts.items():
+        print(f"{node_type}: {count}")
+    print("------------------------\n")
+
     photo_data = job_data.get('photos', {})
     trace_data_all = job_data.get('traces', {}).get('trace_data', {})
     node_points = []
@@ -180,51 +217,38 @@ def extractNodes(job_data, job_name, job_id):
     # Extract job status and conversation from job data
     metadata = job_data.get('metadata', {})
     job_status = metadata.get('job_status', "Unknown")
-    conversation = metadata.get('conversation', "")  # Get conversation from metadata
+    conversation = metadata.get('conversation', "")
 
     for node_id, node_data in nodes.items():
         attributes = node_data.get('attributes', {})
         
-        # Check all possible ways a node could be identified as a pole
+        # Check if node is a pole
         node_type_imported = attributes.get('node_type', {}).get('-Imported')
         node_type_button = attributes.get('node_type', {}).get('button_added')
         node_type_value = attributes.get('node_type', {}).get('value')
-        node_type_auto = attributes.get('node_type', {}).get('auto_calced')  # Added auto_calced check
-        is_pole_in_id = 'pole' in node_id.lower()
+        node_type_auto = attributes.get('node_type', {}).get('auto_calced')
         
-        # Debug logging for node types
-        print(f"Node {node_id} types - imported: {node_type_imported}, button: {node_type_button}, value: {node_type_value}, auto: {node_type_auto}")
-        
-        # Combine all conditions to identify a pole - removed has_pole_tag requirement
         is_pole = (
-            (node_type_imported == 'pole') or
-            (node_type_button == 'pole') or
-            (node_type_value == 'pole') or
-            (node_type_auto == 'pole') or  # Added auto_calced pole check
-            is_pole_in_id
-        ) and not (
-            node_type_imported == 'reference' or
-            node_type_button == 'reference' or
-            node_type_value == 'reference' or
-            node_type_auto == 'reference'  # Added auto_calced reference check
-        )
-        
-        is_anchor = (
-            node_type_imported == 'new anchor' or
-            node_type_button == 'new anchor' or
-            node_type_value == 'new anchor' or
-            node_type_auto == 'new anchor'  # Added auto_calced anchor check
+            (node_type_imported == 'pole' or
+             node_type_button == 'pole' or
+             node_type_value == 'pole' or
+             node_type_auto == 'pole')
+            and not (
+                node_type_imported in ['reference', 'building attachment', 'new anchor', 'existing anchor'] or
+                node_type_button in ['reference', 'building attachment', 'new anchor', 'existing anchor'] or
+                node_type_value in ['reference', 'building attachment', 'new anchor', 'existing anchor'] or
+                node_type_auto in ['reference', 'building attachment', 'new anchor', 'existing anchor']
+            )
         )
 
-        if is_pole or is_anchor:
+        if is_pole:
             latitude = node_data.get('latitude')
             longitude = node_data.get('longitude')
 
             if latitude is None or longitude is None:
-                print(f"Skipping node {node_id}: Missing latitude or longitude")
                 continue
 
-            # Extract additional attributes - all are optional now
+            # Extract MR status
             mr_status = "Unknown"
             if 'proposed_pole_spec' in attributes:
                 mr_status = "PCO Required"
@@ -238,7 +262,7 @@ def extractNodes(job_data, job_name, job_id):
                 elif mr_state == "MR Resolved" and warning_present:
                     mr_status = "Electric MR"
 
-            # All attributes are now optional with default "Unknown"
+            # Extract other attributes
             company = attributes.get('pole_tag', {}).get('-Imported', {}).get('company', "Unknown")
             fldcompl_value = attributes.get('field_completed', {}).get('value', "Unknown")
             fldcompl = 'yes' if fldcompl_value == 1 else 'no' if fldcompl_value == 2 else 'Unknown'
@@ -248,54 +272,49 @@ def extractNodes(job_data, job_name, job_id):
             tag = attributes.get('pole_tag', {}).get('-Imported', {}).get('tagtext', "Unknown")
             scid = attributes.get('scid', {}).get('auto_button', "Unknown")
 
-            # Extract POA height using main photo wire data
+            # Extract POA height
             poa_height = ""
-
-            # Locate the main photo
             photos = node_data.get('photos', {})
             main_photo_id = next(
                 (photo_id for photo_id, photo_info in photos.items() if photo_info.get('association') == 'main'), None)
 
             if main_photo_id and main_photo_id in photo_data:
+                # Check wire data
                 photofirst_data = photo_data[main_photo_id].get('photofirst_data', {}).get('wire', {})
-                for wire_id, wire_info in photofirst_data.items():
+                for wire_info in photofirst_data.values():
                     trace_id = wire_info.get('_trace')
                     trace_data = trace_data_all.get(trace_id, {})
 
-                    # Check if the trace matches the desired conditions
                     if (trace_data.get('company') == 'Clearnetworx' and
                             trace_data.get('proposed', False) and
                             trace_data.get('_trace_type') == 'cable' and
                             trace_data.get('cable_type') == 'Fiber Optic Com'):
 
-                        # Extract the measured height and convert to feet and inches
                         poa_height = wire_info.get('_measured_height')
                         if poa_height is not None:
                             feet = int(poa_height // 12)
                             inches = int(poa_height % 12)
                             poa_height = f"{feet}' {inches}\""
+                            break
 
-            # Extract POA height from "guying" if not found in wire
-            if not poa_height and main_photo_id and main_photo_id in photo_data:
-                guying_data = photo_data[main_photo_id].get('photofirst_data', {}).get('guying', {})
-                for wire_id, wire_info in guying_data.items():
-                    trace_id = wire_info.get('_trace')
-                    trace_data = trace_data_all.get(trace_id, {})
+                # Check guying data if no POA height found
+                if not poa_height:
+                    guying_data = photo_data[main_photo_id].get('photofirst_data', {}).get('guying', {})
+                    for wire_info in guying_data.values():
+                        trace_id = wire_info.get('_trace')
+                        trace_data = trace_data_all.get(trace_id, {})
 
-                    # Check if the trace matches the desired conditions for down guy
-                    if (trace_data.get('company') == 'Clearnetworx' and
-                            trace_data.get('proposed', False) and
-                            trace_data.get('_trace_type') == 'down_guy'):
+                        if (trace_data.get('company') == 'Clearnetworx' and
+                                trace_data.get('proposed', False) and
+                                trace_data.get('_trace_type') == 'down_guy'):
 
-                        # Extract the measured height and convert to feet and inches
-                        poa_height = wire_info.get('_measured_height')
-                        if poa_height is not None:
-                            feet = int(poa_height // 12)
-                            inches = int(poa_height % 12)
-                            poa_height = f"{feet}' {inches}\""
-                        break
+                            poa_height = wire_info.get('_measured_height')
+                            if poa_height is not None:
+                                feet = int(poa_height // 12)
+                                inches = int(poa_height % 12)
+                                poa_height = f"{feet}' {inches}\""
+                                break
 
-            # Append the node data to the list, including job_status and conversation
             node_points.append({
                 "id": node_id,
                 "lat": latitude,
@@ -309,7 +328,7 @@ def extractNodes(job_data, job_name, job_id):
                 "tag": tag,
                 "scid": scid,
                 "POA_Height": poa_height,
-                "conversation": conversation  # Add the conversation field
+                "conversation": conversation
             })
 
     return node_points
@@ -338,129 +357,98 @@ def extractAnchors(job_data, job_name, job_id):
             })
 
     return anchor_points
-# Extract connections (lines, cables, etc.) from job data
 
 # Extract connections (lines, cables, etc.) from job data
-def extractConnections(job_data, job_name, job_id):
-    connections = job_data.get("connections", {})
-    nodes = job_data.get("nodes", {})
-    photos = job_data.get("photos", {})
-
-    if not isinstance(connections, dict) or not nodes:
-        print("Unexpected structure in 'connections' or no nodes found.")
-        return []
-
-    line_connections = []
-
-    # First, create a dictionary of node coordinates for quick lookup
-    node_coordinates = {}
-    for node_id, node_data in nodes.items():
-        lat = node_data.get("latitude")
-        lon = node_data.get("longitude")
-        if lat is not None and lon is not None:
-            node_coordinates[node_id] = (lon, lat)
-
-    for conn_id, connection in connections.items():
-        attributes = connection.get("attributes", {})
-        connection_type = attributes.get("connection_type", {}).get("value") or attributes.get("connection_type", {}).get("button_added")
-
-        if connection_type is None:
-            print(f"Connection ID {conn_id} has no 'connection_type' attribute. Full attributes: {attributes}")
-            connection_type = "Unknown"
-
-        # Skip "reference" connection types
-        if connection_type.lower() == "reference":
-            continue
-
-        # Extract start and end node IDs
-        start_node_id = connection.get("node_id_1")
-        end_node_id = connection.get("node_id_2")
-
-        if not start_node_id or not end_node_id:
-            print(f"Connection ID {conn_id} is missing start or end node ID.")
-            continue
-
-        # Get coordinates from the node_coordinates dictionary
-        start_coords = node_coordinates.get(start_node_id)
-        end_coords = node_coordinates.get(end_node_id)
-
-        if not start_coords or not end_coords:
-            print(f"Missing coordinates for connection ID {conn_id}")
-            continue
-
-        # Check if this is a down guy connection
-        is_down_guy = False
-        sections = connection.get("sections", {}).get("midpoint_section", {})
-        photos_dict = sections.get("photos", {})
+def extractConnections(connections, nodes):
+    # First, analyze connection types
+    connection_type_counts = {}
+    for connection_id, connection_data in connections.items():
+        # Check both value and button_added for connection type
+        connection_type = 'Unknown'
+        attributes = connection_data.get('attributes', {}).get('connection_type', {})
         
-        # Find the main photo and check for down guy
-        for photo_id, photo_details in photos_dict.items():
-            if photo_details.get("association") == "main":
-                main_photo = photos.get(photo_id, {})
-                photofirst_data = main_photo.get("photofirst_data", {})
-                guying_data = photofirst_data.get("guying", {})
+        # First check button_added
+        if attributes.get('button_added'):
+            connection_type = attributes.get('button_added')
+        # Then check value if still unknown
+        elif attributes.get('value'):
+            connection_type = attributes.get('value')
+            
+        if connection_type not in connection_type_counts:
+            connection_type_counts[connection_type] = 0
+        connection_type_counts[connection_type] += 1
+    
+    print("\nConnection Type Analysis:")
+    print("------------------------")
+    for conn_type, count in sorted(connection_type_counts.items()):
+        print(f"{conn_type}: {count}")
+    print("------------------------\n")
+
+    valid_connections = []
+    total_connections = len(connections)
+    processed_count = 0
+    skipped_count = 0
+    
+    for connection_id, connection_data in connections.items():
+        try:
+            node_id_1 = connection_data.get('node_id_1')
+            node_id_2 = connection_data.get('node_id_2')
+            
+            if node_id_1 not in nodes or node_id_2 not in nodes:
+                skipped_count += 1
+                continue
                 
-                for guy_info in guying_data.values():
-                    trace_id = guy_info.get("_trace")
-                    if trace_id:
-                        trace_data = job_data.get("traces", {}).get("trace_data", {}).get(trace_id, {})
-                        if trace_data.get("_trace_type") == "down_guy":
-                            is_down_guy = True
-                            break
-
-        # Initialize mid_ht to None
-        mid_ht = None
-
-        # Only apply mid_ht logic to "aerial" connection type
-        if connection_type.lower() == "aerial cable":
-            # Find the main photo associated with this connection in the midpoint_section
-            main_photo_id = None
-            for photo_id, photo_details in photos_dict.items():
-                if photo_details.get("association") == "main":
-                    main_photo_id = photo_id
-                    break
-
-            if main_photo_id and main_photo_id in photos:
-                main_photo_details = photos.get(main_photo_id, {})
-                photofirst_entry = main_photo_details.get("photofirst_data", {})
-
-                wires = photofirst_entry.get("wire", {})
-                matching_trace_id = None
-
-                for wire_id, wire_info in wires.items():
-                    trace_id = wire_info.get("_trace")
-                    trace_data = job_data.get("traces", {}).get("trace_data", {}).get(trace_id, {})
-                    company = trace_data.get("company")
-                    proposed = trace_data.get("proposed")
-
-                    if company == "Clearnetworx" and proposed:
-                        matching_trace_id = trace_id
-                        break
-
-                if matching_trace_id:
-                    for wire_id, wire_info in wires.items():
-                        if wire_info.get("_trace") == matching_trace_id:
-                            mid_ht = wire_info.get("_measured_height")
-                            if mid_ht is not None:
-                                feet = int(mid_ht // 12)
-                                inches = int(mid_ht % 12)
-                                mid_ht = f"{feet}' {inches}\""
-                            break
-
-        # Append connection to list
-        line_connections.append({
-            "StartX": start_coords[0],
-            "StartY": start_coords[1],
-            "EndX": end_coords[0],
-            "EndY": end_coords[1],
-            "ConnType": "Down Guy" if is_down_guy else connection_type,
-            "JobName": job_name,
-            "job_id": job_id,
-            "mid_ht": mid_ht
-        })
-
-    print(f"Total connections extracted: {len(line_connections)}")
-    return line_connections
+            start_node = nodes[node_id_1]
+            end_node = nodes[node_id_2]
+            
+            start_lat = start_node.get('latitude')
+            start_lon = start_node.get('longitude')
+            end_lat = end_node.get('latitude')
+            end_lon = end_node.get('longitude')
+            
+            if any(coord is None for coord in [start_lat, start_lon, end_lat, end_lon]):
+                skipped_count += 1
+                continue
+            
+            line = LineString([(start_lon, start_lat), (end_lon, end_lat)])
+            
+            # Get connection type from both possible sources
+            attributes = connection_data.get('attributes', {}).get('connection_type', {})
+            connection_type = 'Unknown'
+            if attributes.get('button_added'):
+                connection_type = attributes.get('button_added')
+            elif attributes.get('value'):
+                connection_type = attributes.get('value')
+            
+            feature = {
+                'type': 'Feature',
+                'geometry': mapping(line),
+                'properties': {
+                    'connection_id': connection_id,
+                    'connection_type': connection_type,
+                    'StartX': start_lon,
+                    'StartY': start_lat,
+                    'EndX': end_lon,
+                    'EndY': end_lat,
+                    'node_id_1': node_id_1,
+                    'node_id_2': node_id_2
+                }
+            }
+            
+            valid_connections.append(feature)
+            processed_count += 1
+            
+        except Exception as e:
+            print(f"Error processing connection {connection_id}: {str(e)}")
+            skipped_count += 1
+            continue
+    
+    print(f"\nConnection processing summary:")
+    print(f"Total connections: {total_connections}")
+    print(f"Successfully processed: {processed_count}")
+    print(f"Skipped: {skipped_count}")
+    
+    return valid_connections
 
 
 
@@ -521,8 +509,9 @@ def saveLineShapefile(line_connections, filename):
     workspace_path = CONFIG['WORKSPACE_PATH']
     file_path = os.path.join(workspace_path, filename.replace('.shp', '.gpkg'))
     geometries = [
-        LineString([(line["StartX"], line["StartY"]), (line["EndX"], line["EndY"])]
-    ) for line in line_connections]
+        LineString([(line["StartX"], line["StartY"]), (line["EndX"], line["EndY"])])
+        for line in line_connections
+    ]
 
     gdf = gpd.GeoDataFrame(line_connections, geometry=geometries, crs="EPSG:4326")
     gdf.drop(columns=['StartX', 'StartY', 'EndX', 'EndY', 'job_id'], errors='ignore', inplace=True)
@@ -535,176 +524,88 @@ def saveLineShapefile(line_connections, filename):
 # Function to save nodes to a GeoPackage
 def saveMasterGeoPackage(all_nodes, all_connections, all_anchors, filename):
     workspace_path = CONFIG['WORKSPACE_PATH']
-    file_path = os.path.join(workspace_path, filename.replace('.shp', '.gpkg'))
+    file_path = os.path.join(workspace_path, filename)
 
     # Save nodes as point layer
     if all_nodes:
-        node_geometries = [Point(node["lng"], node["lat"]) for node in all_nodes]
-        gdf_nodes = gpd.GeoDataFrame(all_nodes, geometry=node_geometries, crs="EPSG:4326")
-
-        # Rename columns
-        gdf_nodes.rename(columns={
-            'company': 'utility',
-            'tag': 'pole tag',
-            'fldcompl': 'collected',
-            'jobname': 'jobname',
-            'job_status': 'job_status',
-            'MR_statu': 'mr_status',
-            'pole_spec': 'pole_spec',
-            'POA_Height': 'att_ht',
-            'lat': 'latitude',
-            'lng': 'longitude'
-        }, inplace=True)
-
-        # Remove unwanted columns
-        gdf_nodes.drop(columns=['pole_class', 'pole_height', 'id'], errors='ignore', inplace=True)
-
-        if not gdf_nodes.empty:
-            try:
-                gdf_nodes.to_file(file_path, layer='poles', driver="GPKG", mode='w', OVERWRITE="YES")
-                print(f"Nodes layer successfully saved to: {file_path}")
-            except Exception as e:
-                print(f"Error saving nodes layer to GeoPackage: {e}")
+        try:
+            # Create point geometries for nodes
+            geometries = [Point(node["lng"], node["lat"]) for node in all_nodes]
+            gdf_nodes = gpd.GeoDataFrame(all_nodes, geometry=geometries, crs="EPSG:4326")
+            
+            # Drop lat/lng columns as they're now in the geometry
+            gdf_nodes.drop(columns=['lat', 'lng'], errors='ignore', inplace=True)
+            
+            # Save to GeoPackage
+            gdf_nodes.to_file(file_path, layer='nodes', driver="GPKG")
+            print(f"Nodes layer successfully saved to: {file_path}")
+            
+        except Exception as e:
+            print(f"Error saving nodes layer to GeoPackage: {e}")
 
     # Save connections as line layer
     if all_connections:
-        line_geometries = [
-            LineString([(line["StartX"], line["StartY"]), (line["EndX"], line["EndY"])])
-            for line in all_connections
-        ]
-        gdf_connections = gpd.GeoDataFrame(all_connections, geometry=line_geometries, crs="EPSG:4326")
+        try:
+            valid_connections = []
+            line_geometries = []
+            
+            print(f"Processing {len(all_connections)} connections...")
+            for connection in all_connections:
+                try:
+                    # Get coordinates from the connection properties
+                    properties = connection.get('properties', {})
+                    start_x = properties.get('StartX')
+                    start_y = properties.get('StartY')
+                    end_x = properties.get('EndX')
+                    end_y = properties.get('EndY')
 
-        # Drop unnecessary columns from connections
-        gdf_connections.drop(columns=['StartX', 'StartY', 'EndX', 'EndY', 'job_id'], errors='ignore', inplace=True)
+                    if any(coord is None for coord in [start_x, start_y, end_x, end_y]):
+                        print(f"Missing coordinates for connection between nodes {properties.get('node_id_1')} and {properties.get('node_id_2')}")
+                        continue
 
-        if not gdf_connections.empty:
-            try:
-                gdf_connections.to_file(file_path, layer='connections', driver="GPKG", mode='w', OVERWRITE="YES")
-                print(f"Connections layer successfully saved to: {file_path}")
-            except Exception as e:
-                print(f"Error saving connections layer to GeoPackage: {e}")
-
-    # Save anchors as point layer
-    if all_anchors:
-        anchor_geometries = [Point(anchor["longitude"], anchor["latitude"]) for anchor in all_anchors]
-        gdf_anchors = gpd.GeoDataFrame(all_anchors, geometry=anchor_geometries, crs="EPSG:4326")
-
-        # Rename columns
-        gdf_anchors.rename(columns={
-            'longitude': 'longitude',
-            'latitude': 'latitude',
-            'anchor_spec': 'anchor_spec'
-        }, inplace=True)
-
-        if not gdf_anchors.empty:
-            try:
-                gdf_anchors.to_file(file_path, layer='anchors', driver="GPKG", mode='w', OVERWRITE="YES")
-                print(f"Anchors layer successfully saved to: {file_path}")
-            except Exception as e:
-                print(f"Error saving anchors layer to GeoPackage: {e}")
-        # Overwrite the Feature Service in ArcGIS Enterprise
-    overwriteFeatureService(file_path)
-
-# Function to save line connections to a GeoPackage
-def saveMasterConnectionsToGeoPackage(all_connections, filename):
-    workspace_path = CONFIG['WORKSPACE_PATH']
-    file_path = os.path.join(workspace_path, filename.replace('.shp', '.gpkg'))
-
-    # Create geometries for each connection using StartX, StartY, EndX, and EndY
-    geometries = [
-        LineString([(line["StartX"], line["StartY"]), (line["EndX"], line["EndY"])])
-        for line in all_connections
-    ]
-
-    # Create GeoDataFrame including mid_ht field
-    gdf = gpd.GeoDataFrame(all_connections, geometry=geometries, crs="EPSG:4326")
-
-    # Ensure mid_ht field is explicitly present in the DataFrame
-    if 'mid_ht' not in gdf.columns:
-        gdf['mid_ht'] = None  # Add the column if it doesn't exist
-
-    # Drop unnecessary columns from connections
-    gdf.drop(columns=['StartX', 'StartY', 'EndX', 'EndY', 'job_id'], errors='ignore', inplace=True)
-
-    # Save to file
-    try:
-        gdf.to_file(file_path, driver="GPKG")  # Switched to GeoPackage for better flexibility
-        print(f"Master connections GeoPackage successfully saved to: {file_path}")
-    except Exception as e:
-        print(f"Error saving master connections GeoPackage: {e}")
-
-def saveMasterGeoPackage(all_nodes, all_connections, all_anchors, filename):
-    workspace_path = CONFIG['WORKSPACE_PATH']
-    file_path = os.path.join(workspace_path, filename.replace('.shp', '.gpkg'))
-
-    # Save nodes as point layer
-    if all_nodes:
-        date_stamp = datetime.now().strftime("%Y-%m-%d")
-        node_geometries = [Point(node["lng"], node["lat"]) for node in all_nodes]
-        filename = f"Master_{date_stamp}.gpkg"
-        gdf_nodes = gpd.GeoDataFrame(all_nodes, geometry=node_geometries, crs="EPSG:4326")
-
-        # Rename columns
-        gdf_nodes.rename(columns={
-            'company': 'utility',
-            'tag': 'pole tag',
-            'fldcompl': 'collected',
-            'jobname': 'jobname',
-            'job_status': 'job_status',
-            'MR_statu': 'mr_status',
-            'pole_spec': 'pole_spec',
-            'POA_Height': 'att_ht',
-            'lat': 'latitude',
-            'lng': 'longitude'
-        }, inplace=True)
-
-        # Remove unwanted columns
-        gdf_nodes.drop(columns=['pole_class', 'pole_height', 'id'], errors='ignore', inplace=True)
-
-        if not gdf_nodes.empty:
-            try:
-                gdf_nodes.to_file(file_path, layer='poles', driver="GPKG", mode='w', OVERWRITE="YES")
-                print(f"Nodes layer successfully saved to: {file_path}")
-            except Exception as e:
-                print(f"Error saving nodes layer to GeoPackage: {e}")
-
-    # Save connections as line layer
-    if all_connections:
-        line_geometries = [
-            LineString([(line["StartX"], line["StartY"]), (line["EndX"], line["EndY"])])
-            for line in all_connections
-        ]
-        gdf_connections = gpd.GeoDataFrame(all_connections, geometry=line_geometries, crs="EPSG:4326")
-
-        # Drop unnecessary columns from connections
-        gdf_connections.drop(columns=['StartX', 'StartY', 'EndX', 'EndY', 'job_id'], errors='ignore', inplace=True)
-
-        if not gdf_connections.empty:
-            try:
-                gdf_connections.to_file(file_path, layer='connections', driver="GPKG", mode='w', OVERWRITE="YES")
-                print(f"Connections layer successfully saved to: {file_path}")
-            except Exception as e:
-                print(f"Error saving connections layer to GeoPackage: {e}")
+                    # Create LineString geometry
+                    line_geom = LineString([(start_x, start_y), (end_x, end_y)])
+                    
+                    # Use the existing properties
+                    valid_connections.append(properties)
+                    line_geometries.append(line_geom)
+                        
+                except Exception as e:
+                    print(f"Error processing line: {str(e)}")
+                    continue
+            
+            print(f"Found {len(valid_connections)} valid connections out of {len(all_connections)} total connections")
+            
+            if valid_connections and line_geometries:
+                gdf_lines = gpd.GeoDataFrame(valid_connections, geometry=line_geometries, crs="EPSG:4326")
+                
+                if not gdf_lines.empty:
+                    gdf_lines.to_file(file_path, layer='connections', driver="GPKG", mode='a')
+                    print("Connections layer successfully saved to GeoPackage")
+            else:
+                print("No valid connections found")
+                
+        except Exception as e:
+            print(f"Error saving connections layer to GeoPackage: {e}")
 
     # Save anchors as point layer
     if all_anchors:
-        anchor_geometries = [Point(anchor["longitude"], anchor["latitude"]) for anchor in all_anchors]
-        gdf_anchors = gpd.GeoDataFrame(all_anchors, geometry=anchor_geometries, crs="EPSG:4326")
+        try:
+            # Create point geometries for anchors
+            geometries = [Point(anchor["longitude"], anchor["latitude"]) for anchor in all_anchors]
+            gdf_anchors = gpd.GeoDataFrame(all_anchors, geometry=geometries, crs="EPSG:4326")
+            
+            # Drop lat/lng columns as they're now in the geometry
+            gdf_anchors.drop(columns=['latitude', 'longitude'], errors='ignore', inplace=True)
+            
+            # Save to GeoPackage
+            gdf_anchors.to_file(file_path, layer='anchors', driver="GPKG", mode='a')
+            print("Anchors layer successfully saved to GeoPackage")
+            
+        except Exception as e:
+            print(f"Error saving anchors layer to GeoPackage: {e}")
 
-        # Rename columns
-        gdf_anchors.rename(columns={
-            'longitude': 'longitude',
-            'latitude': 'latitude',
-            'anchor_spec': 'anchor_spec'
-        }, inplace=True)
-
-        if not gdf_anchors.empty:
-            try:
-                gdf_anchors.to_file(file_path, layer='anchors', driver="GPKG", mode='w', OVERWRITE="YES")
-                print(f"Anchors layer successfully saved to: {file_path}")
-            except Exception as e:
-                print(f"Error saving anchors layer to GeoPackage: {e}")
-
+    print("Master GeoPackage saved successfully")
 
 # Function to create a report of MR Status counts per job
 def create_report(jobs_summary):
@@ -712,16 +613,23 @@ def create_report(jobs_summary):
 
     for job in jobs_summary:
         job_name = job['job_name']
-
-        # Extract and clean job status
         job_status = job.get('job_status', 'Unknown').strip()
-
         mr_status_counts = job['mr_status_counts']
         pole_count = sum(mr_status_counts.values())
+        
+        # Get the new fields from job summary
+        last_modified = job.get('last_modified', 'Unknown')
+        field_complete_pct = job.get('field_complete_pct', 0)
+        trace_complete_pct = job.get('trace_complete_pct', 0)
+        utility = job.get('utility', 'Unknown')
 
         report_data.append({
             'Job Name': job_name,
             'Job Status': job_status,
+            'Last Modified': last_modified,
+            'Utility': utility,
+            'Field %': f"{field_complete_pct:.1f}%",
+            'Trace %': f"{trace_complete_pct:.1f}%",
             'No MR': mr_status_counts.get('No MR', 0),
             'Comm MR': mr_status_counts.get('Comm MR', 0),
             'Electric MR': mr_status_counts.get('Electric MR', 0),
@@ -770,118 +678,126 @@ def create_report(jobs_summary):
         date_cell.font = Font(size=12)
         date_cell.alignment = Alignment(horizontal="center", vertical="center")
 
-        # Set row height for the first row to accommodate title
-        ws.row_dimensions[1].height = 30
-        # Set row height for the second row to accommodate the date
-        ws.row_dimensions[2].height = 20
+        # Set row heights
+        ws.row_dimensions[1].height = 30  # Title row
+        ws.row_dimensions[2].height = 20  # Date row
+        ws.row_dimensions[3].height = 25  # Column headers row
 
         # Add the column headers with styling in the third row
+        column_widths = {
+            "Job Name": 44,
+            "Job Status": 23.71,
+            "Last Modified": 15,
+            "Utility": 15,
+            "Field %": 10,
+            "Trace %": 10,
+            "No MR": 10,
+            "Comm MR": 10,
+            "Electric MR": 12,
+            "PCO Required": 12,
+            "Pole Count": 12
+        }
+
+        header_colors = {
+            "Job Name": "CCFFCC",
+            "Job Status": "CCFFCC",
+            "Last Modified": "CCFFCC",
+            "Utility": "CCFFCC",
+            "Field %": "CCFFCC",
+            "Trace %": "CCFFCC",
+            "No MR": "D9D9D9",
+            "Comm MR": "FFFF00",
+            "Electric MR": "FFC000",
+            "PCO Required": "FF0000",
+            "Pole Count": "CCFFCC"
+        }
+
         for col_num, column_title in enumerate(df_report.columns, 1):
             cell = ws.cell(row=3, column=col_num)
             cell.value = column_title
             cell.font = Font(bold=True)
             cell.alignment = Alignment(horizontal="center", vertical="center")
+            
+            # Set column width
+            column_letter = cell.column_letter
+            ws.column_dimensions[column_letter].width = column_widths.get(column_title, 13.3)
 
-            # Color the column headers according to their field
-            header_colors = {
-                "Job Name": "CCFFCC",
-                "Job Status": "CCFFCC",
-                "No MR": "D9D9D9",
-                "Comm MR": "FFFF00",
-                "Electric MR": "FFC000",
-                "PCO Required": "FF0000",
-                "Pole Count": "CCFFCC",
-            }
+            # Set header color
             if column_title in header_colors:
-                cell.fill = PatternFill(start_color=header_colors[column_title], end_color=header_colors[column_title],
-                                        fill_type="solid")
+                cell.fill = PatternFill(start_color=header_colors[column_title],
+                                      end_color=header_colors[column_title],
+                                      fill_type="solid")
 
-        # Add the data rows
+        # Add the data rows with center alignment
         for r_idx, row in enumerate(dataframe_to_rows(df_report, index=False, header=False), 4):
             for c_idx, value in enumerate(row, 1):
-                ws.cell(row=r_idx, column=c_idx, value=value)
+                cell = ws.cell(row=r_idx, column=c_idx, value=value)
+                cell.alignment = Alignment(horizontal="center", vertical="center")
 
-        # Adjust column widths: "Job Status" column to 23.71 and others to 13.3
-        for col in ws.iter_cols(min_row=3, max_row=3):  # Iterating over the column headers row
-            column_letter = col[0].column_letter
-            if col[0].value == "Job Status":
-                ws.column_dimensions[column_letter].width = 23.71
-            elif col[0].value == "Job Name":
-                ws.column_dimensions[column_letter].width = 44
-            else:
-                ws.column_dimensions[column_letter].width = 13.3
+        # Add borders around all cells
+        thin_border = Border(left=Side(style='thin'),
+                           right=Side(style='thin'),
+                           top=Side(style='thin'),
+                           bottom=Side(style='thin'))
 
-        # Add borders around the entire report including title and date rows
-        all_border = Border(left=Side(style='thin'),
-                            right=Side(style='thin'),
-                            top=Side(style='thin'),
-                            bottom=Side(style='thin'))
-
-        # Apply borders to all cells including title and date rows
-        for row in ws.iter_rows(min_row=1, max_row=ws.max_row, min_col=1, max_col=7):
+        for row in ws.iter_rows(min_row=1, max_row=ws.max_row, min_col=1, max_col=len(df_report.columns)):
             for cell in row:
-                cell.border = all_border
+                cell.border = thin_border
 
-        # Add Job Status Summary Headers in Two Rows (4 statuses per row) with colors
-        job_statuses_row_1 = [
+        # Add Job Status Summary Headers with colors and proper spacing
+        status_summary_start_row = 6
+        job_statuses = [
             ("Pending Field Collection", "CCFFCC"),
             ("Pending Photo Annotation", "B7DEE8"),
             ("Sent to PE", "CCC0DA"),
-            ("Pending EMR", "FFC000")
-        ]
-        job_statuses_row_2 = [
+            ("Pending EMR", "FFC000"),
             ("Approved for Construction", "9BBB59"),
             ("Hold", "BFBFBF"),
             ("As Built", "FABF8F"),
             ("Delivered", "92D050")
         ]
 
-        # Add first row of job statuses from I6 to L6
-        for col_num, (status, color) in enumerate(job_statuses_row_1, 9):  # Start at column 'I' (index 9)
-            header_cell = ws.cell(row=6, column=col_num)
-            header_cell.value = status
-            header_cell.font = Font(bold=True)
-            header_cell.fill = PatternFill(start_color=color, end_color=color, fill_type="solid")
-            header_cell.alignment = Alignment(horizontal="center", vertical="center")
-            # Set the column width to 24.14
-            ws.column_dimensions[header_cell.column_letter].width = 24.14
-
-        job_status_counts = {status[0]: 0 for status in job_statuses_row_1 + job_statuses_row_2}
-
+        # Calculate job status counts
+        job_status_counts = {status[0]: 0 for status in job_statuses}
         for job in jobs_summary:
-            job_status = job.get('job_status', 'Unknown').strip()  # Consistent retrieval as in extractNodes
+            job_status = job.get('job_status', 'Unknown').strip()
             if job_status in job_status_counts:
                 job_status_counts[job_status] += 1
 
-        # Write the counts in row 7 under each corresponding header for the first row of statuses
-        for col_num, (status, _) in enumerate(job_statuses_row_1, 9):  # Start at column 'I' (index 9)
-            count_cell = ws.cell(row=7, column=col_num)
-            count_cell.value = job_status_counts[status]
-            count_cell.alignment = Alignment(horizontal="center", vertical="center")
-
-        # Add second row of job statuses from I9 to L9
-        for col_num, (status, color) in enumerate(job_statuses_row_2, 9):  # Start at column 'I' (index 9)
-            header_cell = ws.cell(row=9, column=col_num)
+        # Add status headers and counts in two rows, starting from column L (12)
+        for idx, (status, color) in enumerate(job_statuses[:4]):
+            header_cell = ws.cell(row=status_summary_start_row, column=idx + 12)
+            count_cell = ws.cell(row=status_summary_start_row + 1, column=idx + 12)
+            
             header_cell.value = status
             header_cell.font = Font(bold=True)
             header_cell.fill = PatternFill(start_color=color, end_color=color, fill_type="solid")
             header_cell.alignment = Alignment(horizontal="center", vertical="center")
+            
+            count_cell.value = job_status_counts[status]
+            count_cell.alignment = Alignment(horizontal="center", vertical="center")
+            
+            ws.column_dimensions[header_cell.column_letter].width = 24.14
 
-        # Write the counts in row 10 under each corresponding header for the second row of statuses
-        for col_num, (status, _) in enumerate(job_statuses_row_2, 9):  # Start at column 'I' (index 9)
-            count_cell = ws.cell(row=10, column=col_num)
+        # Add second row of statuses
+        for idx, (status, color) in enumerate(job_statuses[4:]):
+            header_cell = ws.cell(row=status_summary_start_row + 3, column=idx + 12)
+            count_cell = ws.cell(row=status_summary_start_row + 4, column=idx + 12)
+            
+            header_cell.value = status
+            header_cell.font = Font(bold=True)
+            header_cell.fill = PatternFill(start_color=color, end_color=color, fill_type="solid")
+            header_cell.alignment = Alignment(horizontal="center", vertical="center")
+            
             count_cell.value = job_status_counts[status]
             count_cell.alignment = Alignment(horizontal="center", vertical="center")
 
-        # Apply borders to the new summary table headers and counts
-        for row in ws.iter_rows(min_row=6, max_row=7, min_col=9,
-                                max_col=12):  # Columns I to L (indices 9 to 12) for the first row
+        # Add borders to status summary
+        for row in ws.iter_rows(min_row=status_summary_start_row,
+                              max_row=status_summary_start_row + 4,
+                              min_col=12, max_col=15):
             for cell in row:
-                cell.border = all_border
-        for row in ws.iter_rows(min_row=9, max_row=10, min_col=9,
-                                max_col=12):  # Columns I to L (indices 9 to 12) for the second row
-            for cell in row:
-                cell.border = all_border
+                cell.border = thin_border
 
         # Save the workbook
         wb.save(report_path)
@@ -892,284 +808,369 @@ def create_report(jobs_summary):
     return report_path
 
 # Function to send email notification with attachment
-def send_email_notification(email_list, report_path):
+def send_email_notification(recipients, report_path):
+    """Send email notification with the report attached."""
+    print("\nStarting email notification process...")
+    print(f"Recipients: {recipients}")
+    
     try:
-        smtp_server = "smtp.office365.com"  # Your SMTP server
-        smtp_port = 587
-        smtp_user = "brandan.lewis@deeplydigital.com"  # Your email address
-        smtp_password = "Bmxican123!"  # Your email password
+        # Load environment variables
+        load_dotenv()
+        client_id = os.getenv('AZURE_CLIENT_ID')
+        client_secret = os.getenv('AZURE_CLIENT_SECRET')
+        tenant_id = os.getenv('AZURE_TENANT_ID')
+        user_email = os.getenv('EMAIL_USER')
 
-        # Set up the SMTP server
-        server = smtplib.SMTP(smtp_server, smtp_port)
-        server.starttls()
-        server.login(smtp_user, smtp_password)
+        # Initialize MSAL client
+        authority = f"https://login.microsoftonline.com/{tenant_id}"
+        app = msal.ConfidentialClientApplication(
+            client_id,
+            authority=authority,
+            client_credential=client_secret
+        )
 
-        # Create the email
-        from_email = smtp_user
-        to_emails = email_list
+        # Get access token
+        scopes = ['https://graph.microsoft.com/.default']
+        result = app.acquire_token_silent(scopes, account=None)
+        if not result:
+            result = app.acquire_token_for_client(scopes)
 
-        for to_email in to_emails:
-            msg = MIMEMultipart('alternative')
-            msg['From'] = from_email
-            msg['To'] = to_email
-            msg['Subject'] = f"Aerial Status Report: {datetime.now().strftime('%m/%d/%Y %I:%M %p')}"
+        if 'access_token' in result:
+            # Prepare email message
+            email_msg = {
+                'message': {
+                    'subject': 'Aerial Status Report Generated',
+                    'body': {
+                        'contentType': 'Text',
+                        'content': 'Please find attached the latest Aerial Status Report.'
+                    },
+                    'toRecipients': [{'emailAddress': {'address': r}} for r in recipients],
+                    'attachments': [{
+                        '@odata.type': '#microsoft.graph.fileAttachment',
+                        'name': os.path.basename(report_path),
+                        'contentBytes': base64.b64encode(open(report_path, 'rb').read()).decode()
+                    }]
+                }
+            }
 
-            # Plain text version of the email body
-            text_body = (
-                "Hey Team,\n\n"
-                "The Katapult API automation script has finished running and the report has been generated.\n"
-                "The report is designed to give an overview of all poles that are in design with metrics to support decision making and cost planning.\n"
-                "Please find the attached report for more details.\n\n"
-                "Thanks,\n"
-                "Brandan"
+            # Send email using Microsoft Graph API
+            graph_endpoint = 'https://graph.microsoft.com/v1.0'
+            headers = {
+                'Authorization': f"Bearer {result['access_token']}",
+                'Content-Type': 'application/json'
+            }
+            
+            response = requests.post(
+                f"{graph_endpoint}/users/{user_email}/sendMail",
+                headers=headers,
+                data=json.dumps(email_msg)
             )
-
-            # HTML version of the email body
-            html_body = """
-            <html>
-            <body>
-                <p>Hey Team,</p>
-                <p>The Katapult automation script has <b>finished running</b> and the report has been generated.</p>
-                <p>The report is designed to give an overview of all poles that are in design with metrics to support decision making and cost planning.</p>
-                <p>See the updated layer in the web map below.</p>
-                <p><a href='https://gis.clearnetworx.com/portal/apps/mapviewer/index.html?webmap=e3ee3bfdc6184987baf87f9f0ebd23ef'>Katapult Master API Map</a></p>
-                <p>Please find the attached report for more details.</p>
-                <p>Thanks,<br>
-                   <i>Brandan</i>
-                </p>
-            </body>
-            </html>
-            """
-
-            # Attach both plain text and HTML versions to support different email clients
-            part1 = MIMEText(text_body, 'plain')
-            part2 = MIMEText(html_body, 'html')
-
-            msg.attach(part1)
-            msg.attach(part2)
-
-            # Retry mechanism to wait for the report file to be available
-            max_retries = 5
-            retries = 0
-            while not os.path.exists(report_path) and retries < max_retries:
-                print(f"Waiting for report file to be available: {report_path} (Attempt {retries + 1})")
-                time.sleep(2)  # Wait for 2 seconds before retrying
-                retries += 1
-
-            # Attach the Excel file if it exists
-            if os.path.exists(report_path):
-                attachment = MIMEBase('application', 'octet-stream')
-                try:
-                    with open(report_path, "rb") as attachment_file:
-                        attachment.set_payload(attachment_file.read())
-                    encoders.encode_base64(attachment)
-                    attachment.add_header('Content-Disposition', f'attachment; filename={os.path.basename(report_path)}')
-                    msg.attach(attachment)
-                except Exception as e:
-                    print(f"Error reading the report file for attachment: {e}")
-                    continue
+            
+            if response.status_code == 202:
+                print("Email sent successfully")
             else:
-                print(f"Error: Report file not found after {max_retries} retries. Skipping email attachment.")
-                continue
-
-            # Send the email
-            server.send_message(msg)
-            print(f"Email sent to {to_email}")
-
-        # Close the SMTP server
-        server.quit()
-
+                print(f"Failed to send email. Status code: {response.status_code}")
+                print(f"Response: {response.text}")
+        else:
+            print(f"Error getting access token: {result.get('error_description')}")
+            
     except Exception as e:
-        print(f"Error sending email: {e}")
+        print(f"Error in email notification: {str(e)}")
+    
+    print("Email notification process completed")
 
-# Function to update ArcGIS Enterprise feature layers with GeoPackage data
-def updateFeatureLayer(geopkg_path, portal_url, username, password, layer_urls):
-    try:
-        # Connect to the ArcGIS Enterprise Portal
-        gis = GIS(portal_url, username, password)
-        print("Successfully logged into ArcGIS Enterprise")
-
-        # The layers in the GeoPackage and their corresponding URLs in ArcGIS
-        layer_mapping = {
-            "poles": layer_urls["poles"],
-            "connections": layer_urls["connections"],
-            "anchors": layer_urls["anchors"]
-        }
-
-        # Iterate over layers in the GeoPackage
-        for gpkg_layer, feature_layer_url in layer_mapping.items():
-            # Load data from the GeoPackage
-            gdf = gpd.read_file(geopkg_path, layer=gpkg_layer)
-
-            if gdf.empty:
-                print(f"No data found in layer {gpkg_layer}, skipping.")
-                continue
-
-            # Load the corresponding feature layer from its URL
-            feature_layer = FeatureLayer(feature_layer_url, gis)
-
-            # Count existing features
-            try:
-                feature_count_result = feature_layer.query(where="1=1", return_count_only=True)
-                print(f"Layer {gpkg_layer} has {feature_count_result} existing features.")
-
-                if feature_count_result == 0:
-                    print(f"No existing features to delete in layer {gpkg_layer}. Skipping delete operation.")
-                else:
-                    # Delete existing features if present
-                    delete_result = feature_layer.delete_features(where="1=1")
-                    # Check delete result for success
-                    if 'deleteResults' not in delete_result or not delete_result['deleteResults']:
-                        print(f"Failed to delete existing features in layer {gpkg_layer}: No results returned.")
-                        continue
-
-                    if not all(result.get('success', False) for result in delete_result['deleteResults']):
-                        print(f"Failed to delete some or all features in layer {gpkg_layer}.")
-                        continue
-
-                    print(f"Deleted existing features from {gpkg_layer} layer.")
-
-            except Exception as delete_exception:
-                print(f"Exception occurred while deleting features from {gpkg_layer}: {delete_exception}")
-                continue
-
-            # Ensure the GeoDataFrame has a valid spatial reference before converting
-            if gdf.crs is None:
-                print(f"Warning: Layer {gpkg_layer} has no CRS defined. Setting default CRS to EPSG:4326.")
-                gdf.set_crs("EPSG:4326", inplace=True)
-
-            # Convert GeoDataFrame to FeatureSet
-            try:
-                # Correct use of GeoAccessor to convert GeoDataFrame to FeatureSet
-                features = GeoAccessor.from_geodataframe(gdf).to_featureset()
-            except Exception as conversion_exception:
-                print(f"Exception occurred while converting GeoDataFrame to FeatureSet for layer {gpkg_layer}: {conversion_exception}")
-                continue
-
-            # Append new features to the feature layer
-            try:
-                add_result = feature_layer.edit_features(adds=features)
-                # Check add result for success
-                if 'addResults' not in add_result or not add_result['addResults']:
-                    print(f"Failed to add features to layer {gpkg_layer}: No results returned.")
-                    continue
-
-                if not all(result.get('success', False) for result in add_result['addResults']):
-                    print(f"Failed to add some or all features to layer {gpkg_layer}.")
-                    continue
-
-                print(f"Updated {gpkg_layer} layer with new data.")
-
-            except Exception as add_exception:
-                print(f"Exception occurred while adding features to {gpkg_layer}: {add_exception}")
-                continue
-
-        print("Feature layers updated successfully.")
-
-    except Exception as e:
-        print(f"General error updating feature layers: {e}")
-
+# Function to validate job data
 def validateJobData(job_data):
-    required_fields = ['nodes', 'connections', 'metadata']
-    for field in required_fields:
-        if field not in job_data:
-            logging.warning(f"Missing required field: {field}")
-            return False
-    return True
+    available_fields = []
+    if 'nodes' in job_data:
+        available_fields.append('nodes')
+    if 'connections' in job_data:
+        available_fields.append('connections')
+    if 'metadata' in job_data:
+        available_fields.append('metadata')
+    
+    print(f"Available fields in job data: {', '.join(available_fields)}")
+    return True  # Always process the job with whatever data is available
+
+def saveToShapefiles(nodes, connections, anchors, workspace_path):
+    """Save nodes, connections, and anchors to shapefiles with WGS 1984 projection."""
+    print("\nSaving data to shapefiles...")
+    
+    # Field name mappings (original -> truncated)
+    node_fields = {
+        'jobname': 'job_name',
+        'job_status': 'job_stat',
+        'MR_statu': 'mr_status',
+        'company': 'utility',
+        'fldcompl': 'completed',
+        'tag': 'pole_tag',
+        'POA_Height': 'poa_ht',
+        'conversation': 'conv'
+    }
+    
+    connection_fields = {
+        'connection_id': 'conn_id',
+        'connection_type': 'conn_type',
+        'node_id_1': 'node1_id',
+        'node_id_2': 'node2_id'
+    }
+    
+    anchor_fields = {
+        'anchor_spec': 'anch_spec',
+        'job_id': 'job_id'
+    }
+    
+    try:
+        # Create a timestamp for the zip files
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M")
+        
+        # Save nodes
+        if nodes:
+            node_geometries = [Point(node["lng"], node["lat"]) for node in nodes]
+            gdf_nodes = gpd.GeoDataFrame(nodes, geometry=node_geometries, crs="EPSG:4326")
+            
+            # Rename columns and drop unnecessary ones
+            gdf_nodes.rename(columns=node_fields, inplace=True)
+            gdf_nodes.drop(columns=['lat', 'lng', 'pole_class', 'pole_height', 'id', 'scid'], errors='ignore', inplace=True)
+            
+            nodes_shp = os.path.join(workspace_path, "poles.shp")
+            gdf_nodes.to_file(nodes_shp, driver="ESRI Shapefile")
+            print("Poles shapefile saved successfully")
+            
+            # Zip poles shapefile components
+            poles_zip = os.path.join(workspace_path, f"poles_{timestamp}.zip")
+            with zipfile.ZipFile(poles_zip, 'w') as zipf:
+                for ext in ['.shp', '.shx', '.dbf', '.prj', '.cpg']:
+                    file_path = nodes_shp.replace('.shp', ext)
+                    if os.path.exists(file_path):
+                        zipf.write(file_path, os.path.basename(file_path))
+                        os.remove(file_path)  # Remove the original file after zipping
+            print(f"Poles shapefile components zipped to: {poles_zip}")
+    
+        # Save connections
+        if connections:
+            valid_connections = []
+            line_geometries = []
+            
+            for connection in connections:
+                try:
+                    properties = connection.get('properties', {})
+                    start_x = properties.get('StartX')
+                    start_y = properties.get('StartY')
+                    end_x = properties.get('EndX')
+                    end_y = properties.get('EndY')
+                    
+                    if any(coord is None for coord in [start_x, start_y, end_x, end_y]):
+                        continue
+                        
+                    line_geom = LineString([(start_x, start_y), (end_x, end_y)])
+                    valid_connections.append(properties)
+                    line_geometries.append(line_geom)
+                    
+                except Exception as e:
+                    continue
+            
+            if valid_connections and line_geometries:
+                gdf_connections = gpd.GeoDataFrame(valid_connections, geometry=line_geometries, crs="EPSG:4326")
+                gdf_connections.rename(columns=connection_fields, inplace=True)
+                
+                connections_shp = os.path.join(workspace_path, "connections.shp")
+                gdf_connections.to_file(connections_shp, driver="ESRI Shapefile")
+                print("Connections shapefile saved successfully")
+                
+                # Zip connections shapefile components
+                connections_zip = os.path.join(workspace_path, f"connections_{timestamp}.zip")
+                with zipfile.ZipFile(connections_zip, 'w') as zipf:
+                    for ext in ['.shp', '.shx', '.dbf', '.prj', '.cpg']:
+                        file_path = connections_shp.replace('.shp', ext)
+                        if os.path.exists(file_path):
+                            zipf.write(file_path, os.path.basename(file_path))
+                            os.remove(file_path)  # Remove the original file after zipping
+                print(f"Connections shapefile components zipped to: {connections_zip}")
+    
+        # Save anchors
+        if anchors:
+            anchor_geometries = [Point(anchor["longitude"], anchor["latitude"]) for anchor in anchors]
+            gdf_anchors = gpd.GeoDataFrame(anchors, geometry=anchor_geometries, crs="EPSG:4326")
+            
+            gdf_anchors.rename(columns=anchor_fields, inplace=True)
+            gdf_anchors.drop(columns=['latitude', 'longitude'], errors='ignore', inplace=True)
+            
+            anchors_shp = os.path.join(workspace_path, "anchors.shp")
+            gdf_anchors.to_file(anchors_shp, driver="ESRI Shapefile")
+            print("Anchors shapefile saved successfully")
+            
+            # Zip anchors shapefile components
+            anchors_zip = os.path.join(workspace_path, f"anchors_{timestamp}.zip")
+            with zipfile.ZipFile(anchors_zip, 'w') as zipf:
+                for ext in ['.shp', '.shx', '.dbf', '.prj', '.cpg']:
+                    file_path = anchors_shp.replace('.shp', ext)
+                    if os.path.exists(file_path):
+                            zipf.write(file_path, os.path.basename(file_path))
+                            os.remove(file_path)  # Remove the original file after zipping
+            print(f"Anchors shapefile components zipped to: {anchors_zip}")
+            
+    except Exception as e:
+        print(f"Error saving shapefiles: {str(e)}")
 
 # Main function to run the job for testing
 def main(email_list):
-    # Define ArcGIS Portal credentials and service details
-    portal_url = CONFIG['PORTAL_URL']
-    username = CONFIG['USERNAME']
-    password = "Bmxican123!"
-
-    # Define URLs for the individual feature layers in ArcGIS Enterprise
-    layer_urls = {
-        "poles": CONFIG['LAYER_URLS']['poles'],
-        "anchors": CONFIG['LAYER_URLS']['anchors'],
-        "connections": CONFIG['LAYER_URLS']['connections']
-    }
-
+    """Main function to process jobs and generate reports."""
+    print("Starting main function...")
     all_jobs = []
-
+    
     if TEST_ONLY_SPECIFIC_JOB:
+        print(f"Testing specific job with ID: {TEST_JOB_ID}")
         all_jobs = [{'id': TEST_JOB_ID, 'name': 'Test Job'}]
     else:
+        print("Getting list of all jobs...")
         all_jobs = getJobList()
-
+        
     all_nodes = []
     all_connections = []
     all_anchors = []
     jobs_summary = []
-
+    
     if not all_jobs:
         print("No jobs found.")
         return
-
+        
     total_jobs = len(all_jobs)
+    print(f"Found {total_jobs} jobs to process")
+    
     for index, job in enumerate(all_jobs, 1):
-        logging.info(f"Processing job {index}/{total_jobs}: {job['name']}")
+        print(f"\n{'='*50}")
+        print(f"Processing job {index}/{total_jobs}: {job['name']}")
+        print(f"{'='*50}")
+        
         job_id = job['id']
         job_name = job['name']
-        print(f"Processing job: {job_name} (ID: {job_id})")
-
+        
+        print(f"Fetching data for job: {job_name} (ID: {job_id})")
         job_data = getJobData(job_id)
-
+        
         if job_data and validateJobData(job_data):
-            nodes = extractNodes(job_data, job_name, job_id)
-            connections = extractConnections(job_data, job_name, job_id)
+            # Extract nodes and connections from job data
+            nodes = job_data.get('nodes', {})
+            connections = job_data.get('connections', {})
+            
+            print("Extracting nodes...")
+            nodes_data = extractNodes(job_data, job_name, job_id)
+            print(f"Found {len(nodes_data)} nodes")
+            
+            print("Extracting connections...")
+            connections_data = extractConnections(connections, job_data.get('nodes', {}))
+            
+            print("Extracting anchors...")
             anchors = extractAnchors(job_data, job_name, job_id)
-
-            if nodes:
-                all_nodes.extend(nodes)
-
+            print(f"Found {len(anchors)} anchors")
+            
+            if nodes_data:
+                print("Processing nodes for job summary...")
+                all_nodes.extend(nodes_data)
+                
+                # Calculate field completion percentage
+                total_nodes = len(job_data.get('nodes', {}))
+                field_completed = sum(1 for node in job_data.get('nodes', {}).values() 
+                                   if node.get('attributes', {}).get('field_completed', {}).get('value') == True)
+                field_complete_pct = (field_completed / total_nodes * 100) if total_nodes > 0 else 0
+                
+                # Calculate trace completion percentage by checking all connections
+                total_traces = 0
+                completed_traces = 0
+                for conn_id, connection in connections.items():
+                    sections = connection.get('sections', {}).get('midpoint_section', {})
+                    photos = sections.get('photos', {})
+                    
+                    for photo_id, photo_details in photos.items():
+                        if photo_details.get('association') == 'main':
+                            main_photo = job_data.get('photos', {}).get(photo_id, {})
+                            photofirst_data = main_photo.get('photofirst_data', {})
+                            
+                            # Check if there are wire or guying traces in the photo
+                            if 'wire' in photofirst_data or 'guying' in photofirst_data:
+                                total_traces += 1
+                                if main_photo.get('tracing_complete', {}).get('auto', False):
+                                    completed_traces += 1
+                
+                trace_complete_pct = (completed_traces / total_traces * 100) if total_traces > 0 else 0
+                
+                # Get utility from first pole with a company value
+                utility = 'Unknown'
+                for node_data in job_data.get('nodes', {}).values():
+                    company_attr = node_data.get('attributes', {}).get('company', {})
+                    # Check all possible sources for company value
+                    for source in ['-Imported', 'button_added', 'value', 'auto_calced']:
+                        company = company_attr.get(source)
+                        if company:
+                            utility = company
+                            break
+                    if utility != 'Unknown':
+                        break
+                
+                # Get last modified date
+                last_modified = job_data.get('metadata', {}).get('last_modified', 'Unknown')
+                if last_modified != 'Unknown':
+                    last_modified = datetime.fromtimestamp(last_modified).strftime('%Y-%m-%d')
+                
                 # Summarize MR Status counts for the job
                 mr_status_counts = {}
-                for node in nodes:
+                for node in nodes_data:
                     mr_status = node['MR_statu']
                     if mr_status not in mr_status_counts:
                         mr_status_counts[mr_status] = 0
                     mr_status_counts[mr_status] += 1
-
+                
                 jobs_summary.append({
                     'job_name': job_name,
                     'job_status': job_data.get('metadata', {}).get('job_status', 'Unknown'),
-                    'mr_status_counts': mr_status_counts
+                    'mr_status_counts': mr_status_counts,
+                    'last_modified': last_modified,
+                    'field_complete_pct': field_complete_pct,
+                    'trace_complete_pct': trace_complete_pct,
+                    'utility': utility
                 })
-
-            if connections:
-                all_connections.extend(connections)
+                print(f"Job summary updated with MR status counts: {mr_status_counts}")
+            
+            if connections_data:
+                all_connections.extend(connections_data)
             if anchors:
                 all_anchors.extend(anchors)
-
-        # Add a 2-second delay between processing each job
-        if index < total_jobs:  # Don't delay after the last job
-            print(f"Waiting 2 seconds before processing next job...")
+        
+        print(f"Finished processing job {index}/{total_jobs}")
+        if index < total_jobs:
+            print("Waiting 2 seconds before next job...")
             time.sleep(2)
-
-    # Only save if data is present
+    
+    print("\nProcessing complete. Saving results...")
     if all_nodes or all_connections or all_anchors:
-        # Save all nodes, connections, and anchors to master GeoPackage
+        print("Saving data to master GeoPackage...")
         workspace_path = CONFIG['WORKSPACE_PATH']
         master_geopkg_filename = "Master.gpkg"
         master_geopkg_path = os.path.join(workspace_path, master_geopkg_filename)
         saveMasterGeoPackage(all_nodes, all_connections, all_anchors, master_geopkg_filename)
-
-        # Update feature layers in ArcGIS Enterprise
-        updateFeatureLayer(master_geopkg_path, portal_url, username, password, layer_urls)
-
+        print("Master GeoPackage saved successfully")
+        
+        # Add call to save shapefiles
+        print("\nSaving data to shapefiles...")
+        saveToShapefiles(all_nodes, all_connections, all_anchors, workspace_path)
     else:
         print("No data extracted for any job. Nothing to save.")
-
-    # Create a report with MR Status counts per job
+    
+    print("\nGenerating report...")
     report_path = None
     if jobs_summary:
         report_path = create_report(jobs_summary)
-
-    # Send email notification after report generation
-    if report_path:
+        print(f"Report generated at: {report_path}")
+        
+        print("\nSending email notification...")
         send_email_notification(email_list, report_path)
+        print("Email notification process completed")
+    else:
+        print("No job summary data available. Report not generated.")
+    
+    print("\nMain function completed")
+    return True
 
 
 if __name__ == "__main__":
