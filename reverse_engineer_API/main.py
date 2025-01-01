@@ -334,27 +334,90 @@ def extractNodes(job_data, job_name, job_id):
     return node_points
 
 def extractAnchors(job_data, job_name, job_id):
-    """Extract anchor points from job data, focusing only on the Anchor_Spec attribute."""
+    """Extract anchor points from job data, with detailed type analysis."""
     anchors = job_data.get("nodes", {})
     anchor_points = []
-
+    
+    # Analysis counters
+    node_type_counts = {}
+    anchor_spec_counts = {}
+    anchor_status = {}
+    
+    print("\nDetailed Anchor Analysis:")
+    print("------------------------")
+    
     for node_id, node_data in anchors.items():
-        # Check if node_type is 'new anchor'
-        if node_data.get("attributes", {}).get("node_type", {}).get("button_added") == "new anchor":
+        attributes = node_data.get("attributes", {})
+        
+        # Check all possible node type fields
+        node_type = "Unknown"
+        for type_field in ["node_type", "anchor_type"]:
+            for source in ["button_added", "-Imported", "value", "auto_calced"]:
+                type_value = attributes.get(type_field, {}).get(source)
+                if type_value and "anchor" in str(type_value).lower():
+                    node_type = type_value
+                    break
+            if node_type != "Unknown":
+                break
+                
+        # Count node types
+        if node_type not in node_type_counts:
+            node_type_counts[node_type] = 0
+        node_type_counts[node_type] += 1
+        
+        # Only process if it's an anchor
+        if "anchor" in str(node_type).lower():
             latitude = node_data.get("latitude")
             longitude = node_data.get("longitude")
-
-            # Extract anchor_spec
-            anchor_spec_data = node_data.get("attributes", {}).get("anchor_spec", {})
-            anchor_spec = anchor_spec_data.get("button_added", "Unknown")
-
-            # Append anchor information with Anchor_Spec and Job_Name
+            
+            # Get anchor specification with detailed logging
+            anchor_spec = "Unknown"
+            print(f"\nAnalyzing anchor {node_id} (Type: {node_type}):")
+            
+            # Check anchor_spec field for both multi_added and button_added
+            anchor_spec_data = attributes.get("anchor_spec", {})
+            if anchor_spec_data.get("multi_added"):
+                anchor_spec = anchor_spec_data.get("multi_added")
+                print(f"  Found spec in multi_added: {anchor_spec}")
+            elif anchor_spec_data.get("button_added"):
+                anchor_spec = anchor_spec_data.get("button_added")
+                print(f"  Found spec in button_added: {anchor_spec}")
+            
+            # Count anchor specs
+            if anchor_spec not in anchor_spec_counts:
+                anchor_spec_counts[anchor_spec] = 0
+            anchor_spec_counts[anchor_spec] += 1
+            
+            # Track anchor status (new vs existing)
+            status = "new" if "new" in str(node_type).lower() else "existing" if "existing" in str(node_type).lower() else "unknown"
+            if status not in anchor_status:
+                anchor_status[status] = 0
+            anchor_status[status] += 1
+            
+            # Append anchor information
             anchor_points.append({
                 "longitude": longitude,
                 "latitude": latitude,
                 "anchor_spec": anchor_spec,
+                "anchor_type": node_type,
                 "job_id": job_id
             })
+    
+    # Print summary analysis
+    print("\nSummary Analysis:")
+    print("------------------------")
+    print("Node Types Found:")
+    for ntype, count in sorted(node_type_counts.items()):
+        print(f"{ntype}: {count}")
+    
+    print("\nAnchor Specifications:")
+    for spec, count in sorted(anchor_spec_counts.items()):
+        print(f"{spec}: {count}")
+    
+    print("\nAnchor Status:")
+    for status, count in sorted(anchor_status.items()):
+        print(f"{status}: {count}")
+    print("------------------------")
 
     return anchor_points
 
@@ -924,10 +987,18 @@ def saveToShapefiles(nodes, connections, anchors, workspace_path):
         # Create a timestamp for the zip files
         timestamp = datetime.now().strftime("%Y%m%d_%H%M")
         
-        # Save nodes
+        # Save and analyze nodes
         if nodes:
+            print("\nPole Type Analysis in Shapefile:")
+            print("------------------------")
             node_geometries = [Point(node["lng"], node["lat"]) for node in nodes]
             gdf_nodes = gpd.GeoDataFrame(nodes, geometry=node_geometries, crs="EPSG:4326")
+            
+            # Analyze MR status distribution
+            mr_status_counts = gdf_nodes['MR_statu'].value_counts()
+            print("\nMR Status Distribution:")
+            for status, count in mr_status_counts.items():
+                print(f"{status}: {count}")
             
             # Rename columns and drop unnecessary ones
             gdf_nodes.rename(columns=node_fields, inplace=True)
@@ -935,7 +1006,7 @@ def saveToShapefiles(nodes, connections, anchors, workspace_path):
             
             nodes_shp = os.path.join(workspace_path, "poles.shp")
             gdf_nodes.to_file(nodes_shp, driver="ESRI Shapefile")
-            print("Poles shapefile saved successfully")
+            print(f"\nPoles shapefile saved successfully with {len(gdf_nodes)} features")
             
             # Zip poles shapefile components
             poles_zip = os.path.join(workspace_path, f"poles_{timestamp}.zip")
@@ -944,17 +1015,25 @@ def saveToShapefiles(nodes, connections, anchors, workspace_path):
                     file_path = nodes_shp.replace('.shp', ext)
                     if os.path.exists(file_path):
                         zipf.write(file_path, os.path.basename(file_path))
-                        os.remove(file_path)  # Remove the original file after zipping
+                        os.remove(file_path)
             print(f"Poles shapefile components zipped to: {poles_zip}")
     
-        # Save connections
+        # Save and analyze connections
         if connections:
+            print("\nConnection Type Analysis in Shapefile:")
+            print("------------------------")
             valid_connections = []
             line_geometries = []
+            connection_types = {}
             
             for connection in connections:
                 try:
                     properties = connection.get('properties', {})
+                    conn_type = properties.get('connection_type', 'Unknown')
+                    if conn_type not in connection_types:
+                        connection_types[conn_type] = 0
+                    connection_types[conn_type] += 1
+                    
                     start_x = properties.get('StartX')
                     start_y = properties.get('StartY')
                     end_x = properties.get('EndX')
@@ -970,13 +1049,17 @@ def saveToShapefiles(nodes, connections, anchors, workspace_path):
                 except Exception as e:
                     continue
             
+            # Print connection type counts
+            for conn_type, count in sorted(connection_types.items()):
+                print(f"{conn_type}: {count}")
+            
             if valid_connections and line_geometries:
                 gdf_connections = gpd.GeoDataFrame(valid_connections, geometry=line_geometries, crs="EPSG:4326")
                 gdf_connections.rename(columns=connection_fields, inplace=True)
                 
                 connections_shp = os.path.join(workspace_path, "connections.shp")
                 gdf_connections.to_file(connections_shp, driver="ESRI Shapefile")
-                print("Connections shapefile saved successfully")
+                print(f"\nConnections shapefile saved successfully with {len(gdf_connections)} features")
                 
                 # Zip connections shapefile components
                 connections_zip = os.path.join(workspace_path, f"connections_{timestamp}.zip")
@@ -985,20 +1068,28 @@ def saveToShapefiles(nodes, connections, anchors, workspace_path):
                         file_path = connections_shp.replace('.shp', ext)
                         if os.path.exists(file_path):
                             zipf.write(file_path, os.path.basename(file_path))
-                            os.remove(file_path)  # Remove the original file after zipping
+                            os.remove(file_path)
                 print(f"Connections shapefile components zipped to: {connections_zip}")
     
-        # Save anchors
+        # Save and analyze anchors
         if anchors:
+            print("\nAnchor Type Analysis in Shapefile:")
+            print("------------------------")
             anchor_geometries = [Point(anchor["longitude"], anchor["latitude"]) for anchor in anchors]
             gdf_anchors = gpd.GeoDataFrame(anchors, geometry=anchor_geometries, crs="EPSG:4326")
+            
+            # Analyze anchor spec distribution
+            anchor_spec_counts = gdf_anchors['anchor_spec'].value_counts()
+            print("\nAnchor Spec Distribution:")
+            for spec, count in anchor_spec_counts.items():
+                print(f"{spec}: {count}")
             
             gdf_anchors.rename(columns=anchor_fields, inplace=True)
             gdf_anchors.drop(columns=['latitude', 'longitude'], errors='ignore', inplace=True)
             
             anchors_shp = os.path.join(workspace_path, "anchors.shp")
             gdf_anchors.to_file(anchors_shp, driver="ESRI Shapefile")
-            print("Anchors shapefile saved successfully")
+            print(f"\nAnchors shapefile saved successfully with {len(gdf_anchors)} features")
             
             # Zip anchors shapefile components
             anchors_zip = os.path.join(workspace_path, f"anchors_{timestamp}.zip")
@@ -1007,11 +1098,19 @@ def saveToShapefiles(nodes, connections, anchors, workspace_path):
                     file_path = anchors_shp.replace('.shp', ext)
                     if os.path.exists(file_path):
                             zipf.write(file_path, os.path.basename(file_path))
-                            os.remove(file_path)  # Remove the original file after zipping
+                            os.remove(file_path)
             print(f"Anchors shapefile components zipped to: {anchors_zip}")
             
     except Exception as e:
         print(f"Error saving shapefiles: {str(e)}")
+        
+    print("\nVerification Summary:")
+    print("------------------------")
+    print(f"Input Counts:")
+    print(f"Poles: {len(nodes)}")
+    print(f"Connections: {len(connections)}")
+    print(f"Anchors: {len(anchors)}")
+    print("------------------------")
 
 # Main function to run the job for testing
 def main(email_list):
