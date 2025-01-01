@@ -184,32 +184,22 @@ def extractNodes(job_data, job_name, job_id):
         print("No nodes found.")
         return []
 
-    # Analyze node types first
+    # Analysis counters (keep existing counters)
     node_type_counts = {}
-    for node_id, node_data in nodes.items():
-        attributes = node_data.get('attributes', {})
-        node_type = 'Unknown'
-        
-        # Check all possible ways a node could be typed
-        for type_source in ['node_type', 'pole_type']:
-            for source_type in ['-Imported', 'button_added', 'value', 'auto_calced']:
-                type_value = attributes.get(type_source, {}).get(source_type)
-                if type_value:
-                    node_type = type_value
-                    break
-            if node_type != 'Unknown':
-                break
-        
-        if node_type not in node_type_counts:
-            node_type_counts[node_type] = 0
-        node_type_counts[node_type] += 1
+    attachment_height_counts = {}
+    pole_class_counts = {}
+    pole_height_counts = {}
     
-    print("\nNode Type Analysis:")
+    # Debug counters
+    total_nodes = len(nodes)
+    processed_nodes = 0
+    skipped_nodes = 0
+    nodes_with_height = 0
+    nodes_without_height = 0
+    
+    print(f"\nStarting node analysis for {total_nodes} total nodes...")
     print("------------------------")
-    for node_type, count in node_type_counts.items():
-        print(f"{node_type}: {count}")
-    print("------------------------\n")
-
+    
     photo_data = job_data.get('photos', {})
     trace_data_all = job_data.get('traces', {}).get('trace_data', {})
     node_points = []
@@ -220,116 +210,175 @@ def extractNodes(job_data, job_name, job_id):
     conversation = metadata.get('conversation', "")
 
     for node_id, node_data in nodes.items():
-        attributes = node_data.get('attributes', {})
-        
-        # Check if node is a pole
-        node_type_imported = attributes.get('node_type', {}).get('-Imported')
-        node_type_button = attributes.get('node_type', {}).get('button_added')
-        node_type_value = attributes.get('node_type', {}).get('value')
-        node_type_auto = attributes.get('node_type', {}).get('auto_calced')
-        
-        is_pole = (
-            (node_type_imported == 'pole' or
-             node_type_button == 'pole' or
-             node_type_value == 'pole' or
-             node_type_auto == 'pole')
-            and not (
-                node_type_imported in ['reference', 'building attachment', 'new anchor', 'existing anchor'] or
-                node_type_button in ['reference', 'building attachment', 'new anchor', 'existing anchor'] or
-                node_type_value in ['reference', 'building attachment', 'new anchor', 'existing anchor'] or
-                node_type_auto in ['reference', 'building attachment', 'new anchor', 'existing anchor']
-            )
-        )
+        try:
+            attributes = node_data.get('attributes', {})
+            
+            # Check if node is a pole
+            node_type = 'Unknown'
+            for type_source in ['node_type', 'pole_type']:
+                for source_type in ['-Imported', 'button_added', 'value', 'auto_calced']:
+                    type_value = attributes.get(type_source, {}).get(source_type)
+                    if type_value:
+                        node_type = type_value
+                        break
+                if node_type != 'Unknown':
+                    break
+            
+            # Count node types
+            if node_type not in node_type_counts:
+                node_type_counts[node_type] = 0
+            node_type_counts[node_type] += 1
+            
+            # Only process poles (exclude anchors, references, etc.)
+            if node_type == 'pole':
+                processed_nodes += 1
+                latitude = node_data.get('latitude')
+                longitude = node_data.get('longitude')
 
-        if is_pole:
-            latitude = node_data.get('latitude')
-            longitude = node_data.get('longitude')
+                if latitude is None or longitude is None:
+                    print(f"Warning: Missing coordinates for pole {node_id}")
+                    skipped_nodes += 1
+                    continue
 
-            if latitude is None or longitude is None:
-                continue
+                # Extract MR status
+                mr_status = "Unknown"
+                if 'proposed_pole_spec' in attributes:
+                    mr_status = "PCO Required"
+                else:
+                    mr_state = attributes.get('mr_state', {}).get('auto_calced', "Unknown")
+                    warning_present = 'warning' in attributes
+                    if mr_state == "No MR" and not warning_present:
+                        mr_status = "No MR"
+                    elif mr_state == "MR Resolved" and not warning_present:
+                        mr_status = "Comm MR"
+                    elif mr_state == "MR Resolved" and warning_present:
+                        mr_status = "Electric MR"
 
-            # Extract MR status
-            mr_status = "Unknown"
-            if 'proposed_pole_spec' in attributes:
-                mr_status = "PCO Required"
-            else:
-                mr_state = attributes.get('mr_state', {}).get('auto_calced', "Unknown")
-                warning_present = 'warning' in attributes
-                if mr_state == "No MR" and not warning_present:
-                    mr_status = "No MR"
-                elif mr_state == "MR Resolved" and not warning_present:
-                    mr_status = "Comm MR"
-                elif mr_state == "MR Resolved" and warning_present:
-                    mr_status = "Electric MR"
+                # Extract pole attributes
+                company = attributes.get('pole_tag', {}).get('-Imported', {}).get('company', "Unknown")
+                fldcompl_value = attributes.get('field_completed', {}).get('value', "Unknown")
+                fldcompl = 'yes' if fldcompl_value == 1 else 'no' if fldcompl_value == 2 else 'Unknown'
+                
+                # Extract and count pole class
+                pole_class = attributes.get('pole_class', {}).get('-Imported', "Unknown")
+                if pole_class not in pole_class_counts:
+                    pole_class_counts[pole_class] = 0
+                pole_class_counts[pole_class] += 1
+                
+                # Extract and count pole height
+                pole_height = attributes.get('pole_height', {}).get('-Imported', "Unknown")
+                if pole_height not in pole_height_counts:
+                    pole_height_counts[pole_height] = 0
+                pole_height_counts[pole_height] += 1
+                
+                # Extract tag and scid
+                tag = attributes.get('pole_tag', {}).get('-Imported', {}).get('tagtext', "Unknown")
+                scid = attributes.get('scid', {}).get('auto_button', "Unknown")
 
-            # Extract other attributes
-            company = attributes.get('pole_tag', {}).get('-Imported', {}).get('company', "Unknown")
-            fldcompl_value = attributes.get('field_completed', {}).get('value', "Unknown")
-            fldcompl = 'yes' if fldcompl_value == 1 else 'no' if fldcompl_value == 2 else 'Unknown'
-            pole_class = attributes.get('pole_class', {}).get('-Imported', "Unknown")
-            pole_height = attributes.get('pole_height', {}).get('-Imported', "Unknown")
-            pole_spec = attributes.get('pole_spec', {}).get('button_calced', "Unknown")
-            tag = attributes.get('pole_tag', {}).get('-Imported', {}).get('tagtext', "Unknown")
-            scid = attributes.get('scid', {}).get('auto_button', "Unknown")
+                # Extract POA height with detailed analysis
+                poa_height = ""
+                photos = node_data.get('photos', {})
+                main_photo_id = next(
+                    (photo_id for photo_id, photo_info in photos.items() if photo_info.get('association') == 'main'), None)
 
-            # Extract POA height
-            poa_height = ""
-            photos = node_data.get('photos', {})
-            main_photo_id = next(
-                (photo_id for photo_id, photo_info in photos.items() if photo_info.get('association') == 'main'), None)
-
-            if main_photo_id and main_photo_id in photo_data:
-                # Check wire data
-                photofirst_data = photo_data[main_photo_id].get('photofirst_data', {}).get('wire', {})
-                for wire_info in photofirst_data.values():
-                    trace_id = wire_info.get('_trace')
-                    trace_data = trace_data_all.get(trace_id, {})
-
-                    if (trace_data.get('company') == 'Clearnetworx' and
-                            trace_data.get('proposed', False) and
-                            trace_data.get('_trace_type') == 'cable' and
-                            trace_data.get('cable_type') == 'Fiber Optic Com'):
-
-                        poa_height = wire_info.get('_measured_height')
-                        if poa_height is not None:
-                            feet = int(poa_height // 12)
-                            inches = int(poa_height % 12)
-                            poa_height = f"{feet}' {inches}\""
-                            break
-
-                # Check guying data if no POA height found
-                if not poa_height:
-                    guying_data = photo_data[main_photo_id].get('photofirst_data', {}).get('guying', {})
-                    for wire_info in guying_data.values():
+                if main_photo_id and main_photo_id in photo_data:
+                    # Check wire data
+                    photofirst_data = photo_data[main_photo_id].get('photofirst_data', {}).get('wire', {})
+                    for wire_info in photofirst_data.values():
                         trace_id = wire_info.get('_trace')
                         trace_data = trace_data_all.get(trace_id, {})
 
                         if (trace_data.get('company') == 'Clearnetworx' and
                                 trace_data.get('proposed', False) and
-                                trace_data.get('_trace_type') == 'down_guy'):
+                                trace_data.get('_trace_type') == 'cable' and
+                                trace_data.get('cable_type') == 'Fiber Optic Com'):
 
                             poa_height = wire_info.get('_measured_height')
                             if poa_height is not None:
                                 feet = int(poa_height // 12)
                                 inches = int(poa_height % 12)
                                 poa_height = f"{feet}' {inches}\""
+                                nodes_with_height += 1
+                                
+                                # Count attachment heights
+                                height_key = f"{feet}'{inches}\""
+                                if height_key not in attachment_height_counts:
+                                    attachment_height_counts[height_key] = 0
+                                attachment_height_counts[height_key] += 1
                                 break
 
-            node_points.append({
-                "id": node_id,
-                "lat": latitude,
-                "lng": longitude,
-                "jobname": job_name,
-                "job_status": job_status,
-                "MR_statu": mr_status,
-                "company": company,
-                "fldcompl": fldcompl,
-                "pole_class": pole_class,
-                "tag": tag,
-                "scid": scid,
-                "POA_Height": poa_height,
-                "conversation": conversation
-            })
+                    # Check guying data if no POA height found
+                    if not poa_height:
+                        guying_data = photo_data[main_photo_id].get('photofirst_data', {}).get('guying', {})
+                        for wire_info in guying_data.values():
+                            trace_id = wire_info.get('_trace')
+                            trace_data = trace_data_all.get(trace_id, {})
+
+                            if (trace_data.get('company') == 'Clearnetworx' and
+                                    trace_data.get('proposed', False) and
+                                    trace_data.get('_trace_type') == 'down_guy'):
+
+                                poa_height = wire_info.get('_measured_height')
+                                if poa_height is not None:
+                                    feet = int(poa_height // 12)
+                                    inches = int(poa_height % 12)
+                                    poa_height = f"{feet}' {inches}\""
+                                    nodes_with_height += 1
+                                    
+                                    # Count attachment heights
+                                    height_key = f"{feet}'{inches}\""
+                                    if height_key not in attachment_height_counts:
+                                        attachment_height_counts[height_key] = 0
+                                    attachment_height_counts[height_key] += 1
+                                    break
+                
+                if not poa_height:
+                    nodes_without_height += 1
+
+                node_points.append({
+                    "id": node_id,
+                    "lat": latitude,
+                    "lng": longitude,
+                    "jobname": job_name,
+                    "job_status": job_status,
+                    "MR_statu": mr_status,
+                    "company": company,
+                    "fldcompl": fldcompl,
+                    "pole_class": pole_class,
+                    "tag": tag,
+                    "scid": scid,
+                    "POA_Height": poa_height,
+                    "conversation": conversation
+                })
+        except Exception as e:
+            print(f"Error processing node {node_id}: {str(e)}")
+            skipped_nodes += 1
+
+    # Print analysis results
+    print("\nNode Processing Summary:")
+    print(f"Total nodes found: {total_nodes}")
+    print(f"Poles processed: {processed_nodes}")
+    print(f"Skipped nodes: {skipped_nodes}")
+    print(f"Poles with height: {nodes_with_height}")
+    print(f"Poles without height: {nodes_without_height}")
+    
+    print("\nNode Type Distribution:")
+    for ntype, count in sorted(node_type_counts.items()):
+        print(f"{ntype}: {count}")
+    
+    print("\nPole Class Distribution:")
+    for pclass, count in sorted(pole_class_counts.items()):
+        print(f"{pclass}: {count}")
+    
+    print("\nPole Height Distribution:")
+    for pheight, count in sorted(pole_height_counts.items()):
+        print(f"{pheight}: {count}")
+    
+    print("\nAttachment Height Distribution:")
+    for height, count in sorted(attachment_height_counts.items()):
+        print(f"{height}: {count}")
+    
+    print("------------------------\n")
 
     return node_points
 
@@ -423,32 +472,77 @@ def extractAnchors(job_data, job_name, job_id):
 
 # Extract connections (lines, cables, etc.) from job data
 def extractConnections(connections, nodes):
-    # First, analyze connection types
+    # Analysis counters
     connection_type_counts = {}
-    for connection_id, connection_data in connections.items():
-        # Check both value and button_added for connection type
-        connection_type = 'Unknown'
-        attributes = connection_data.get('attributes', {}).get('connection_type', {})
-        
-        # First check button_added
-        if attributes.get('button_added'):
-            connection_type = attributes.get('button_added')
-        # Then check value if still unknown
-        elif attributes.get('value'):
-            connection_type = attributes.get('value')
-            
-        if connection_type not in connection_type_counts:
-            connection_type_counts[connection_type] = 0
-        connection_type_counts[connection_type] += 1
+    connection_height_counts = {}
     
-    print("\nConnection Type Analysis:")
+    # Debug counters
+    total_connections = len(connections)
+    connections_with_height = 0
+    connections_without_height = 0
+    connections_by_type = {}
+    
+    print(f"\nStarting connection analysis for {total_connections} total connections...")
     print("------------------------")
+    
+    # First analyze connection types and heights
+    for connection_id, connection_data in connections.items():
+        try:
+            # Check both value and button_added for connection type
+            connection_type = 'Unknown'
+            attributes = connection_data.get('attributes', {}).get('connection_type', {})
+            
+            # First check button_added
+            if attributes.get('button_added'):
+                connection_type = attributes.get('button_added')
+            # Then check value if still unknown
+            elif attributes.get('value'):
+                connection_type = attributes.get('value')
+                
+            if connection_type not in connection_type_counts:
+                connection_type_counts[connection_type] = 0
+            connection_type_counts[connection_type] += 1
+            
+            # Track connections by type for debugging
+            if connection_type not in connections_by_type:
+                connections_by_type[connection_type] = []
+            connections_by_type[connection_type].append(connection_id)
+            
+            # Extract attachment height if available
+            sections = connection_data.get('sections', {}).get('midpoint_section', {})
+            if 'attachment_height' in sections:
+                height = sections['attachment_height']
+                if height is not None:
+                    feet = int(height // 12)
+                    inches = int(height % 12)
+                    height_key = f"{feet}'{inches}\""
+                    if height_key not in connection_height_counts:
+                        connection_height_counts[height_key] = 0
+                    connection_height_counts[height_key] += 1
+                    connections_with_height += 1
+                else:
+                    connections_without_height += 1
+            else:
+                connections_without_height += 1
+                
+        except Exception as e:
+            print(f"Error analyzing connection {connection_id}: {str(e)}")
+    
+    print("\nConnection Type Distribution:")
     for conn_type, count in sorted(connection_type_counts.items()):
         print(f"{conn_type}: {count}")
+        print(f"  Sample IDs: {connections_by_type[conn_type][:3]}")  # Show first 3 IDs for each type
+        
+    print("\nConnection Height Distribution:")
+    for height, count in sorted(connection_height_counts.items()):
+        print(f"{height}: {count}")
+    
+    print("\nConnection Height Summary:")
+    print(f"Connections with height: {connections_with_height}")
+    print(f"Connections without height: {connections_without_height}")
     print("------------------------\n")
 
     valid_connections = []
-    total_connections = len(connections)
     processed_count = 0
     skipped_count = 0
     
@@ -458,6 +552,7 @@ def extractConnections(connections, nodes):
             node_id_2 = connection_data.get('node_id_2')
             
             if node_id_1 not in nodes or node_id_2 not in nodes:
+                print(f"Warning: Missing node(s) for connection {connection_id} (nodes: {node_id_1}, {node_id_2})")
                 skipped_count += 1
                 continue
                 
@@ -470,6 +565,7 @@ def extractConnections(connections, nodes):
             end_lon = end_node.get('longitude')
             
             if any(coord is None for coord in [start_lat, start_lon, end_lat, end_lon]):
+                print(f"Warning: Missing coordinates for connection {connection_id}")
                 skipped_count += 1
                 continue
             
@@ -483,12 +579,23 @@ def extractConnections(connections, nodes):
             elif attributes.get('value'):
                 connection_type = attributes.get('value')
             
+            # Get attachment height if available
+            attachment_height = None
+            sections = connection_data.get('sections', {}).get('midpoint_section', {})
+            if 'attachment_height' in sections:
+                height = sections['attachment_height']
+                if height is not None:
+                    feet = int(height // 12)
+                    inches = int(height % 12)
+                    attachment_height = f"{feet}' {inches}\""
+            
             feature = {
                 'type': 'Feature',
                 'geometry': mapping(line),
                 'properties': {
                     'connection_id': connection_id,
                     'connection_type': connection_type,
+                    'attachment_height': attachment_height,
                     'StartX': start_lon,
                     'StartY': start_lat,
                     'EndX': end_lon,
@@ -968,7 +1075,8 @@ def saveToShapefiles(nodes, connections, anchors, workspace_path):
         'fldcompl': 'completed',
         'tag': 'pole_tag',
         'POA_Height': 'poa_ht',
-        'conversation': 'conv'
+        'conversation': 'conv',
+        'scid': 'scid'
     }
     
     connection_fields = {
@@ -1002,7 +1110,7 @@ def saveToShapefiles(nodes, connections, anchors, workspace_path):
             
             # Rename columns and drop unnecessary ones
             gdf_nodes.rename(columns=node_fields, inplace=True)
-            gdf_nodes.drop(columns=['lat', 'lng', 'pole_class', 'pole_height', 'id', 'scid'], errors='ignore', inplace=True)
+            gdf_nodes.drop(columns=['lat', 'lng', 'pole_class', 'pole_height', 'id'], errors='ignore', inplace=True)
             
             nodes_shp = os.path.join(workspace_path, "poles.shp")
             gdf_nodes.to_file(nodes_shp, driver="ESRI Shapefile")
