@@ -42,7 +42,7 @@ logging.basicConfig(
 load_dotenv()
 
 # Toggle to enable/disable testing a specific job
-TEST_ONLY_SPECIFIC_JOB = True
+TEST_ONLY_SPECIFIC_JOB = False
 
 # ID of the specific job to test
 TEST_JOB_ID = "-O-nlOLQbPIYhHwJCPDN"
@@ -72,36 +72,86 @@ def getJobList():
     URL_PATH = '/api/v2/jobs'
     headers = {}
     all_jobs = []
+    base_wait_time = 5  # Base wait time in seconds
 
-    for attempt in range(5):  # Consider using exponential backoff to avoid overwhelming the server
+    for attempt in range(5):
         conn = None
         try:
-            conn = http.client.HTTPSConnection("katapultpro.com", timeout=10)  # Timeout value could be made configurable
+            # Calculate exponential backoff wait time
+            wait_time = base_wait_time * (2 ** attempt)
+            print(f"\nAttempt {attempt + 1} to retrieve jobs...")
+            
+            if attempt > 0:
+                print(f"Waiting {wait_time} seconds before retry due to rate limiting...")
+                time.sleep(wait_time)
+            
+            conn = http.client.HTTPSConnection("katapultpro.com", timeout=30)  # Increased timeout
+            
+            # Print the full URL being requested
+            full_url = f"{URL_PATH}?api_key={CONFIG['API_KEY'][:10]}..."  # Only show first 10 chars of API key
+            print(f"Requesting URL: https://katapultpro.com{full_url}")
+            
             conn.request("GET", f"{URL_PATH}?api_key={CONFIG['API_KEY']}", headers=headers)
             res = conn.getresponse()
+            
+            # Print response status and headers
+            print(f"Response Status: {res.status} {res.reason}")
+            
             data = res.read().decode("utf-8")
-            jobs_dict = json.loads(data)
+            
+            if res.status == 429:  # Too Many Requests
+                print("Rate limit exceeded. Will retry with exponential backoff.")
+                continue
+            
+            if res.status != 200:
+                print(f"Error: Received status code {res.status}")
+                print(f"Response: {data[:500]}")
+                continue
 
-            if not isinstance(jobs_dict, dict):
-                raise TypeError(f"Expected a dictionary but received {type(jobs_dict)}: {jobs_dict}")
+            try:
+                jobs_dict = json.loads(data)
+                
+                # Check if jobs_dict is a string and try to parse it again if needed
+                if isinstance(jobs_dict, str):
+                    jobs_dict = json.loads(jobs_dict)
 
-            # Retrieve all jobs without filtering for status
-            all_jobs = [
-                {'id': job_id, 'name': job_details.get('name'), 'status': job_details.get('status')}
-                for job_id, job_details in jobs_dict.items()
-            ]
-            logging.info(f"Retrieved {len(all_jobs)} jobs")
-            break
+                if not isinstance(jobs_dict, dict):
+                    print(f"Unexpected response format: {type(jobs_dict)}")
+                    print(f"Response content: {jobs_dict}")
+                    continue
+
+                # Retrieve all jobs without filtering for status
+                all_jobs = [
+                    {'id': job_id, 'name': job_details.get('name', 'Unknown'), 'status': job_details.get('status', 'Unknown')}
+                    for job_id, job_details in jobs_dict.items()
+                    if isinstance(job_details, dict)  # Ensure we only process dictionary entries
+                ]
+                
+                if all_jobs:
+                    print(f"Successfully retrieved {len(all_jobs)} jobs")
+                    break
+                else:
+                    print("No jobs found in the response")
+                    print(f"Raw response: {data[:500]}")
+                    continue
+
+            except json.JSONDecodeError as e:
+                print(f"JSON decode error: {e}")
+                print(f"Raw data causing the error: {data[:200]}...")
+                continue
 
         except (socket.error, OSError) as e:
-            print(f"Socket error: {e}. Retrying...")
-            time.sleep(5)
+            print(f"Socket error: {e}. Will retry...")
         except Exception as e:
-            print(f"Failed to retrieve job list: {e}")
-            break
+            print(f"Failed to retrieve job list: {str(e)}")
+            if 'data' in locals():
+                print(f"Response data: {data[:200]}...")
         finally:
             if conn:
-                conn.close()
+                try:
+                    conn.close()
+                except:
+                    pass
 
     return all_jobs
 
@@ -990,226 +1040,28 @@ def update_sharepoint_spreadsheet(df, site_url=None, drive_path=None):
         print(f"Error updating SharePoint spreadsheet: {str(e)}")
         return False
 
-# Modify create_report function to include SharePoint update
+from excel_utils import create_summary_sheet
+
 def create_report(jobs_summary):
-    report_data = []
-
-    for job in jobs_summary:
-        job_name = job['job_name']
-        job_status = job.get('job_status', 'Unknown').strip()
-        mr_status_counts = job['mr_status_counts']
-        pole_count = sum(mr_status_counts.values())
-        
-        # Get the fields from job summary
-        field_complete_pct = job.get('field_complete_pct', 0)
-        trace_complete_pct = job.get('trace_complete_pct', 0)
-        utility = job.get('utility', 'Unknown')
-        most_recent_editor = job.get('most_recent_editor', 'Unknown')
-        last_edit_time = job.get('last_edit_time', 'Unknown')
-
-        report_data.append({
-            'Job Name': job_name,
-            'Job Status': job_status,
-            'OSP Engineer': most_recent_editor,  # Changed from 'Last Editor'
-            'Last Edit': last_edit_time,
-            'Utility': utility,
-            'Field %': f"{field_complete_pct:.1f}%",
-            'Trace %': f"{trace_complete_pct:.1f}%",
-            'No MR': mr_status_counts.get('No MR', 0),
-            'Comm MR': mr_status_counts.get('Comm MR', 0),
-            'Electric MR': mr_status_counts.get('Electric MR', 0),
-            'PCO Required': mr_status_counts.get('PCO Required', 0),
-            'Pole Count': pole_count
-        })
-
-    # Create a DataFrame from the report data
-    df_report = pd.DataFrame(report_data)
-
-    # Sort the DataFrame first by Utility, then by Job Status
-    df_report = df_report.sort_values(by=['Utility', 'Job Status'])
-
-    # Ensure the directory exists
-    workspace_dir = CONFIG['WORKSPACE_PATH']
-    if not os.path.exists(workspace_dir):
-        try:
-            os.makedirs(workspace_dir)
-            print(f"Workspace directory created: {workspace_dir}")
-        except Exception as e:
-            print(f"Failed to create workspace directory: {e}")
-            return None
-
-    # Generate a filename with a timestamp
-    timestamp = datetime.now().strftime("%m%d%Y_%I%M")
-    report_filename = f"Aerial_Status_Report_{timestamp}.xlsx"
-    report_path = os.path.join(workspace_dir, report_filename)
-
-    # Write the report to an Excel file with formatting
+    # ... (existing code until after creating the main sheet)
+    
     try:
         wb = Workbook()
         ws = wb.active
         ws.title = "Aerial Status Report"
-
-        # Add merged header with title in the first row
-        ws.merge_cells('A1:G1')
-        title_cell = ws.cell(row=1, column=1)
-        title_cell.value = "Aerial Status Report"
-        title_cell.font = Font(size=18, bold=True)
-        title_cell.alignment = Alignment(horizontal="center", vertical="center")
-
-        # Add the date/time in the second row
-        ws.merge_cells('A2:L2')
-        date_cell = ws.cell(row=2, column=1)
-        current_time = datetime.now()
-        date_cell.value = current_time.strftime('%-m/%-d/%Y %-I:%M %p')  # Changed format to match desired output
-        date_cell.font = Font(size=12)
-        date_cell.alignment = Alignment(horizontal="center", vertical="center")
-
-        # Set row heights
-        ws.row_dimensions[1].height = 30  # Title row
-        ws.row_dimensions[2].height = 20  # Date row
-        ws.row_dimensions[3].height = 25  # Column headers row
-
-        # Add the column headers with styling in the third row
-        column_widths = {
-            "Job Name": 44,
-            "Job Status": 23.71,
-            "OSP Engineer": 30,  # Changed from "Last Editor"
-            "Last Edit": 20,
-            "Utility": 15,
-            "Field %": 10,
-            "Trace %": 10,
-            "No MR": 10,
-            "Comm MR": 10,
-            "Electric MR": 12,
-            "PCO Required": 12,
-            "Pole Count": 12
-        }
-
-        header_colors = {
-            "Job Name": "CCFFCC",
-            "Job Status": "CCFFCC",
-            "OSP Engineer": "CCFFCC",  # Changed from "Last Editor"
-            "Last Edit": "CCFFCC",
-            "Utility": "CCFFCC",
-            "Field %": "CCFFCC",
-            "Trace %": "CCFFCC",
-            "No MR": "D9D9D9",
-            "Comm MR": "FFFF00",
-            "Electric MR": "FFC000",
-            "PCO Required": "FF0000",
-            "Pole Count": "CCFFCC"
-        }
-
-        for col_num, column_title in enumerate(df_report.columns, 1):
-            cell = ws.cell(row=3, column=col_num)
-            cell.value = column_title
-            cell.font = Font(bold=True)
-            cell.alignment = Alignment(horizontal="center", vertical="center")
-            
-            # Set column width
-            column_letter = cell.column_letter
-            ws.column_dimensions[column_letter].width = column_widths.get(column_title, 13.3)
-
-            # Set header color
-            if column_title in header_colors:
-                cell.fill = PatternFill(start_color=header_colors[column_title],
-                                      end_color=header_colors[column_title],
-                                      fill_type="solid")
-
-        # Add the data rows with center alignment
-        for r_idx, row in enumerate(dataframe_to_rows(df_report, index=False, header=False), 4):
-            for c_idx, value in enumerate(row, 1):
-                cell = ws.cell(row=r_idx, column=c_idx, value=value)
-                cell.alignment = Alignment(horizontal="center", vertical="center")
-
-        # Add borders around all cells
-        thin_border = Border(left=Side(style='thin'),
-                           right=Side(style='thin'),
-                           top=Side(style='thin'),
-                           bottom=Side(style='thin'))
-
-        for row in ws.iter_rows(min_row=1, max_row=ws.max_row, min_col=1, max_col=len(df_report.columns)):
-            for cell in row:
-                cell.border = thin_border
-
-        # Add Job Status Summary Headers with colors and proper spacing
-        status_summary_start_row = 6
-        job_statuses = [
-            ("Pending Field Collection", "CCFFCC"),
-            ("Pending Photo Annotation", "B7DEE8"),
-            ("Sent to PE", "CCC0DA"),
-            ("Pending EMR", "FFC000"),
-            ("Approved for Construction", "9BBB59"),
-            ("Hold", "BFBFBF"),
-            ("As Built", "FABF8F"),
-            ("Delivered", "92D050")
-        ]
-
-        # Calculate job status counts
-        job_status_counts = {status[0]: 0 for status in job_statuses}
-        for job in jobs_summary:
-            job_status = job.get('job_status', 'Unknown').strip()
-            if job_status in job_status_counts:
-                job_status_counts[job_status] += 1
-
-        # Add status headers and counts in two rows, starting from column N (14)
-        for idx, (status, color) in enumerate(job_statuses[:4]):
-            header_cell = ws.cell(row=status_summary_start_row, column=idx + 14)
-            count_cell = ws.cell(row=status_summary_start_row + 1, column=idx + 14)
-            
-            header_cell.value = status
-            header_cell.font = Font(bold=True)
-            header_cell.fill = PatternFill(start_color=color, end_color=color, fill_type="solid")
-            header_cell.alignment = Alignment(horizontal="center", vertical="center")
-            
-            count_cell.value = job_status_counts[status]
-            count_cell.alignment = Alignment(horizontal="center", vertical="center")
-            
-            ws.column_dimensions[header_cell.column_letter].width = 24.14
-
-        # Add second row of statuses
-        for idx, (status, color) in enumerate(job_statuses[4:]):
-            header_cell = ws.cell(row=status_summary_start_row + 3, column=idx + 14)
-            count_cell = ws.cell(row=status_summary_start_row + 4, column=idx + 14)
-            
-            header_cell.value = status
-            header_cell.font = Font(bold=True)
-            header_cell.fill = PatternFill(start_color=color, end_color=color, fill_type="solid")
-            header_cell.alignment = Alignment(horizontal="center", vertical="center")
-            
-            count_cell.value = job_status_counts[status]
-            count_cell.alignment = Alignment(horizontal="center", vertical="center")
-
-        # Add borders to status summary
-        for row in ws.iter_rows(min_row=status_summary_start_row,
-                              max_row=status_summary_start_row + 4,
-                              min_col=14, max_col=17):
-            for cell in row:
-                cell.border = thin_border
-
+        
+        # ... (existing code for creating main report sheet)
+        
+        # Add the Jobs Summary sheet
+        create_summary_sheet(wb, jobs_summary, current_time)
+        
         # Save the workbook
         wb.save(report_path)
         print(f"Report successfully created: {report_path}")
+        
+        # ... (rest of the existing code for SharePoint update)
     except Exception as e:
         print(f"Error creating report: {e}")
-
-    try:
-        # After creating the local Excel file
-        print("\nUpdating SharePoint spreadsheet...")
-        sharepoint_update_success = update_sharepoint_spreadsheet(
-            df_report,
-            CONFIG['SHAREPOINT']['SITE_URL'],
-            CONFIG['SHAREPOINT']['DRIVE_PATH']
-        )
-        if sharepoint_update_success:
-            print("SharePoint spreadsheet updated successfully")
-        else:
-            print("Failed to update SharePoint spreadsheet")
-            
-    except Exception as e:
-        print(f"Error in SharePoint update: {str(e)}")
-    
-    return report_path
 
 # Function to send email notification with attachment
 def send_email_notification(recipients, report_path):
@@ -1249,7 +1101,7 @@ def send_email_notification(recipients, report_path):
                     'subject': 'Aerial Status Report Generated',
                     'body': {
                         'contentType': 'Text',
-                        'content': f'Please find attached the latest Aerial Status Report.\n\nYou can also view the report in SharePoint here:\n{sharepoint_link}'
+                        'content': f'Please find attached the latest Aerial Status Report.\n\nYou can also view the report in SharePoint here:\n{sharepoint_link}\n\nThis is an automated email, if you would like to opt out please respond and I can remove you from the list.'
                     },
                     'toRecipients': [{'emailAddress': {'address': r}} for r in recipients],
                     'attachments': [{
@@ -1334,6 +1186,7 @@ def saveToShapefiles(nodes, connections, anchors, workspace_path):
         # Create a timestamp for the master zip file
         timestamp = datetime.now().strftime("%Y%m%d_%H%M")
         master_zip_name = f"KatapultMaster_{timestamp}.zip"
+        master_zip_path = os.path.join(workspace_path, master_zip_name)
         master_zip_path = os.path.join(workspace_path, master_zip_name)
         
         shapefile_components = []
@@ -1498,7 +1351,7 @@ def saveToShapefiles(nodes, connections, anchors, workspace_path):
         # Upload the new zip file
         print(f"Uploading new file: {master_zip_name}")
         with open(master_zip_path, 'rb') as file_content:
-            # Create upload session for Documents folder
+            # Create upload session
             upload_session = graph_client.post(
                 f"sites/{site_id}/drives/{drive_id}/root:/{master_zip_name}:/createUploadSession",
                 json={
@@ -1536,7 +1389,7 @@ def saveToShapefiles(nodes, connections, anchors, workspace_path):
                     print(f"Failed to upload chunk. Status code: {chunk_response.status_code}")
                     return
         
-        print("Master zip file successfully uploaded to SharePoint Documents folder")
+        print("Master zip file successfully uploaded to SharePoint")
             
     except Exception as e:
         print(f"Error saving shapefiles: {str(e)}")
@@ -1856,6 +1709,7 @@ def main(email_list):
             time.sleep(2)
     
     print("\nProcessing complete. Saving results...")
+    master_zip_path = None
     if all_nodes or all_connections or all_anchors:
         print("Saving data to master GeoPackage...")
         workspace_path = CONFIG['WORKSPACE_PATH']
@@ -1864,8 +1718,11 @@ def main(email_list):
         saveMasterGeoPackage(all_nodes, all_connections, all_anchors, master_geopkg_filename)
         print("Master GeoPackage saved successfully")
         
-        # Add call to save shapefiles
+        # Save to shapefiles and create master zip
         print("\nSaving data to shapefiles...")
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M")
+        master_zip_name = f"KatapultMaster_{timestamp}.zip"
+        master_zip_path = os.path.join(workspace_path, master_zip_name)
         saveToShapefiles(all_nodes, all_connections, all_anchors, workspace_path)
     else:
         print("No data extracted for any job. Nothing to save.")
@@ -1888,8 +1745,17 @@ def main(email_list):
 
 if __name__ == "__main__":
     # Email list to notify when the report is done
-
-    email_list = ["brandan.lewis@deeplydigital.com"]
+    email_list = [
+        "brandan.lewis@deeplydigital.com",
+        "mitchell.melton@deeplydigital.com",
+        "michael.espinal@deeplydigital.com",
+        "riley.mcneil@clearnetworx.com",
+        "jcook@deeplydigital.com",
+        "tanner@deeplydigital.com",
+        "ben.endreson@deeplydigital.com",
+        "jordan.demers@deeplydigital.com",
+        
+    ]
     start_time = time.time()  # Record the start time
     main(email_list)
     end_time = time.time()
