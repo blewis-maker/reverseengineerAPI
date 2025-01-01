@@ -747,22 +747,22 @@ def saveMasterGeoPackage(all_nodes, all_connections, all_anchors, filename):
     workspace_path = CONFIG['WORKSPACE_PATH']
     file_path = os.path.join(workspace_path, filename)
 
-    # Save nodes as point layer
+    # Save poles as point layer (renamed from nodes)
     if all_nodes:
         try:
-            # Create point geometries for nodes
+            # Create point geometries for poles
             geometries = [Point(node["lng"], node["lat"]) for node in all_nodes]
-            gdf_nodes = gpd.GeoDataFrame(all_nodes, geometry=geometries, crs="EPSG:4326")
+            gdf_poles = gpd.GeoDataFrame(all_nodes, geometry=geometries, crs="EPSG:4326")
             
             # Drop lat/lng columns as they're now in the geometry
-            gdf_nodes.drop(columns=['lat', 'lng'], errors='ignore', inplace=True)
+            gdf_poles.drop(columns=['lat', 'lng'], errors='ignore', inplace=True)
             
             # Save to GeoPackage
-            gdf_nodes.to_file(file_path, layer='nodes', driver="GPKG")
-            print(f"Nodes layer successfully saved to: {file_path}")
+            gdf_poles.to_file(file_path, layer='poles', driver="GPKG")
+            print(f"Poles layer successfully saved to: {file_path}")
             
         except Exception as e:
-            print(f"Error saving nodes layer to GeoPackage: {e}")
+            print(f"Error saving poles layer to GeoPackage: {e}")
 
     # Save connections as line layer
     if all_connections:
@@ -794,7 +794,7 @@ def saveMasterGeoPackage(all_nodes, all_connections, all_anchors, filename):
                 except Exception as e:
                     print(f"Error processing line: {str(e)}")
                     continue
-            
+
             print(f"Found {len(valid_connections)} valid connections out of {len(all_connections)} total connections")
             
             if valid_connections and line_geometries:
@@ -866,7 +866,7 @@ def update_sharepoint_spreadsheet(df, site_url=None, drive_path=None):
             
         site_id = site_response.json()['id']
         print(f"Successfully got site ID: {site_id}")
-        
+
         # Get the drive ID
         print("Getting drive ID...")
         drives_response = graph_client.get(f"sites/{site_id}/drives")
@@ -907,7 +907,7 @@ def update_sharepoint_spreadsheet(df, site_url=None, drive_path=None):
                 print(f"Failed to create workbook session. Status code: {session_response.status_code}")
                 print(f"Response: {session_response.text}")
                 return False
-            
+
             session_id = session_response.json()['id']
             print("Successfully created workbook session")
             
@@ -931,154 +931,45 @@ def update_sharepoint_spreadsheet(df, site_url=None, drive_path=None):
                         print(f"Response: {worksheet_response.text}")
                         return False
 
-                # Update the title and date with formatting and merging
-                # First, merge cells for title (A1:L1)
-                graph_client.post(
-                    f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/worksheets/Aerial%20Status%20Report/range(address='A1:L1')/merge",
-                    headers={"workbook-session-id": session_id}
-                )
-
-                # Then update title with formatting
-                graph_client.patch(
+                # Update title row
+                title_response = graph_client.patch(
                     f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/worksheets/Aerial%20Status%20Report/range(address='A1:L1')",
                     headers={"workbook-session-id": session_id},
                     json={
-                        "values": [["Aerial Status Report"]],
-                        "format": {
-                            "font": {"bold": True, "size": 18},
-                            "horizontalAlignment": "center",
-                            "verticalAlignment": "center"
-                        }
+                        "values": [["Aerial Status Report"] + [""] * 11]
                     }
                 )
 
-                # Update timestamp
-                current_date = datetime.now().strftime('%m/%d/%Y %I:%M %p')
-                print(f"Updating timestamp to: {current_date}")
-                
-                # Update timestamp with correct array dimensions
+                # Update timestamp row
+                current_time = datetime.now()
+                formatted_timestamp = current_time.strftime('%-m/%-d/%Y %-I:%M %p')
                 timestamp_response = graph_client.patch(
                     f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/worksheets/Aerial%20Status%20Report/range(address='A2:L2')",
                     headers={"workbook-session-id": session_id},
                     json={
-                        "values": [[current_date] + [""] * 11],  # One row with 12 columns
-                        "numberFormat": [["@"] * 12]  # Format for all 12 columns
+                        "values": [[formatted_timestamp] + [""] * 11]
                     }
                 )
+
+                # Update headers and data
+                num_rows = len(formatted_data)
+                num_cols = len(formatted_data[0])
+                data_range = f"A3:L{num_rows + 2}"  # +2 because we start at row 3 and Excel is 1-based
                 
-                if timestamp_response.status_code != 200:
-                    print(f"Failed to update timestamp. Status code: {timestamp_response.status_code}")
-                    print(f"Response: {timestamp_response.text}")
-                    return False
-
-                # Commit the changes immediately after timestamp update
-                commit_response = graph_client.post(
-                    f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/functions/saveWorkbook",
-                    headers={"workbook-session-id": session_id}
-                )
-                
-                if commit_response.status_code != 200:
-                    print(f"Failed to commit changes. Status code: {commit_response.status_code}")
-                    print(f"Response: {commit_response.text}")
-                    return False
-
-                # Set column widths
-                column_widths = {
-                    "A": 44,  # Job Name
-                    "B": 23.71,  # Job Status
-                    "C": 30,  # Last Editor
-                    "D": 20,  # Last Edit
-                    "E": 15,  # Utility
-                    "F": 10,  # Field %
-                    "G": 10,  # Trace %
-                    "H": 10,  # No MR
-                    "I": 10,  # Comm MR
-                    "J": 12,  # Electric MR
-                    "K": 12,  # PCO Required
-                    "L": 12,  # Pole Count
-                }
-
-                # Apply column widths
-                for col_letter, width in column_widths.items():
-                    graph_client.patch(
-                        f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/worksheets/Aerial%20Status%20Report/column('{col_letter}')",
-                        headers={"workbook-session-id": session_id},
-                        json={"columnWidth": width}
-                    )
-
-                # Set row heights
-                row_heights = {
-                    1: 30,  # Title row
-                    2: 20,  # Date row
-                    3: 25,  # Column headers row
-                }
-
-                for row_num, height in row_heights.items():
-                    graph_client.patch(
-                        f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/worksheets/Aerial%20Status%20Report/row({row_num})",
-                        headers={"workbook-session-id": session_id},
-                        json={"height": height}
-                    )
-
-                # Define header colors and apply formatting
-                header_colors = {
-                    "A": "CCFFCC",  # Job Name (Green)
-                    "B": "CCFFCC",  # Job Status (Green)
-                    "C": "CCFFCC",  # Last Editor (Green)
-                    "D": "CCFFCC",  # Last Edit (Green)
-                    "E": "CCFFCC",  # Utility (Green)
-                    "F": "CCFFCC",  # Field % (Green)
-                    "G": "CCFFCC",  # Trace % (Green)
-                    "H": "D9D9D9",  # No MR (Gray)
-                    "I": "FFFF00",  # Comm MR (Yellow)
-                    "J": "FFC000",  # Electric MR (Orange)
-                    "K": "FF0000",  # PCO Required (Red)
-                    "L": "CCFFCC",  # Pole Count (Green)
-                }
-
-                # Apply header formatting
-                for col_letter, color in header_colors.items():
-                    header_range = f"{col_letter}3"
-                    graph_client.patch(
-                        f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/worksheets/Aerial%20Status%20Report/range(address='{header_range}')",
-                        headers={"workbook-session-id": session_id},
-                        json={
-                            "format": {
-                                "fill": {"color": color},
-                                "font": {"bold": True},
-                                "horizontalAlignment": "center",
-                                "verticalAlignment": "center",
-                                "borders": {
-                                    "allBorders": {
-                                        "style": "thin",
-                                        "color": "#000000"
-                                    }
-                                }
-                            }
-                        }
-                    )
-
-                # Update the data rows with center alignment and borders
-                data_range = f"A4:L{len(formatted_data) + 2}"  # Start from row 4 to preserve title, timestamp, and headers
-                graph_client.patch(
+                update_response = graph_client.patch(
                     f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/worksheets/Aerial%20Status%20Report/range(address='{data_range}')",
                     headers={"workbook-session-id": session_id},
                     json={
-                        "values": formatted_data[1:],  # Skip the header row
-                        "format": {
-                            "horizontalAlignment": "center",
-                            "verticalAlignment": "center",
-                            "borders": {
-                                "allBorders": {
-                                    "style": "thin",
-                                    "color": "#000000"
-                                }
-                            }
-                        }
+                        "values": formatted_data
                     }
                 )
 
-                print("Successfully updated data and formatting")
+                if update_response.status_code != 200:
+                    print(f"Failed to update content. Status code: {update_response.status_code}")
+                    print(f"Response: {update_response.text}")
+                    return False
+
+                print("Successfully updated data")
                 return True
 
             finally:
@@ -1119,7 +1010,7 @@ def create_report(jobs_summary):
         report_data.append({
             'Job Name': job_name,
             'Job Status': job_status,
-            'Last Editor': most_recent_editor,
+            'OSP Engineer': most_recent_editor,  # Changed from 'Last Editor'
             'Last Edit': last_edit_time,
             'Utility': utility,
             'Field %': f"{field_complete_pct:.1f}%",
@@ -1134,8 +1025,8 @@ def create_report(jobs_summary):
     # Create a DataFrame from the report data
     df_report = pd.DataFrame(report_data)
 
-    # Sort the DataFrame by the "Job Status" column alphabetically
-    df_report = df_report.sort_values(by='Job Status')
+    # Sort the DataFrame first by Utility, then by Job Status
+    df_report = df_report.sort_values(by=['Utility', 'Job Status'])
 
     # Ensure the directory exists
     workspace_dir = CONFIG['WORKSPACE_PATH']
@@ -1166,9 +1057,10 @@ def create_report(jobs_summary):
         title_cell.alignment = Alignment(horizontal="center", vertical="center")
 
         # Add the date/time in the second row
-        ws.merge_cells('A2:G2')
+        ws.merge_cells('A2:L2')
         date_cell = ws.cell(row=2, column=1)
-        date_cell.value = datetime.now().strftime('%-m/%-d/%Y %-I:%M %p')
+        current_time = datetime.now()
+        date_cell.value = current_time.strftime('%-m/%-d/%Y %-I:%M %p')  # Changed format to match desired output
         date_cell.font = Font(size=12)
         date_cell.alignment = Alignment(horizontal="center", vertical="center")
 
@@ -1181,7 +1073,7 @@ def create_report(jobs_summary):
         column_widths = {
             "Job Name": 44,
             "Job Status": 23.71,
-            "Last Editor": 30,
+            "OSP Engineer": 30,  # Changed from "Last Editor"
             "Last Edit": 20,
             "Utility": 15,
             "Field %": 10,
@@ -1196,7 +1088,7 @@ def create_report(jobs_summary):
         header_colors = {
             "Job Name": "CCFFCC",
             "Job Status": "CCFFCC",
-            "Last Editor": "CCFFCC",
+            "OSP Engineer": "CCFFCC",  # Changed from "Last Editor"
             "Last Edit": "CCFFCC",
             "Utility": "CCFFCC",
             "Field %": "CCFFCC",
@@ -1348,13 +1240,16 @@ def send_email_notification(recipients, report_path):
             result = app.acquire_token_for_client(scopes)
 
         if 'access_token' in result:
-            # Prepare email message
+            # SharePoint spreadsheet link
+            sharepoint_link = "https://deeplydigital.sharepoint.com/:x:/s/OSPIntegrationTestingSite/EfNOio4T1RFEjmCOJ1XYb3YB2HZPT0v8Sqb--3A_mKJLSQ?e=kLEpux"
+            
+            # Prepare email message with SharePoint link
             email_msg = {
                 'message': {
                     'subject': 'Aerial Status Report Generated',
                     'body': {
                         'contentType': 'Text',
-                        'content': 'Please find attached the latest Aerial Status Report.'
+                        'content': f'Please find attached the latest Aerial Status Report.\n\nYou can also view the report in SharePoint here:\n{sharepoint_link}'
                     },
                     'toRecipients': [{'emailAddress': {'address': r}} for r in recipients],
                     'attachments': [{
@@ -1438,9 +1333,10 @@ def saveToShapefiles(nodes, connections, anchors, workspace_path):
     try:
         # Create a timestamp for the master zip file
         timestamp = datetime.now().strftime("%Y%m%d_%H%M")
-        master_zip_path = os.path.join(workspace_path, f"KatapultMaster_{timestamp}.zip")
+        master_zip_name = f"KatapultMaster_{timestamp}.zip"
+        master_zip_path = os.path.join(workspace_path, master_zip_name)
         
-        shapefile_components = []  # List to track all shapefile components
+        shapefile_components = []
         
         # Save and analyze nodes
         if nodes:
@@ -1552,6 +1448,95 @@ def saveToShapefiles(nodes, connections, anchors, workspace_path):
                     os.remove(file_path)  # Remove the original file after adding to zip
         
         print(f"\nAll shapefiles have been consolidated into: {master_zip_path}")
+        
+        # Upload master zip to SharePoint
+        print("\nUploading master zip to SharePoint...")
+        graph_client = initialize_graph_client()
+        if not graph_client:
+            print("Failed to initialize Graph client")
+            return
+            
+        # Get site ID
+        site_url = CONFIG['SHAREPOINT']['SITE_URL']
+        site_response = graph_client.get(f"sites/{site_url}")
+        if site_response.status_code != 200:
+            print(f"Failed to get site. Status code: {site_response.status_code}")
+            return
+            
+        site_id = site_response.json()['id']
+        
+        # Get drive ID
+        drives_response = graph_client.get(f"sites/{site_id}/drives")
+        if drives_response.status_code != 200:
+            print(f"Failed to get drives")
+            return
+            
+        # Find the Documents drive
+        documents_drive = None
+        for drive in drives_response.json()['value']:
+            if drive['name'] == 'Documents':
+                documents_drive = drive
+                break
+                
+        if not documents_drive:
+            print("Could not find Documents drive")
+            return
+            
+        drive_id = documents_drive['id']
+        
+        # Check for existing zip files and delete them
+        print("Checking for existing shapefile zip files...")
+        files_response = graph_client.get(f"sites/{site_id}/drives/{drive_id}/root/children")
+        if files_response.status_code == 200:
+            for item in files_response.json().get('value', []):
+                if item['name'].startswith('KatapultMaster_') and item['name'].endswith('.zip'):
+                    print(f"Deleting existing file: {item['name']}")
+                    delete_response = graph_client.delete(f"sites/{site_id}/drives/{drive_id}/items/{item['id']}")
+                    if delete_response.status_code != 204:
+                        print(f"Failed to delete file {item['name']}")
+        
+        # Upload the new zip file
+        print(f"Uploading new file: {master_zip_name}")
+        with open(master_zip_path, 'rb') as file_content:
+            # Create upload session for Documents folder
+            upload_session = graph_client.post(
+                f"sites/{site_id}/drives/{drive_id}/root:/{master_zip_name}:/createUploadSession",
+                json={
+                    "@microsoft.graph.conflictBehavior": "replace"
+                }
+            )
+            
+            if upload_session.status_code != 200:
+                print("Failed to create upload session")
+                return
+                
+            upload_url = upload_session.json()['uploadUrl']
+            
+            # Read file content
+            file_content.seek(0, 2)  # Seek to end
+            file_size = file_content.tell()
+            file_content.seek(0)  # Seek back to start
+            
+            # Upload the file in chunks
+            chunk_size = 320 * 1024  # 320 KB chunks
+            for chunk_start in range(0, file_size, chunk_size):
+                chunk_end = min(chunk_start + chunk_size - 1, file_size - 1)
+                content_length = chunk_end - chunk_start + 1
+                
+                file_content.seek(chunk_start)
+                chunk_data = file_content.read(content_length)
+                
+                headers = {
+                    'Content-Length': str(content_length),
+                    'Content-Range': f'bytes {chunk_start}-{chunk_end}/{file_size}'
+                }
+                
+                chunk_response = requests.put(upload_url, data=chunk_data, headers=headers)
+                if chunk_response.status_code not in [200, 201, 202]:
+                    print(f"Failed to upload chunk. Status code: {chunk_response.status_code}")
+                    return
+        
+        print("Master zip file successfully uploaded to SharePoint Documents folder")
             
     except Exception as e:
         print(f"Error saving shapefiles: {str(e)}")
@@ -1778,11 +1763,16 @@ def main(email_list):
                 print("Processing nodes for job summary...")
                 all_nodes.extend(nodes_data)
                 
-                # Calculate field completion percentage
-                total_nodes = len(job_data.get('nodes', {}))
-                field_completed = sum(1 for node in job_data.get('nodes', {}).values() 
+                # Calculate field completion percentage for poles only
+                poles = {node_id: node_data for node_id, node_data in job_data.get('nodes', {}).items()
+                        if any(node_data.get('attributes', {}).get(type_field, {}).get(source) == 'pole'
+                            for type_field in ['node_type', 'pole_type']
+                            for source in ['button_added', '-Imported', 'value', 'auto_calced'])}
+                
+                total_poles = len(poles)
+                field_completed = sum(1 for node in poles.values() 
                                    if node.get('attributes', {}).get('field_completed', {}).get('value') == True)
-                field_complete_pct = (field_completed / total_nodes * 100) if total_nodes > 0 else 0
+                field_complete_pct = (field_completed / total_poles * 100) if total_poles > 0 else 0
                 
                 # Find most recent editor and edit time
                 most_recent_editor = 'Unknown'
@@ -1805,24 +1795,15 @@ def main(email_list):
                             print(f"Error parsing edit time: {e}")
                             continue
                 
-                # Calculate trace completion percentage by checking all connections
-                total_traces = 0
-                completed_traces = 0
-                for conn_id, connection in connections.items():
-                    sections = connection.get('sections', {}).get('midpoint_section', {})
-                    photos = sections.get('photos', {})
-                    
-                    for photo_id, photo_details in photos.items():
-                        if photo_details.get('association') == 'main':
-                            main_photo = job_data.get('photos', {}).get(photo_id, {})
-                            photofirst_data = main_photo.get('photofirst_data', {})
-                            
-                            # Check if there are wire or guying traces in the photo
-                            if 'wire' in photofirst_data or 'guying' in photofirst_data:
-                                total_traces += 1
-                                if main_photo.get('tracing_complete', {}).get('auto', False):
-                                    completed_traces += 1
-                
+                # Calculate trace completion percentage by checking only aerial cable connections
+                aerial_cable_connections = {
+                    conn_id: conn_data for conn_id, conn_data in connections.items()
+                    if conn_data.get('attributes', {}).get('connection_type', {}).get('button_added') == 'aerial cable' or
+                       conn_data.get('attributes', {}).get('connection_type', {}).get('value') == 'aerial cable'
+                }
+                total_traces = len(aerial_cable_connections)
+                completed_traces = sum(1 for connection in aerial_cable_connections.values() 
+                                      if connection.get('attributes', {}).get('tracing_complete', {}).get('auto', False))
                 trace_complete_pct = (completed_traces / total_traces * 100) if total_traces > 0 else 0
                 
                 # Get utility from first pole with a company value
