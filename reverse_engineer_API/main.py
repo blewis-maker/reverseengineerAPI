@@ -214,6 +214,7 @@ def extractNodes(job_data, job_name, job_id, user_map):
             attributes = node_data.get('attributes', {})
             
             # Extract editor tracking information
+            editors_history = {}  # Changed to dict to track latest edit per editor
             last_editor = "Unknown"
             last_edit_time = None
             
@@ -223,15 +224,37 @@ def extractNodes(job_data, job_name, job_id, user_map):
                 if photo_id in photo_data:
                     photo_editors = photo_data[photo_id].get('photofirst_data', {}).get('_editors', {})
                     if photo_editors:
-                        # Get the most recent edit
-                        latest_edit = max(photo_editors.items(), key=lambda x: x[1])
-                        editor_id = latest_edit[0]
-                        last_editor = user_map.get(editor_id, "Unknown User")  # Use the user map to get the full name
-                        last_edit_time = datetime.fromtimestamp(latest_edit[1]/1000).strftime('%Y-%m-%d %H:%M:%S')
-                        print(f"Found editor tracking info for node {node_id}:")
-                        print(f"  Editor: {last_editor}")
-                        print(f"  Last Edit: {last_edit_time}")
-                        break
+                        # Process all editors for this photo
+                        for editor_id, edit_time in photo_editors.items():
+                            editor_name = user_map.get(editor_id, "Unknown User")
+                            # Only update if this is the most recent edit for this editor
+                            if editor_name not in editors_history or edit_time > editors_history[editor_name]['raw_timestamp']:
+                                # Convert timestamp to MST (UTC-7)
+                                edit_dt = datetime.fromtimestamp(edit_time/1000)
+                                # Subtract 7 hours for MST
+                                edit_dt_mst = edit_dt.replace(hour=(edit_dt.hour - 7) % 24)
+                                formatted_time = edit_dt_mst.strftime('%I:%M %p MST')
+                                formatted_date = edit_dt_mst.strftime('%Y-%m-%d')
+                                
+                                editors_history[editor_name] = {
+                                    'editor': editor_name,
+                                    'timestamp': f"{formatted_date} {formatted_time}",
+                                    'raw_timestamp': edit_time
+                                }
+            
+            # Convert editors_history dict to list and sort by timestamp
+            editors_list = list(editors_history.values())
+            if editors_list:
+                editors_list.sort(key=lambda x: x['raw_timestamp'], reverse=True)
+                last_editor = editors_list[0]['editor']
+                last_edit_time = editors_list[0]['timestamp']
+                
+                # Print detailed editor history for debugging
+                print(f"\nEditor history for node {node_id}:")
+                for edit in editors_list:
+                    print(f"  Editor: {edit['editor']}")
+                    print(f"  Last Edit: {edit['timestamp']}")
+                print("------------------------")
             
             # Check if node is a pole
             node_type = 'Unknown'
