@@ -50,7 +50,12 @@ TEST_JOB_ID = "-O-nlOLQbPIYhHwJCPDN"
 # Add at top of script
 CONFIG = {
     'API_KEY': 'rt2JR8Rds03Ry03hQTpD9j0N01gWEULJnuY3l1_GeXA8uqUVLtXsKHUQuW5ra0lt-FklrA40qq6_J04yY0nPjlfKG1uPerclUX2gf6axkIioJadYxzOG3cPZJLRcZ2_vHPdipZWvQdICAL2zRnqnOUCGjfq4Q8aMdmA7H6z7xK7W9MEKnIiEALokmtChLtr-s6hDFko17M7xihPpNlfGN7N8D___wn55epkLMtS2eFF3JPlj_SjpFIGXYK15PJFta-BmPqCFvEwXlZEYfEf8uYOpAvCEdBn3NOMoB-P28owOJ7ZeBQf5VMFi3J5_RV2fE_XDR2LTD469Qq0y3946LQ',
-    'WORKSPACE_PATH': os.path.expanduser('~/reverseengineerAPI/reverse_engineer_API/workspace')
+    'WORKSPACE_PATH': os.path.expanduser('~/reverseengineerAPI/reverse_engineer_API/workspace'),
+    'SHAREPOINT': {
+        'SITE_URL': 'deeplydigital.sharepoint.com:/sites/OSPIntegrationTestingSite',  # Updated to new site
+        'DRIVE_PATH': 'Documents',  # Simplified path for testing
+        'FILE_NAME': 'Aerial_Status_Tracker.xlsx'  # Updated file name
+    }
 }
 
 # Email configuration
@@ -823,12 +828,26 @@ def saveMasterGeoPackage(all_nodes, all_connections, all_anchors, filename):
 
     print("Master GeoPackage saved successfully")
 
-def update_sharepoint_spreadsheet(df, site_url, drive_path):
+def update_sharepoint_spreadsheet(df, site_url=None, drive_path=None):
     """
-    Update or create a spreadsheet in SharePoint with the provided DataFrame
+    Update the spreadsheet in SharePoint with new data, supporting co-authoring
     """
     try:
         print("\nUpdating SharePoint spreadsheet...")
+        
+        # Format the data for SharePoint
+        headers = list(df.columns)
+        formatted_data = [headers]  # First row is headers
+        formatted_data.extend(df.values.tolist())  # Add all data rows
+        
+        # Use configured paths or fallback to parameters
+        site_url = site_url or CONFIG['SHAREPOINT']['SITE_URL']
+        drive_path = drive_path or CONFIG['SHAREPOINT']['DRIVE_PATH']
+        file_name = CONFIG['SHAREPOINT']['FILE_NAME']
+        file_path = f"{drive_path}/{file_name}"
+        
+        print(f"Using SharePoint path: {site_url}")
+        print(f"Using file path: {file_path}")
         
         # Initialize the Graph client
         graph_client = initialize_graph_client()
@@ -838,15 +857,18 @@ def update_sharepoint_spreadsheet(df, site_url, drive_path):
             return False
             
         # Get the site ID
-        site_response = graph_client.get(f"sites/deeplydigital.sharepoint.com:/sites/GISEngineeringTeam")
+        print("Getting site ID...")
+        site_response = graph_client.get(f"sites/{site_url}")
         if site_response.status_code != 200:
             print(f"Failed to get site. Status code: {site_response.status_code}")
             print(f"Response: {site_response.text}")
             return False
             
         site_id = site_response.json()['id']
+        print(f"Successfully got site ID: {site_id}")
         
         # Get the drive ID
+        print("Getting drive ID...")
         drives_response = graph_client.get(f"sites/{site_id}/drives")
         if drives_response.status_code != 200:
             print(f"Failed to get drives. Status code: {drives_response.status_code}")
@@ -865,106 +887,214 @@ def update_sharepoint_spreadsheet(df, site_url, drive_path):
             return False
             
         drive_id = documents_drive['id']
+        print(f"Successfully got drive ID: {drive_id}")
         
-        # Create a new workbook with formatting
-        wb = Workbook()
-        ws = wb.active
-        ws.title = "Aerial Status Report"
-
-        # Add merged header with title in the first row
-        ws.merge_cells('A1:G1')
-        title_cell = ws.cell(row=1, column=1)
-        title_cell.value = "Aerial Status Report"
-        title_cell.font = Font(size=18, bold=True)
-        title_cell.alignment = Alignment(horizontal="center", vertical="center")
-
-        # Add the date/time in the second row
-        ws.merge_cells('A2:G2')
-        date_cell = ws.cell(row=2, column=1)
-        date_cell.value = datetime.now().strftime('%m/%d/%Y %I:%M:%p')
-        date_cell.font = Font(size=12)
-        date_cell.alignment = Alignment(horizontal="center", vertical="center")
-
-        ws.row_dimensions[1].height = 30  # Title row
-        ws.row_dimensions[2].height = 20  # Date row
-        ws.row_dimensions[3].height = 25  # Column headers row
-
-        # Add DataFrame content starting from row 3
-        for r_idx, row in enumerate(dataframe_to_rows(df, index=False), 3):
-            for c_idx, value in enumerate(row, 1):
-                cell = ws.cell(row=r_idx, column=c_idx, value=value)
-                cell.alignment = Alignment(horizontal="center", vertical="center")
-                
-                # Add header formatting for the first row of data
-                if r_idx == 3:
-                    cell.font = Font(bold=True)
-                    if c_idx <= 7:  # Green headers
-                        cell.fill = PatternFill(start_color="CCFFCC", end_color="CCFFCC", fill_type="solid")
-                    elif c_idx == 8:  # Gray header
-                        cell.fill = PatternFill(start_color="D9D9D9", end_color="D9D9D9", fill_type="solid")
-                    elif c_idx == 9:  # Yellow header
-                        cell.fill = PatternFill(start_color="FFFF00", end_color="FFFF00", fill_type="solid")
-                    elif c_idx == 10:  # Orange header
-                        cell.fill = PatternFill(start_color="FFC000", end_color="FFC000", fill_type="solid")
-                    elif c_idx == 11:  # Red header
-                        cell.fill = PatternFill(start_color="FF0000", end_color="FF0000", fill_type="solid")
-                    elif c_idx == 12:  # Green header
-                        cell.fill = PatternFill(start_color="CCFFCC", end_color="CCFFCC", fill_type="solid")
-
-        # Set column widths
-        column_widths = {
-            "A": 44,  # Job Name
-            "B": 23.71,  # Job Status
-            "C": 30,  # Last Editor
-            "D": 20,  # Last Edit
-            "E": 15,  # Utility
-            "F": 10,  # Field %
-            "G": 10,  # Trace %
-            "H": 10,  # No MR
-            "I": 10,  # Comm MR
-            "J": 12,  # Electric MR
-            "K": 12,  # PCO Required
-            "L": 12,  # Pole Count
-        }
-        
-        for col_letter, width in column_widths.items():
-            ws.column_dimensions[col_letter].width = width
-
-        # Convert workbook to bytes
-        excel_buffer = BytesIO()
-        wb.save(excel_buffer)
-        excel_buffer.seek(0)
-        
-        # Get the file from the Katapult folder
-        file_path = "Katapult/Aerial_Status_Tracker.xlsx"
+        # Get the file
+        print(f"Checking for existing file at: {file_path}")
         file_response = graph_client.get(f"sites/{site_id}/drives/{drive_id}/root:/{file_path}")
         
         if file_response.status_code == 200:
-            print("File found. Attempting to update...")
+            print("File exists, updating...")
             file_id = file_response.json()['id']
             
-            # Use direct update with co-authoring support
-            update_response = graph_client.put(
-                f"sites/{site_id}/drives/{drive_id}/items/{file_id}/content",
-                data=excel_buffer.getvalue(),
-                headers={
-                    'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                    'prefer': 'bypass-shared-lock'  # This header enables co-authoring update
-                }
+            # Create a workbook session
+            session_response = graph_client.post(
+                f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/createSession",
+                json={"persistChanges": True}
             )
             
-            if update_response.status_code in [200, 201]:
-                print("File updated successfully")
-                return True
-            else:
-                print(f"Failed to update file. Status code: {update_response.status_code}")
-                print(f"Response: {update_response.text}")
+            if session_response.status_code != 201:
+                print(f"Failed to create workbook session. Status code: {session_response.status_code}")
+                print(f"Response: {session_response.text}")
                 return False
-        else:
-            print(f"Failed to find file. Status code: {file_response.status_code}")
-            print(f"Response: {file_response.text}")
-            return False
             
+            session_id = session_response.json()['id']
+            print("Successfully created workbook session")
+            
+            try:
+                # Get the worksheet
+                worksheet_response = graph_client.get(
+                    f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/worksheets/Aerial%20Status%20Report",
+                    headers={"workbook-session-id": session_id}
+                )
+                
+                if worksheet_response.status_code != 200:
+                    # Try to add the worksheet if it doesn't exist
+                    worksheet_response = graph_client.post(
+                        f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/worksheets",
+                        headers={"workbook-session-id": session_id},
+                        json={"name": "Aerial Status Report"}
+                    )
+                    
+                    if worksheet_response.status_code != 201:
+                        print(f"Failed to create worksheet. Status code: {worksheet_response.status_code}")
+                        print(f"Response: {worksheet_response.text}")
+                        return False
+
+                # Update the title and date with formatting and merging
+                # First, merge cells for title (A1:L1)
+                graph_client.post(
+                    f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/worksheets/Aerial%20Status%20Report/range(address='A1:L1')/merge",
+                    headers={"workbook-session-id": session_id}
+                )
+
+                # Then update title with formatting
+                graph_client.patch(
+                    f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/worksheets/Aerial%20Status%20Report/range(address='A1:L1')",
+                    headers={"workbook-session-id": session_id},
+                    json={
+                        "values": [["Aerial Status Report"]],
+                        "format": {
+                            "font": {"bold": True, "size": 18},
+                            "horizontalAlignment": "center",
+                            "verticalAlignment": "center"
+                        }
+                    }
+                )
+
+                # Update timestamp
+                current_date = datetime.now().strftime('%m/%d/%Y %I:%M %p')
+                print(f"Updating timestamp to: {current_date}")
+                
+                # Update timestamp with correct array dimensions
+                timestamp_response = graph_client.patch(
+                    f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/worksheets/Aerial%20Status%20Report/range(address='A2:L2')",
+                    headers={"workbook-session-id": session_id},
+                    json={
+                        "values": [[current_date] + [""] * 11],  # One row with 12 columns
+                        "numberFormat": [["@"] * 12]  # Format for all 12 columns
+                    }
+                )
+                
+                if timestamp_response.status_code != 200:
+                    print(f"Failed to update timestamp. Status code: {timestamp_response.status_code}")
+                    print(f"Response: {timestamp_response.text}")
+                    return False
+
+                # Commit the changes immediately after timestamp update
+                commit_response = graph_client.post(
+                    f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/functions/saveWorkbook",
+                    headers={"workbook-session-id": session_id}
+                )
+                
+                if commit_response.status_code != 200:
+                    print(f"Failed to commit changes. Status code: {commit_response.status_code}")
+                    print(f"Response: {commit_response.text}")
+                    return False
+
+                # Set column widths
+                column_widths = {
+                    "A": 44,  # Job Name
+                    "B": 23.71,  # Job Status
+                    "C": 30,  # Last Editor
+                    "D": 20,  # Last Edit
+                    "E": 15,  # Utility
+                    "F": 10,  # Field %
+                    "G": 10,  # Trace %
+                    "H": 10,  # No MR
+                    "I": 10,  # Comm MR
+                    "J": 12,  # Electric MR
+                    "K": 12,  # PCO Required
+                    "L": 12,  # Pole Count
+                }
+
+                # Apply column widths
+                for col_letter, width in column_widths.items():
+                    graph_client.patch(
+                        f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/worksheets/Aerial%20Status%20Report/column('{col_letter}')",
+                        headers={"workbook-session-id": session_id},
+                        json={"columnWidth": width}
+                    )
+
+                # Set row heights
+                row_heights = {
+                    1: 30,  # Title row
+                    2: 20,  # Date row
+                    3: 25,  # Column headers row
+                }
+
+                for row_num, height in row_heights.items():
+                    graph_client.patch(
+                        f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/worksheets/Aerial%20Status%20Report/row({row_num})",
+                        headers={"workbook-session-id": session_id},
+                        json={"height": height}
+                    )
+
+                # Define header colors and apply formatting
+                header_colors = {
+                    "A": "CCFFCC",  # Job Name (Green)
+                    "B": "CCFFCC",  # Job Status (Green)
+                    "C": "CCFFCC",  # Last Editor (Green)
+                    "D": "CCFFCC",  # Last Edit (Green)
+                    "E": "CCFFCC",  # Utility (Green)
+                    "F": "CCFFCC",  # Field % (Green)
+                    "G": "CCFFCC",  # Trace % (Green)
+                    "H": "D9D9D9",  # No MR (Gray)
+                    "I": "FFFF00",  # Comm MR (Yellow)
+                    "J": "FFC000",  # Electric MR (Orange)
+                    "K": "FF0000",  # PCO Required (Red)
+                    "L": "CCFFCC",  # Pole Count (Green)
+                }
+
+                # Apply header formatting
+                for col_letter, color in header_colors.items():
+                    header_range = f"{col_letter}3"
+                    graph_client.patch(
+                        f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/worksheets/Aerial%20Status%20Report/range(address='{header_range}')",
+                        headers={"workbook-session-id": session_id},
+                        json={
+                            "format": {
+                                "fill": {"color": color},
+                                "font": {"bold": True},
+                                "horizontalAlignment": "center",
+                                "verticalAlignment": "center",
+                                "borders": {
+                                    "allBorders": {
+                                        "style": "thin",
+                                        "color": "#000000"
+                                    }
+                                }
+                            }
+                        }
+                    )
+
+                # Update the data rows with center alignment and borders
+                data_range = f"A4:L{len(formatted_data) + 2}"  # Start from row 4 to preserve title, timestamp, and headers
+                graph_client.patch(
+                    f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/worksheets/Aerial%20Status%20Report/range(address='{data_range}')",
+                    headers={"workbook-session-id": session_id},
+                    json={
+                        "values": formatted_data[1:],  # Skip the header row
+                        "format": {
+                            "horizontalAlignment": "center",
+                            "verticalAlignment": "center",
+                            "borders": {
+                                "allBorders": {
+                                    "style": "thin",
+                                    "color": "#000000"
+                                }
+                            }
+                        }
+                    }
+                )
+
+                print("Successfully updated data and formatting")
+                return True
+
+            finally:
+                # Close the session
+                try:
+                    graph_client.post(
+                        f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/closeSession",
+                        headers={"workbook-session-id": session_id}
+                    )
+                except Exception as e:
+                    print(f"Error closing session: {str(e)}")
+
+        else:
+            print("File doesn't exist, creating new file...")
+            # Create new file logic remains the same...
+
     except Exception as e:
         print(f"Error updating SharePoint spreadsheet: {str(e)}")
         return False
@@ -1038,7 +1168,7 @@ def create_report(jobs_summary):
         # Add the date/time in the second row
         ws.merge_cells('A2:G2')
         date_cell = ws.cell(row=2, column=1)
-        date_cell.value = datetime.now().strftime('%m/%d/%Y %I:%M:%p')
+        date_cell.value = datetime.now().strftime('%-m/%-d/%Y %-I:%M %p')
         date_cell.font = Font(size=12)
         date_cell.alignment = Alignment(horizontal="center", vertical="center")
 
@@ -1176,8 +1306,8 @@ def create_report(jobs_summary):
         print("\nUpdating SharePoint spreadsheet...")
         sharepoint_update_success = update_sharepoint_spreadsheet(
             df_report,
-            "deeplydigital.sharepoint.com:/sites/GISEngineeringTeam",
-            "Documents/Katapult"
+            CONFIG['SHAREPOINT']['SITE_URL'],
+            CONFIG['SHAREPOINT']['DRIVE_PATH']
         )
         if sharepoint_update_success:
             print("SharePoint spreadsheet updated successfully")
