@@ -42,10 +42,15 @@ logging.basicConfig(
 load_dotenv()
 
 # Toggle to enable/disable testing a specific job
-TEST_ONLY_SPECIFIC_JOB = False
+TEST_ONLY_SPECIFIC_JOB = True
 
-# ID of the specific job to test
-TEST_JOB_ID = "-O-nlOLQbPIYhHwJCPDN"
+# IDs of the test jobs
+TEST_JOB_IDS = [
+    "-O-nlOLQbPIYhHwJCPDN",
+    "-Nvs8uA2MHZB5NdTK2_p",
+    "-O4RHaixdJmN3lqi0Q3m",
+    "-O7_Gr-6exIhw0vtfVga"
+]
 
 # Add at top of script
 CONFIG = {
@@ -354,7 +359,8 @@ def extractNodes(job_data, job_name, job_id, user_map):
                         mr_status = "Electric MR"
 
                 # Extract pole attributes
-                company = attributes.get('pole_tag', {}).get('-Imported', {}).get('company', "Unknown")
+                pole_tag = attributes.get('pole_tag', {})
+                company = pole_tag.get('-Imported', {}).get('company') or pole_tag.get('button_added', {}).get('company') or "Unknown"
                 fldcompl_value = attributes.get('field_completed', {}).get('value', "Unknown")
                 fldcompl = 'yes' if fldcompl_value == 1 else 'no' if fldcompl_value == 2 else 'Unknown'
                 
@@ -879,16 +885,45 @@ def saveMasterGeoPackage(all_nodes, all_connections, all_anchors, filename):
     print("Master GeoPackage saved successfully")
 
 def update_sharepoint_spreadsheet(df, site_url=None, drive_path=None):
-    """
-    Update the spreadsheet in SharePoint with new data, supporting co-authoring
-    """
+    """Update the spreadsheet in SharePoint with new data."""
     try:
         print("\nUpdating SharePoint spreadsheet...")
         
         # Format the data for SharePoint
-        headers = list(df.columns)
+        headers = [
+            'Job Name',
+            'Utility',
+            'Job Status',
+            'OSP Engineer',
+            'Last Edit',
+            'Field %',
+            'Trace %',
+            'No MR',
+            'Comm MR',
+            'Electric MR',
+            'PCO Required',
+            'Pole Count'
+        ]
+        
         formatted_data = [headers]  # First row is headers
-        formatted_data.extend(df.values.tolist())  # Add all data rows
+        
+        # Add data rows
+        for _, row in df.iterrows():
+            formatted_row = [
+                row['Job Name'],
+                row['Utility'],
+                row['Job Status'],
+                row['OSP Engineer'],
+                row['Last Edit'],
+                row['Field %'],
+                row['Trace %'],
+                row['No MR'],
+                row['Comm MR'],
+                row['Electric MR'],
+                row['PCO Required'],
+                row['Pole Count']
+            ]
+            formatted_data.append(formatted_row)
         
         # Use configured paths or fallback to parameters
         site_url = site_url or CONFIG['SHAREPOINT']['SITE_URL']
@@ -906,23 +941,21 @@ def update_sharepoint_spreadsheet(df, site_url=None, drive_path=None):
             print("Failed to initialize Graph client")
             return False
             
-        # Get the site ID
+        # Get site ID
         print("Getting site ID...")
         site_response = graph_client.get(f"sites/{site_url}")
         if site_response.status_code != 200:
             print(f"Failed to get site. Status code: {site_response.status_code}")
-            print(f"Response: {site_response.text}")
             return False
             
         site_id = site_response.json()['id']
         print(f"Successfully got site ID: {site_id}")
-
-        # Get the drive ID
+        
+        # Get drive ID
         print("Getting drive ID...")
         drives_response = graph_client.get(f"sites/{site_id}/drives")
         if drives_response.status_code != 200:
-            print(f"Failed to get drives. Status code: {drives_response.status_code}")
-            print(f"Response: {drives_response.text}")
+            print(f"Failed to get drives")
             return False
             
         # Find the Documents drive
@@ -955,9 +988,8 @@ def update_sharepoint_spreadsheet(df, site_url=None, drive_path=None):
             
             if session_response.status_code != 201:
                 print(f"Failed to create workbook session. Status code: {session_response.status_code}")
-                print(f"Response: {session_response.text}")
                 return False
-
+                
             session_id = session_response.json()['id']
             print("Successfully created workbook session")
             
@@ -969,59 +1001,58 @@ def update_sharepoint_spreadsheet(df, site_url=None, drive_path=None):
                 )
                 
                 if worksheet_response.status_code != 200:
-                    # Try to add the worksheet if it doesn't exist
-                    worksheet_response = graph_client.post(
-                        f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/worksheets",
-                        headers={"workbook-session-id": session_id},
-                        json={"name": "Aerial Status Report"}
-                    )
+                    print(f"Failed to get worksheet. Status code: {worksheet_response.status_code}")
+                    return False
                     
-                    if worksheet_response.status_code != 201:
-                        print(f"Failed to create worksheet. Status code: {worksheet_response.status_code}")
-                        print(f"Response: {worksheet_response.text}")
-                        return False
-
-                # Update title row
-                title_response = graph_client.patch(
-                    f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/worksheets/Aerial%20Status%20Report/range(address='A1:L1')",
-                    headers={"workbook-session-id": session_id},
-                    json={
-                        "values": [["Aerial Status Report"] + [""] * 11]
-                    }
-                )
-
-                # Update timestamp row
-                current_time = datetime.now()
-                formatted_timestamp = current_time.strftime('%-m/%-d/%Y %-I:%M %p')
+                # Update timestamp in cell A2
                 timestamp_response = graph_client.patch(
-                    f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/worksheets/Aerial%20Status%20Report/range(address='A2:L2')",
+                    f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/worksheets/Aerial%20Status%20Report/range(address='A2')",
                     headers={"workbook-session-id": session_id},
                     json={
-                        "values": [[formatted_timestamp] + [""] * 11]
+                        "values": [[datetime.now().strftime('%-m/%-d/%Y %-I:%M %p MST')]]
                     }
                 )
-
-                # Update headers and data
-                num_rows = len(formatted_data)
-                num_cols = len(formatted_data[0])
-                data_range = f"A3:L{num_rows + 2}"  # +2 because we start at row 3 and Excel is 1-based
                 
+                if timestamp_response.status_code != 200:
+                    print(f"Failed to update timestamp. Status code: {timestamp_response.status_code}")
+                
+                # Clear existing content (except title and timestamp)
+                clear_range = f"A3:L{1000}"  # Clear a large range to ensure all data is removed
+                clear_response = graph_client.post(
+                    f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/worksheets/Aerial%20Status%20Report/range(address='{clear_range}')/clear",
+                    headers={"workbook-session-id": session_id}
+                )
+                
+                # Note: 204 is a valid success response for clear operation
+                if clear_response.status_code not in [200, 204]:
+                    print(f"Failed to clear content. Status code: {clear_response.status_code}")
+                    return False
+                
+                # Update with new data
+                data_range = f"A3:L{len(formatted_data) + 1}"  # +1 because we start at row 3
                 update_response = graph_client.patch(
                     f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/worksheets/Aerial%20Status%20Report/range(address='{data_range}')",
                     headers={"workbook-session-id": session_id},
                     json={
-                        "values": formatted_data
+                        "values": formatted_data[1:],  # Skip headers since they're already in the file
+                        "format": {
+                            "borders": {
+                                "allBorders": {
+                                    "style": "thin",
+                                    "color": "#000000"
+                                }
+                            }
+                        }
                     }
                 )
-
+                
                 if update_response.status_code != 200:
                     print(f"Failed to update content. Status code: {update_response.status_code}")
-                    print(f"Response: {update_response.text}")
                     return False
-
+                    
                 print("Successfully updated data")
                 return True
-
+                
             finally:
                 # Close the session
                 try:
@@ -1031,11 +1062,11 @@ def update_sharepoint_spreadsheet(df, site_url=None, drive_path=None):
                     )
                 except Exception as e:
                     print(f"Error closing session: {str(e)}")
-
+        
         else:
             print("File doesn't exist, creating new file...")
-            # Create new file logic remains the same...
-
+            return False
+            
     except Exception as e:
         print(f"Error updating SharePoint spreadsheet: {str(e)}")
         return False
@@ -1043,25 +1074,208 @@ def update_sharepoint_spreadsheet(df, site_url=None, drive_path=None):
 from excel_utils import create_summary_sheet
 
 def create_report(jobs_summary):
-    # ... (existing code until after creating the main sheet)
-    
+    report_data = []
+
+    for job in jobs_summary:
+        job_name = job['job_name']
+        job_status = job.get('job_status', 'Unknown').strip()
+        mr_status_counts = job['mr_status_counts']
+        pole_count = sum(mr_status_counts.values())
+        
+        # Get the fields from job summary
+        field_complete_pct = job.get('field_complete_pct', 0)
+        trace_complete_pct = job.get('trace_complete_pct', 0)
+        utility = job.get('utility', 'Unknown')
+        most_recent_editor = job.get('most_recent_editor', 'Unknown')
+        last_edit_time = job.get('last_edit_time', 'Unknown')
+
+        report_data.append({
+            'Job Name': job_name,
+            'Utility': utility,
+            'Job Status': job_status,
+            'OSP Engineer': most_recent_editor,  # Changed from 'Last Editor'
+            'Last Edit': last_edit_time,
+            'Field %': f"{field_complete_pct:.1f}%",
+            'Trace %': f"{trace_complete_pct:.1f}%",
+            'No MR': mr_status_counts.get('No MR', 0),
+            'Comm MR': mr_status_counts.get('Comm MR', 0),
+            'Electric MR': mr_status_counts.get('Electric MR', 0),
+            'PCO Required': mr_status_counts.get('PCO Required', 0),
+            'Pole Count': pole_count
+        })
+
+    # Create a DataFrame from the report data
+    df_report = pd.DataFrame(report_data)
+
+    # Sort the DataFrame first by Utility, then by Job Status
+    df_report = df_report.sort_values(by=['Utility', 'Job Status'])
+
+    # Ensure the directory exists
+    workspace_dir = CONFIG['WORKSPACE_PATH']
+    if not os.path.exists(workspace_dir):
+        try:
+            os.makedirs(workspace_dir)
+            print(f"Workspace directory created: {workspace_dir}")
+        except Exception as e:
+            print(f"Failed to create workspace directory: {e}")
+            return None
+
+    # Generate a filename with a timestamp
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M")
+    report_filename = f"Aerial_Status_Report_{timestamp}.xlsx"
+    report_path = os.path.join(workspace_dir, report_filename)
+
+    # Write the report to an Excel file with formatting
     try:
         wb = Workbook()
         ws = wb.active
         ws.title = "Aerial Status Report"
-        
-        # ... (existing code for creating main report sheet)
-        
-        # Add the Jobs Summary sheet
-        create_summary_sheet(wb, jobs_summary, current_time)
-        
+
+        # Add merged header with title in the first row
+        ws.merge_cells('A1:L1')
+        title_cell = ws.cell(row=1, column=1)
+        title_cell.value = "Aerial Status Report"
+        title_cell.font = Font(size=18, bold=True)
+        title_cell.alignment = Alignment(horizontal="center", vertical="center")
+
+        # Add the date/time in the second row
+        ws.merge_cells('A2:L2')
+        date_cell = ws.cell(row=2, column=1)
+        date_cell.value = datetime.now().strftime('%-m/%-d/%Y %-I:%M %p MST')
+        date_cell.font = Font(size=12)
+        date_cell.alignment = Alignment(horizontal="center", vertical="center")
+
+        # Set row heights
+        ws.row_dimensions[1].height = 30  # Title row
+        ws.row_dimensions[2].height = 20  # Date row
+        ws.row_dimensions[3].height = 25  # Column headers row
+
+        # Define column headers and their properties
+        columns = [
+            ("Job Name", 44, "CCFFCC"),
+            ("Utility", 15, "CCFFCC"),
+            ("Job Status", 23.71, "CCFFCC"),
+            ("OSP Engineer", 30, "CCFFCC"),  # Changed from "Last Editor"
+            ("Last Edit", 20, "CCFFCC"),
+            ("Field %", 10, "CCFFCC"),
+            ("Trace %", 10, "CCFFCC"),
+            ("No MR", 10, "D9D9D9"),
+            ("Comm MR", 10, "FFFF00"),
+            ("Electric MR", 12, "FFC000"),
+            ("PCO Required", 12, "FF0000"),
+            ("Pole Count", 12, "CCFFCC")
+        ]
+
+        # Add the column headers with styling in the third row
+        for col_num, (header, width, color) in enumerate(columns, 1):
+            cell = ws.cell(row=3, column=col_num)
+            cell.value = header
+            cell.font = Font(bold=True)
+            cell.alignment = Alignment(horizontal="center", vertical="center")
+            
+            # Set column width
+            column_letter = cell.column_letter
+            ws.column_dimensions[column_letter].width = width
+
+            # Set header color
+            cell.fill = PatternFill(start_color=color, end_color=color, fill_type="solid")
+
+        # Add the data rows with center alignment
+        for r_idx, row in enumerate(dataframe_to_rows(df_report, index=False, header=False), 4):
+            for c_idx, value in enumerate(row, 1):
+                cell = ws.cell(row=r_idx, column=c_idx, value=value)
+                cell.alignment = Alignment(horizontal="center", vertical="center")
+
+        # Add borders around all cells
+        thin_border = Border(left=Side(style='thin'),
+                           right=Side(style='thin'),
+                           top=Side(style='thin'),
+                           bottom=Side(style='thin'))
+
+        for row in ws.iter_rows(min_row=1, max_row=ws.max_row, min_col=1, max_col=len(df_report.columns)):
+            for cell in row:
+                cell.border = thin_border
+
+        # Add Job Status Summary Headers with colors and proper spacing
+        status_summary_start_row = 6
+        job_statuses = [
+            ("Pending Field Collection", "CCFFCC"),
+            ("Pending Photo Annotation", "B7DEE8"),
+            ("Sent to PE", "CCC0DA"),
+            ("Pending EMR", "FFC000"),
+            ("Approved for Construction", "9BBB59"),
+            ("Hold", "BFBFBF"),
+            ("As Built", "FABF8F"),
+            ("Delivered", "92D050")
+        ]
+
+        # Calculate job status counts
+        job_status_counts = {status[0]: 0 for status in job_statuses}
+        for job in jobs_summary:
+            job_status = job.get('job_status', 'Unknown').strip()
+            if job_status in job_status_counts:
+                job_status_counts[job_status] += 1
+
+        # Add status headers and counts in two rows, starting from column N (14)
+        for idx, (status, color) in enumerate(job_statuses[:4]):
+            header_cell = ws.cell(row=status_summary_start_row, column=idx + 14)
+            count_cell = ws.cell(row=status_summary_start_row + 1, column=idx + 14)
+            
+            header_cell.value = status
+            header_cell.font = Font(bold=True)
+            header_cell.fill = PatternFill(start_color=color, end_color=color, fill_type="solid")
+            header_cell.alignment = Alignment(horizontal="center", vertical="center")
+            
+            count_cell.value = job_status_counts[status]
+            count_cell.alignment = Alignment(horizontal="center", vertical="center")
+            
+            ws.column_dimensions[header_cell.column_letter].width = 24.14
+
+        # Add second row of statuses
+        for idx, (status, color) in enumerate(job_statuses[4:]):
+            header_cell = ws.cell(row=status_summary_start_row + 3, column=idx + 14)
+            count_cell = ws.cell(row=status_summary_start_row + 4, column=idx + 14)
+            
+            header_cell.value = status
+            header_cell.font = Font(bold=True)
+            header_cell.fill = PatternFill(start_color=color, end_color=color, fill_type="solid")
+            header_cell.alignment = Alignment(horizontal="center", vertical="center")
+            
+            count_cell.value = job_status_counts[status]
+            count_cell.alignment = Alignment(horizontal="center", vertical="center")
+
+        # Add borders to status summary
+        for row in ws.iter_rows(min_row=status_summary_start_row,
+                              max_row=status_summary_start_row + 4,
+                              min_col=14, max_col=17):
+            for cell in row:
+                cell.border = thin_border
+
         # Save the workbook
         wb.save(report_path)
         print(f"Report successfully created: {report_path}")
-        
-        # ... (rest of the existing code for SharePoint update)
+
     except Exception as e:
         print(f"Error creating report: {e}")
+        return None
+
+    try:
+        # Update SharePoint spreadsheet
+        print("\nUpdating SharePoint spreadsheet...")
+        sharepoint_update_success = update_sharepoint_spreadsheet(
+            df_report,
+            CONFIG['SHAREPOINT']['SITE_URL'],
+            CONFIG['SHAREPOINT']['DRIVE_PATH']
+        )
+        if sharepoint_update_success:
+            print("SharePoint spreadsheet updated successfully")
+        else:
+            print("Failed to update SharePoint spreadsheet")
+            
+    except Exception as e:
+        print(f"Error in SharePoint update: {str(e)}")
+
+    return report_path
 
 # Function to send email notification with attachment
 def send_email_notification(recipients, report_path):
@@ -1561,8 +1775,8 @@ def main(email_list):
     print(f"Retrieved {len(user_map)} users")
     
     if TEST_ONLY_SPECIFIC_JOB:
-        print(f"Testing specific job with ID: {TEST_JOB_ID}")
-        all_jobs = [{'id': TEST_JOB_ID, 'name': 'Test Job'}]
+        print(f"Testing specific job with ID: {TEST_JOB_IDS}")
+        all_jobs = [{'id': job_id, 'name': 'Test Job'} for job_id in TEST_JOB_IDS]
     else:
         print("Getting list of all jobs...")
         all_jobs = getJobList()
@@ -1747,13 +1961,6 @@ if __name__ == "__main__":
     # Email list to notify when the report is done
     email_list = [
         "brandan.lewis@deeplydigital.com",
-        "mitchell.melton@deeplydigital.com",
-        "michael.espinal@deeplydigital.com",
-        "riley.mcneil@clearnetworx.com",
-        "jcook@deeplydigital.com",
-        "tanner@deeplydigital.com",
-        "ben.endreson@deeplydigital.com",
-        "jordan.demers@deeplydigital.com",
         
     ]
     start_time = time.time()  # Record the start time
