@@ -285,6 +285,7 @@ def extractNodes(job_data, job_name, job_id, user_map):
     metadata = job_data.get('metadata', {})
     job_status = metadata.get('job_status', "Unknown")
     conversation = metadata.get('conversation', "")
+    project = metadata.get('project', "")
 
     for node_id, node_data in nodes.items():
         try:
@@ -318,7 +319,7 @@ def extractNodes(job_data, job_name, job_id, user_map):
                                     'timestamp': f"{formatted_date} {formatted_time}",
                                     'raw_timestamp': edit_time
                                 }
-            
+
             # Convert editors_history dict to list and sort by timestamp
             editors_list = list(editors_history.values())
             if editors_list:
@@ -466,12 +467,12 @@ def extractNodes(job_data, job_name, job_id, user_map):
                                         attachment_height_counts[height_key] = 0
                                     attachment_height_counts[height_key] += 1
                                     break
-                
+
                 if not poa_height:
                     nodes_without_height += 1
 
                 node_points.append({
-                    "id": node_id,
+                    "node_id": node_id,  # Use the actual node ID from the JSON
                     "lat": latitude,
                     "lng": longitude,
                     "jobname": job_name,
@@ -484,6 +485,7 @@ def extractNodes(job_data, job_name, job_id, user_map):
                     "scid": scid,
                     "POA_Height": poa_height,
                     "conversation": conversation,
+                    "project": project,
                     "last_editor": last_editor,
                     "last_edit": last_edit_time
                 })
@@ -608,10 +610,16 @@ def extractAnchors(job_data, job_name, job_id):
     return anchor_points
 
 # Extract connections (lines, cables, etc.) from job data
-def extractConnections(connections, nodes):
+def extractConnections(connections, nodes, job_data=None):
+    """Extract connection data with enhanced wire specification and height information."""
     # Analysis counters
     connection_type_counts = {}
     connection_height_counts = {}
+    
+    # Debug counters for wire_spec and mid_ht
+    total_aerial_cables = 0
+    aerial_with_wire_spec = 0
+    aerial_with_mid_ht = 0
     
     # Debug counters
     total_connections = len(connections)
@@ -622,79 +630,42 @@ def extractConnections(connections, nodes):
     print(f"\nStarting connection analysis for {total_connections} total connections...")
     print("------------------------")
     
-    # First analyze connection types and heights
-    for connection_id, connection_data in connections.items():
-        try:
-            # Check both value and button_added for connection type
-            connection_type = 'Unknown'
-            attributes = connection_data.get('attributes', {}).get('connection_type', {})
-            
-            # First check button_added
-            if attributes.get('button_added'):
-                connection_type = attributes.get('button_added')
-            # Then check value if still unknown
-            elif attributes.get('value'):
-                connection_type = attributes.get('value')
-                
-            if connection_type not in connection_type_counts:
-                connection_type_counts[connection_type] = 0
-            connection_type_counts[connection_type] += 1
-            
-            # Track connections by type for debugging
-            if connection_type not in connections_by_type:
-                connections_by_type[connection_type] = []
-            connections_by_type[connection_type].append(connection_id)
-            
-            # Extract attachment height if available
-            sections = connection_data.get('sections', {}).get('midpoint_section', {})
-            if 'attachment_height' in sections:
-                height = sections['attachment_height']
-                if height is not None:
-                    feet = int(height // 12)
-                    inches = int(height % 12)
-                    height_key = f"{feet}'{inches}\""
-                    if height_key not in connection_height_counts:
-                        connection_height_counts[height_key] = 0
-                    connection_height_counts[height_key] += 1
-                    connections_with_height += 1
-                else:
-                    connections_without_height += 1
-            else:
-                connections_without_height += 1
-                
-        except Exception as e:
-            print(f"Error analyzing connection {connection_id}: {str(e)}")
+    # Get trace data and photo data from job data
+    trace_data = job_data.get('traces', {}).get('trace_data', {}) if job_data else {}
+    photo_data = job_data.get('photos', {}) if job_data else {}
     
-    print("\nConnection Type Distribution:")
-    for conn_type, count in sorted(connection_type_counts.items()):
-        print(f"{conn_type}: {count}")
-        print(f"  Sample IDs: {connections_by_type[conn_type][:3]}")  # Show first 3 IDs for each type
-        
-    print("\nConnection Height Distribution:")
-    for height, count in sorted(connection_height_counts.items()):
-        print(f"{height}: {count}")
-    
-    print("\nConnection Height Summary:")
-    print(f"Connections with height: {connections_with_height}")
-    print(f"Connections without height: {connections_without_height}")
-    print("------------------------\n")
-
     valid_connections = []
     processed_count = 0
     skipped_count = 0
     
+    # Store some sample data for logging
+    sample_aerial_cables = []
+    
     for connection_id, connection_data in connections.items():
         try:
-            node_id_1 = connection_data.get('node_id_1')
-            node_id_2 = connection_data.get('node_id_2')
+            # Get node IDs from the connection data
+            node_id_1 = connection_data.get('node_id_1')  # First try direct node_id_1
+            node_id_2 = connection_data.get('node_id_2')  # First try direct node_id_2
             
-            if node_id_1 not in nodes or node_id_2 not in nodes:
-                print(f"Warning: Missing node(s) for connection {connection_id} (nodes: {node_id_1}, {node_id_2})")
+            # If not found directly, try getting from node_1 and node_2 objects
+            if not node_id_1:
+                node_id_1 = connection_data.get('node_1', {}).get('id')
+            if not node_id_2:
+                node_id_2 = connection_data.get('node_2', {}).get('id')
+            
+            if not node_id_1 or not node_id_2:
+                print(f"Warning: Missing node IDs for connection {connection_id} (nodes: {node_id_1}, {node_id_2})")
                 skipped_count += 1
                 continue
-                
-            start_node = nodes[node_id_1]
-            end_node = nodes[node_id_2]
+            
+            # Get coordinates from nodes dictionary
+            start_node = nodes.get(node_id_1)
+            end_node = nodes.get(node_id_2)
+            
+            if not start_node or not end_node:
+                print(f"Warning: Could not find nodes for connection {connection_id}")
+                skipped_count += 1
+                continue
             
             start_lat = start_node.get('latitude')
             start_lon = start_node.get('longitude')
@@ -706,9 +677,7 @@ def extractConnections(connections, nodes):
                 skipped_count += 1
                 continue
             
-            line = LineString([(start_lon, start_lat), (end_lon, end_lat)])
-            
-            # Get connection type from both possible sources
+            # Get connection type
             attributes = connection_data.get('attributes', {}).get('connection_type', {})
             connection_type = 'Unknown'
             if attributes.get('button_added'):
@@ -716,15 +685,91 @@ def extractConnections(connections, nodes):
             elif attributes.get('value'):
                 connection_type = attributes.get('value')
             
+            # Track connection types for analysis
+            if connection_type not in connection_type_counts:
+                connection_type_counts[connection_type] = 0
+                connections_by_type[connection_type] = []
+            connection_type_counts[connection_type] += 1
+            connections_by_type[connection_type].append(connection_id)
+            
             # Get attachment height if available
             attachment_height = None
-            sections = connection_data.get('sections', {}).get('midpoint_section', {})
-            if 'attachment_height' in sections:
-                height = sections['attachment_height']
-                if height is not None:
-                    feet = int(height // 12)
-                    inches = int(height % 12)
-                    attachment_height = f"{feet}' {inches}\""
+            sections = connection_data.get('sections', {})
+            for section_id, section_data in sections.items():
+                if 'attachment_height' in section_data:
+                    height = section_data['attachment_height']
+                    if height is not None:
+                        feet = int(height // 12)
+                        inches = int(height % 12)
+                        attachment_height = f"{feet}' {inches}\""
+                        height_key = f"{feet}'{inches}\""
+                        if height_key not in connection_height_counts:
+                            connection_height_counts[height_key] = 0
+                        connection_height_counts[height_key] += 1
+                        connections_with_height += 1
+                        break
+            if attachment_height is None:
+                connections_without_height += 1
+            
+            # Extract wire specification and mid-height from section photo data
+            wire_spec = ''
+            mid_height = None
+            
+            # Track if this is an aerial cable
+            is_aerial_cable = connection_type == 'aerial cable'
+            if is_aerial_cable:
+                total_aerial_cables += 1
+            
+            # First, get all section photos
+            for section_id, section_data in sections.items():
+                section_photos = section_data.get('photos', {})
+                for photo_id, photo_info in section_photos.items():
+                    if photo_id in photo_data:
+                        photo_data_item = photo_data[photo_id]
+                        photofirst_data = photo_data_item.get('photofirst_data', {})
+                        wire_data = photofirst_data.get('wire', {})
+                        
+                        # Look through each wire in the photo
+                        for wire_info in wire_data.values():
+                            trace_id = wire_info.get('_trace')
+                            if trace_id and trace_id in trace_data:
+                                trace_info = trace_data[trace_id]
+                                
+                                # Check if this is the Clearnetworx fiber optic wire
+                                if (trace_info.get('company') == 'Clearnetworx' and
+                                        trace_info.get('proposed', False) and
+                                        trace_info.get('cable_type') == 'Fiber Optic Com'):
+                                    wire_spec = wire_info.get('wire_spec', '')
+                                    mid_height = wire_info.get('_measured_height')
+                                    break
+                        
+                        if wire_spec and mid_height is not None:
+                            break
+            
+            # Format mid-height
+            mid_ht_str = ''
+            if mid_height is not None:
+                feet = int(mid_height // 12)
+                inches = int(mid_height % 12)
+                mid_ht_str = f"{feet}' {inches}\""
+            
+            # Track aerial cable stats
+            if is_aerial_cable:
+                if wire_spec:
+                    aerial_with_wire_spec += 1
+                if mid_ht_str:
+                    aerial_with_mid_ht += 1
+                
+                # Store sample data for the first few aerial cables
+                if len(sample_aerial_cables) < 5:
+                    sample_aerial_cables.append({
+                        'connection_id': connection_id,
+                        'wire_spec': wire_spec,
+                        'mid_ht': mid_ht_str
+                    })
+            
+            # Create the line geometry and feature
+            line = LineString([(start_lon, start_lat), (end_lon, end_lat)])
             
             feature = {
                 'type': 'Feature',
@@ -733,6 +778,8 @@ def extractConnections(connections, nodes):
                     'connection_id': connection_id,
                     'connection_type': connection_type,
                     'attachment_height': attachment_height,
+                    'wire_spec': wire_spec,
+                    'mid_ht': mid_ht_str,
                     'StartX': start_lon,
                     'StartY': start_lat,
                     'EndX': end_lon,
@@ -750,14 +797,26 @@ def extractConnections(connections, nodes):
             skipped_count += 1
             continue
     
-    print(f"\nConnection processing summary:")
+    # Print aerial cable analysis
+    print("\nAerial Cable Field Analysis:")
+    print(f"Total aerial cables: {total_aerial_cables}")
+    print(f"Aerial cables with wire_spec: {aerial_with_wire_spec} ({(aerial_with_wire_spec/total_aerial_cables*100 if total_aerial_cables > 0 else 0):.1f}%)")
+    print(f"Aerial cables with mid_ht: {aerial_with_mid_ht} ({(aerial_with_mid_ht/total_aerial_cables*100 if total_aerial_cables > 0 else 0):.1f}%)")
+    
+    print("\nSample Aerial Cable Data:")
+    for sample in sample_aerial_cables:
+        print(f"Connection ID: {sample['connection_id']}")
+        print(f"  wire_spec: {sample['wire_spec']}")
+        print(f"  mid_ht: {sample['mid_ht']}")
+        print("---")
+    
+    print(f"\nConnection Processing Summary:")
     print(f"Total connections: {total_connections}")
     print(f"Successfully processed: {processed_count}")
     print(f"Skipped: {skipped_count}")
+    print("------------------------\n")
     
     return valid_connections
-
-
 
 def savePointsToShapefile(points, filename):
     workspace_path = CONFIG['WORKSPACE_PATH']
@@ -843,6 +902,12 @@ def saveMasterGeoPackage(all_nodes, all_connections, all_anchors, filename):
             # Drop lat/lng columns as they're now in the geometry
             gdf_poles.drop(columns=['lat', 'lng'], errors='ignore', inplace=True)
             
+            # Add project and conversation fields if not present
+            if 'project' not in gdf_poles.columns:
+                gdf_poles['project'] = ''
+            if 'conversation' not in gdf_poles.columns:
+                gdf_poles['conversation'] = ''
+            
             # Save to GeoPackage
             gdf_poles.to_file(file_path, layer='poles', driver="GPKG")
             print(f"Poles layer successfully saved to: {file_path}")
@@ -873,6 +938,24 @@ def saveMasterGeoPackage(all_nodes, all_connections, all_anchors, filename):
                     # Create LineString geometry
                     line_geom = LineString([(start_x, start_y), (end_x, end_y)])
                     
+                    # Extract wire specification and mid-height from section photo data
+                    section_photo_id = properties.get('section_photo_id')
+                    if section_photo_id:
+                        photo_data = connection.get('photo_data', {}).get(section_photo_id, {})
+                        photofirst_data = photo_data.get('photofirst_data', {})
+                        
+                        # Extract mid-height
+                        mid_height = photofirst_data.get('measured_height')
+                        if mid_height is not None:
+                            feet = int(mid_height // 12)
+                            inches = int(mid_height % 12)
+                            properties['mid_ht'] = f"{feet}' {inches}\""
+                        
+                        # Extract wire specification
+                        wire_spec = photofirst_data.get('wire_spec', '')
+                        if wire_spec:
+                            properties['wire_spec'] = wire_spec
+                    
                     # Use the existing properties
                     valid_connections.append(properties)
                     line_geometries.append(line_geom)
@@ -885,6 +968,10 @@ def saveMasterGeoPackage(all_nodes, all_connections, all_anchors, filename):
             
             if valid_connections and line_geometries:
                 gdf_lines = gpd.GeoDataFrame(valid_connections, geometry=line_geometries, crs="EPSG:4326")
+                
+                # Rename 'attachment' to 'mid_ht' if it exists
+                if 'attachment' in gdf_lines.columns:
+                    gdf_lines.rename(columns={'attachment': 'mid_ht'}, inplace=True)
                 
                 if not gdf_lines.empty:
                     gdf_lines.to_file(file_path, layer='connections', driver="GPKG", mode='a')
@@ -1002,7 +1089,7 @@ def update_sharepoint_spreadsheet(df, site_url=None, drive_path=None):
                     return False
                     
                 # First, clear the existing data range (starting from row 4)
-                clear_range = f"A4:L1000"  # Clear data rows only, preserve headers
+                clear_range = f"A4:N1000"  # Clear data rows only, preserve headers
                 clear_response = graph_client.post(
                     f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/worksheets/Aerial%20Status%20Report/range(address='{clear_range}')/clear",
                     headers={"workbook-session-id": session_id}
@@ -1015,10 +1102,10 @@ def update_sharepoint_spreadsheet(df, site_url=None, drive_path=None):
                 # Update timestamp in row 2
                 current_time = datetime.now().strftime('%-m/%-d/%Y %-I:%M %p MST')
                 timestamp_response = graph_client.patch(
-                    f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/worksheets/Aerial%20Status%20Report/range(address='A2:L2')",
+                    f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/worksheets/Aerial%20Status%20Report/range(address='A2:N2')",
                     headers={"workbook-session-id": session_id},
                     json={
-                        "values": [[current_time] + [""] * 11]  # Empty strings for the rest of the row
+                        "values": [[current_time] + [""] * 13]  # Empty strings for the rest of the row
                     }
                 )
                 
@@ -1028,7 +1115,7 @@ def update_sharepoint_spreadsheet(df, site_url=None, drive_path=None):
                 # Update data starting at A4 (preserving headers)
                 if formatted_data:
                     num_rows = len(formatted_data)
-                    data_range = f"A4:L{num_rows + 3}"  # +3 because we start at row 4 and Excel is 1-based
+                    data_range = f"A4:N{num_rows + 3}"  # +3 because we start at row 4 and Excel is 1-based
                     update_response = graph_client.patch(
                         f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/worksheets/Aerial%20Status%20Report/range(address='{data_range}')",
                         headers={"workbook-session-id": session_id},
@@ -1078,21 +1165,22 @@ def create_report(jobs_summary):
         field_complete_pct = job.get('field_complete_pct', 0)
         trace_complete_pct = job.get('trace_complete_pct', 0)
         utility = job.get('utility', 'Unknown')
-        assigned_osp = job.get('assigned_osp', 'Unknown')
+        most_recent_editor = job.get('most_recent_editor', 'Unknown')
         last_edit_time = job.get('last_edit_time', 'Unknown')
-
-        # Format percentages as strings with one decimal place
-        field_pct_str = f"{field_complete_pct:.1f}" if isinstance(field_complete_pct, (int, float)) else "0.0"
-        trace_pct_str = f"{trace_complete_pct:.1f}" if isinstance(trace_complete_pct, (int, float)) else "0.0"
+        conversation = job.get('conversation', '')
+        project = job.get('project', '')
+        assigned_osp = job.get('assigned_osp', 'Unknown')
 
         report_data.append({
             'Job Name': job_name,
+            'Conversation': conversation,
+            'Project': project,
             'Utility': utility,
             'Job Status': job_status,
             'Assigned OSP': assigned_osp,
             'Last Edit': last_edit_time,
-            'Field %': field_pct_str,
-            'Trace %': trace_pct_str,
+            'Field %': f"{field_complete_pct:.1f}%",
+            'Trace %': f"{trace_complete_pct:.1f}%",
             'No MR': mr_status_counts.get('No MR', 0),
             'Comm MR': mr_status_counts.get('Comm MR', 0),
             'Electric MR': mr_status_counts.get('Electric MR', 0),
@@ -1128,16 +1216,17 @@ def create_report(jobs_summary):
         ws.title = "Aerial Status Report"
 
         # Add merged header with title in the first row
-        ws.merge_cells('A1:L1')
+        ws.merge_cells('A1:N1')
         title_cell = ws.cell(row=1, column=1)
         title_cell.value = "Aerial Status Report"
         title_cell.font = Font(size=18, bold=True)
         title_cell.alignment = Alignment(horizontal="center", vertical="center")
 
         # Add the date/time in the second row
-        ws.merge_cells('A2:L2')
+        ws.merge_cells('A2:N2')
         date_cell = ws.cell(row=2, column=1)
-        date_cell.value = datetime.now().strftime('%-m/%-d/%Y %-I:%M %p MST')
+        current_time = datetime.now()
+        date_cell.value = current_time.strftime('%-m/%-d/%Y %-I:%M %p')
         date_cell.font = Font(size=12)
         date_cell.alignment = Alignment(horizontal="center", vertical="center")
 
@@ -1146,35 +1235,56 @@ def create_report(jobs_summary):
         ws.row_dimensions[2].height = 20  # Date row
         ws.row_dimensions[3].height = 25  # Column headers row
 
-        # Define column headers and their properties
-        columns = [
-            ("Job Name", 44, "CCFFCC"),
-            ("Utility", 15, "CCFFCC"),
-            ("Job Status", 23.71, "CCFFCC"),
-            ("Assigned OSP", 30, "CCFFCC"),
-            ("Last Edit", 20, "CCFFCC"),
-            ("Field %", 10, "CCFFCC"),
-            ("Trace %", 10, "CCFFCC"),
-            ("No MR", 10, "D9D9D9"),
-            ("Comm MR", 10, "FFFF00"),
-            ("Electric MR", 12, "FFC000"),
-            ("PCO Required", 12, "FF0000"),
-            ("Pole Count", 12, "CCFFCC")
-        ]
-
         # Add the column headers with styling in the third row
-        for col_num, (header, width, color) in enumerate(columns, 1):
+        column_widths = {
+            "Job Name": 44,
+            "Conversation": 15,
+            "Project": 15,
+            "Utility": 15,
+            "Job Status": 23.71,
+            "Assigned OSP": 30,
+            "Last Edit": 20,
+            "Field %": 10,
+            "Trace %": 10,
+            "No MR": 10,
+            "Comm MR": 10,
+            "Electric MR": 12,
+            "PCO Required": 12,
+            "Pole Count": 12
+        }
+
+        header_colors = {
+            "Job Name": "CCFFCC",
+            "Conversation": "CCFFCC",
+            "Project": "CCFFCC",
+            "Utility": "CCFFCC",
+            "Job Status": "CCFFCC",
+            "Assigned OSP": "CCFFCC",
+            "Last Edit": "CCFFCC",
+            "Field %": "CCFFCC",
+            "Trace %": "CCFFCC",
+            "No MR": "D9D9D9",
+            "Comm MR": "FFFF00",
+            "Electric MR": "FFC000",
+            "PCO Required": "FF0000",
+            "Pole Count": "CCFFCC"
+        }
+
+        for col_num, column_title in enumerate(df_report.columns, 1):
             cell = ws.cell(row=3, column=col_num)
-            cell.value = header
+            cell.value = column_title
             cell.font = Font(bold=True)
             cell.alignment = Alignment(horizontal="center", vertical="center")
             
             # Set column width
             column_letter = cell.column_letter
-            ws.column_dimensions[column_letter].width = width
+            ws.column_dimensions[column_letter].width = column_widths.get(column_title, 13.3)
 
             # Set header color
-            cell.fill = PatternFill(start_color=color, end_color=color, fill_type="solid")
+            if column_title in header_colors:
+                cell.fill = PatternFill(start_color=header_colors[column_title],
+                                     end_color=header_colors[column_title],
+                                     fill_type="solid")
 
         # Add the data rows with center alignment
         for r_idx, row in enumerate(dataframe_to_rows(df_report, index=False, header=False), 4):
@@ -1184,9 +1294,9 @@ def create_report(jobs_summary):
 
         # Add borders around all cells
         thin_border = Border(left=Side(style='thin'),
-                           right=Side(style='thin'),
-                           top=Side(style='thin'),
-                           bottom=Side(style='thin'))
+                          right=Side(style='thin'),
+                          top=Side(style='thin'),
+                          bottom=Side(style='thin'))
 
         for row in ws.iter_rows(min_row=1, max_row=ws.max_row, min_col=1, max_col=len(df_report.columns)):
             for cell in row:
@@ -1319,17 +1429,21 @@ def saveToShapefiles(nodes, connections, anchors, workspace_path):
         'fldcompl': 'completed',
         'tag': 'pole_tag',
         'POA_Height': 'poa_ht',
-        'conversation': 'conv',
+        'conversation': 'conv',  # New field
+        'project': 'proj',  # New field
         'scid': 'scid',
         'last_editor': 'editor',
-        'last_edit': 'edit_time'
+        'last_edit': 'edit_time',
+        'node_id': 'node_id'  # New field for tracking
     }
     
     connection_fields = {
-        'connection_id': 'conn_id',
+        'connection_id': 'conn_id',  # New field for tracking
         'connection_type': 'conn_type',
         'node_id_1': 'node1_id',
-        'node_id_2': 'node2_id'
+        'node_id_2': 'node2_id',
+        'mid_ht': 'mid_ht',  # Renamed from attachment
+        'wire_spec': 'wire_spec'  # New field
     }
     
     anchor_fields = {
@@ -1342,10 +1456,9 @@ def saveToShapefiles(nodes, connections, anchors, workspace_path):
         timestamp = datetime.now().strftime("%Y%m%d_%H%M")
         master_zip_name = f"KatapultMaster_{timestamp}.zip"
         master_zip_path = os.path.join(workspace_path, master_zip_name)
-        master_zip_path = os.path.join(workspace_path, master_zip_name)
         
         shapefile_components = []
-        
+
         # Save and analyze nodes
         if nodes:
             print("\nPole Type Analysis in Shapefile:")
@@ -1358,6 +1471,16 @@ def saveToShapefiles(nodes, connections, anchors, workspace_path):
             print("\nMR Status Distribution:")
             for status, count in mr_status_counts.items():
                 print(f"{status}: {count}")
+            
+            # Add node_id if not present
+            if 'node_id' not in gdf_nodes.columns:
+                gdf_nodes['node_id'] = range(1, len(gdf_nodes) + 1)
+            
+            # Add project and conversation fields if not present
+            if 'project' not in gdf_nodes.columns:
+                gdf_nodes['project'] = ''
+            if 'conversation' not in gdf_nodes.columns:
+                gdf_nodes['conversation'] = ''
             
             # Rename columns and drop unnecessary ones
             gdf_nodes.rename(columns=node_fields, inplace=True)
@@ -1372,7 +1495,7 @@ def saveToShapefiles(nodes, connections, anchors, workspace_path):
                 file_path = nodes_shp.replace('.shp', ext)
                 if os.path.exists(file_path):
                     shapefile_components.append(file_path)
-    
+
         # Save and analyze connections
         if connections:
             print("\nConnection Type Analysis in Shapefile:")
@@ -1398,18 +1521,46 @@ def saveToShapefiles(nodes, connections, anchors, workspace_path):
                         continue
                         
                     line_geom = LineString([(start_x, start_y), (end_x, end_y)])
+                    
+                    # Add connection_id if not present
+                    if 'connection_id' not in properties:
+                        properties['connection_id'] = len(valid_connections) + 1
+                    
+                    # Extract wire specification and mid-height from section photo data
+                    section_photo_id = properties.get('section_photo_id')
+                    if section_photo_id:
+                        photo_data = connection.get('photo_data', {}).get(section_photo_id, {})
+                        photofirst_data = photo_data.get('photofirst_data', {})
+                        
+                        # Extract mid-height
+                        mid_height = photofirst_data.get('measured_height')
+                        if mid_height is not None:
+                            feet = int(mid_height // 12)
+                            inches = int(mid_height % 12)
+                            properties['mid_ht'] = f"{feet}' {inches}\""
+                        
+                        # Extract wire specification
+                        wire_spec = photofirst_data.get('wire_spec', '')
+                        if wire_spec:
+                            properties['wire_spec'] = wire_spec
+                    
                     valid_connections.append(properties)
                     line_geometries.append(line_geom)
                     
                 except Exception as e:
                     continue
-            
+
             # Print connection type counts
             for conn_type, count in sorted(connection_types.items()):
                 print(f"{conn_type}: {count}")
             
             if valid_connections and line_geometries:
                 gdf_connections = gpd.GeoDataFrame(valid_connections, geometry=line_geometries, crs="EPSG:4326")
+                
+                # Rename 'attachment' to 'mid_ht' if it exists
+                if 'attachment' in gdf_connections.columns:
+                    gdf_connections.rename(columns={'attachment': 'mid_ht'}, inplace=True)
+                
                 gdf_connections.rename(columns=connection_fields, inplace=True)
                 
                 connections_shp = os.path.join(workspace_path, "connections.shp")
@@ -1447,7 +1598,7 @@ def saveToShapefiles(nodes, connections, anchors, workspace_path):
                 file_path = anchors_shp.replace('.shp', ext)
                 if os.path.exists(file_path):
                     shapefile_components.append(file_path)
-        
+
         # Create master zip file containing all shapefile components
         with zipfile.ZipFile(master_zip_path, 'w') as master_zip:
             for file_path in shapefile_components:
@@ -1485,7 +1636,7 @@ def saveToShapefiles(nodes, connections, anchors, workspace_path):
             if drive['name'] == 'Documents':
                 documents_drive = drive
                 break
-                
+
         if not documents_drive:
             print("Could not find Documents drive")
             return
@@ -1506,7 +1657,7 @@ def saveToShapefiles(nodes, connections, anchors, workspace_path):
         # Upload the new zip file
         print(f"Uploading new file: {master_zip_name}")
         with open(master_zip_path, 'rb') as file_content:
-            # Create upload session
+            # Create upload session for Documents folder
             upload_session = graph_client.post(
                 f"sites/{site_id}/drives/{drive_id}/root:/{master_zip_name}:/createUploadSession",
                 json={
@@ -1556,47 +1707,6 @@ def saveToShapefiles(nodes, connections, anchors, workspace_path):
     print(f"Connections: {len(connections)}")
     print(f"Anchors: {len(anchors)}")
     print("------------------------")
-
-# Function to get user list from KatapultPro API
-def getUserList():
-    URL_PATH = '/api/v2/users'
-    headers = {}
-    user_map = {}
-
-    for attempt in range(5):
-        conn = None
-        try:
-            conn = http.client.HTTPSConnection("katapultpro.com", timeout=10)
-            conn.request("GET", f"{URL_PATH}?api_key={CONFIG['API_KEY']}", headers=headers)
-            res = conn.getresponse()
-            data = res.read().decode("utf-8")
-            users_dict = json.loads(data)
-
-            if not isinstance(users_dict, dict):
-                raise TypeError(f"Expected a dictionary but received {type(users_dict)}: {users_dict}")
-
-            # Create a mapping of user IDs to full names
-            for user_id, user_data in users_dict.items():
-                name = user_data.get('name', {})
-                full_name = f"{name.get('first', '')} {name.get('last', '')}".strip()
-                if not full_name:
-                    full_name = user_data.get('email', 'Unknown User')
-                user_map[user_id] = full_name
-
-            logging.info(f"Retrieved {len(user_map)} users")
-            break
-
-        except (socket.error, OSError) as e:
-            print(f"Socket error while getting user list: {e}. Retrying...")
-            time.sleep(5)
-        except Exception as e:
-            print(f"Failed to retrieve user list: {e}")
-            break
-        finally:
-            if conn:
-                conn.close()
-
-    return user_map
 
 def test_sharepoint_access():
     """Test SharePoint access using existing credentials."""
@@ -1704,6 +1814,47 @@ def initialize_graph_client():
         print(f"Error initializing Graph client: {str(e)}")
         return None
 
+# Function to get user list from KatapultPro API
+def getUserList():
+    URL_PATH = '/api/v2/users'
+    headers = {}
+    user_map = {}
+
+    for attempt in range(5):
+        conn = None
+        try:
+            conn = http.client.HTTPSConnection("katapultpro.com", timeout=10)
+            conn.request("GET", f"{URL_PATH}?api_key={CONFIG['API_KEY']}", headers=headers)
+            res = conn.getresponse()
+            data = res.read().decode("utf-8")
+            users_dict = json.loads(data)
+
+            if not isinstance(users_dict, dict):
+                raise TypeError(f"Expected a dictionary but received {type(users_dict)}: {users_dict}")
+
+            # Create a mapping of user IDs to full names
+            for user_id, user_data in users_dict.items():
+                name = user_data.get('name', {})
+                full_name = f"{name.get('first', '')} {name.get('last', '')}".strip()
+                if not full_name:
+                    full_name = user_data.get('email', 'Unknown User')
+                user_map[user_id] = full_name
+
+            logging.info(f"Retrieved {len(user_map)} users")
+            break
+
+        except (socket.error, OSError) as e:
+            print(f"Socket error while getting user list: {e}. Retrying...")
+            time.sleep(5)
+        except Exception as e:
+            print(f"Failed to retrieve user list: {e}")
+            break
+        finally:
+            if conn:
+                conn.close()
+
+    return user_map
+
 # Main function to run the job for testing
 def main(email_list):
     """Main function to process jobs and generate reports."""
@@ -1750,7 +1901,8 @@ def main(email_list):
     else:
         print("Getting list of all jobs...")
         all_jobs = getJobList()
-        
+    
+    # Initialize lists to store all data
     all_nodes = []
     all_connections = []
     all_anchors = []
@@ -1758,8 +1910,8 @@ def main(email_list):
     
     if not all_jobs:
         print("No jobs found.")
-        return
-        
+        return False
+    
     total_jobs = len(all_jobs)
     print(f"Found {total_jobs} jobs to process")
     
@@ -1786,34 +1938,37 @@ def main(email_list):
             connections = job_data.get('connections', {})
             metadata = job_data.get('metadata', {})
             
+            print("\nDEBUG - Metadata Contents:")
+            print(f"Raw metadata: {json.dumps(metadata, indent=2)}")
+            
             # Update job name from metadata if available
             if metadata:
                 metadata_name = metadata.get('name')
                 if metadata_name:
                     job_name = metadata_name
-                    print(f"Using job name from metadata: {job_name}")
+                    print(f"DEBUG - Using job name from metadata: {job_name}")
                 else:
                     # Try to get name from job data directly
                     job_data_name = job_data.get('name')
                     if job_data_name:
                         job_name = job_data_name
-                        print(f"Using name from job data: {job_name}")
+                        print(f"DEBUG - Using name from job data: {job_name}")
                     else:
-                        print(f"Using existing job name: {job_name}")
+                        print(f"DEBUG - Using existing job name: {job_name}")
             
-            print("Extracting nodes...")
+            print("\nExtracting nodes...")
             nodes_data = extractNodes(job_data, job_name, job_id, user_map)
             print(f"Found {len(nodes_data)} nodes")
             
-            print("Extracting connections...")
-            connections_data = extractConnections(connections, job_data.get('nodes', {}))
+            print("\nExtracting connections...")
+            connections_data = extractConnections(connections, job_data.get('nodes', {}), job_data)
             
-            print("Extracting anchors...")
+            print("\nExtracting anchors...")
             anchors = extractAnchors(job_data, job_name, job_id)
             print(f"Found {len(anchors)} anchors")
             
             if nodes_data:
-                print("Processing nodes for job summary...")
+                print("\nDEBUG - Processing nodes for job summary...")
                 all_nodes.extend(nodes_data)
                 
                 # Calculate field completion percentage for poles only
@@ -1827,26 +1982,10 @@ def main(email_list):
                                    if node.get('attributes', {}).get('field_completed', {}).get('value') == 1)
                 field_complete_pct = (field_completed / total_poles * 100) if total_poles > 0 else 0
                 
-                # Find most recent editor and edit time
-                most_recent_editor = 'Unknown'
-                last_edit_time = 'Unknown'
-                latest_timestamp = 0
-                
-                for node in nodes_data:
-                    if node.get('last_editor') and node.get('last_edit'):
-                        # Parse the timestamp from the format "YYYY-MM-DD HH:MM AM/PM MST"
-                        try:
-                            edit_time = node['last_edit'].replace(' MST', '')
-                            edit_dt = datetime.strptime(edit_time, '%Y-%m-%d %I:%M %p')
-                            timestamp = edit_dt.timestamp()
-                            
-                            if timestamp > latest_timestamp:
-                                latest_timestamp = timestamp
-                                most_recent_editor = node['last_editor']
-                                last_edit_time = node['last_edit']
-                        except Exception as e:
-                            print(f"Error parsing edit time: {e}")
-                            continue
+                print(f"\nDEBUG - Field Completion Stats:")
+                print(f"Total poles found: {total_poles}")
+                print(f"Field completed poles: {field_completed}")
+                print(f"Field completion percentage: {field_complete_pct:.2f}%")
                 
                 # Calculate trace completion percentage by checking only aerial cable connections
                 aerial_cable_connections = {
@@ -1859,10 +1998,42 @@ def main(email_list):
                                       if connection.get('attributes', {}).get('tracing_complete', {}).get('auto', False))
                 trace_complete_pct = (completed_traces / total_traces * 100) if total_traces > 0 else 0
                 
+                print(f"\nDEBUG - Trace Completion Stats:")
+                print(f"Total aerial cable connections: {total_traces}")
+                print(f"Completed traces: {completed_traces}")
+                print(f"Trace completion percentage: {trace_complete_pct:.2f}%")
+                
+                # Find most recent editor and edit time
+                most_recent_editor = 'Unknown'
+                last_edit_time = 'Unknown'
+                latest_timestamp = 0
+                
+                print("\nDEBUG - Processing edit timestamps...")
+                for node in nodes_data:
+                    if node.get('last_editor') and node.get('last_edit'):
+                        print(f"Found edit: Editor={node['last_editor']}, Time={node['last_edit']}")
+                        try:
+                            edit_time = node['last_edit'].replace(' MST', '')
+                            edit_dt = datetime.strptime(edit_time, '%Y-%m-%d %I:%M %p')
+                            timestamp = edit_dt.timestamp()
+                            
+                            if timestamp > latest_timestamp:
+                                latest_timestamp = timestamp
+                                most_recent_editor = node['last_editor']
+                                last_edit_time = node['last_edit']
+                                print(f"New most recent edit found: {last_edit_time} by {most_recent_editor}")
+                        except Exception as e:
+                            print(f"Error parsing edit time: {e}")
+                            continue
+                
                 # Get utility from first pole with a company value
                 utility = 'Unknown'
-                for node_data in job_data.get('nodes', {}).values():
+                print("\nDEBUG - Searching for utility company...")
+                for node_id, node_data in job_data.get('nodes', {}).items():
                     pole_tag = node_data.get('attributes', {}).get('pole_tag', {})
+                    print(f"\nChecking node {node_id}:")
+                    print(f"Pole tag data: {json.dumps(pole_tag, indent=2)}")
+                    
                     # First try to get company from -Imported or button_added
                     company = pole_tag.get('-Imported', {}).get('company') or pole_tag.get('button_added', {}).get('company')
                     
@@ -1871,15 +2042,25 @@ def main(email_list):
                         for key, value in pole_tag.items():
                             if isinstance(value, dict) and 'company' in value:
                                 company = value['company']
+                                print(f"Found company in {key}: {company}")
                                 break
                     
                     if company:
                         utility = company
+                        print(f"Using utility: {utility}")
                         break
                 
                 # Get job status and assigned OSP from metadata
                 job_status = metadata.get('job_status', 'Unknown')
                 assigned_osp = metadata.get('assigned_OSP', 'Unknown')
+                conversation = metadata.get('conversation', '')
+                project = metadata.get('project', '')
+                
+                print("\nDEBUG - Metadata fields:")
+                print(f"Job Status: {job_status}")
+                print(f"Assigned OSP: {assigned_osp}")
+                print(f"Conversation: {conversation}")
+                print(f"Project: {project}")
                 
                 # Summarize MR Status counts for the job
                 mr_status_counts = {}
@@ -1888,6 +2069,9 @@ def main(email_list):
                     if mr_status not in mr_status_counts:
                         mr_status_counts[mr_status] = 0
                     mr_status_counts[mr_status] += 1
+                
+                print("\nDEBUG - MR Status Counts:")
+                print(json.dumps(mr_status_counts, indent=2))
                 
                 jobs_summary.append({
                     'job_name': job_name,
@@ -1898,22 +2082,31 @@ def main(email_list):
                     'utility': utility,
                     'most_recent_editor': most_recent_editor,
                     'last_edit_time': last_edit_time,
-                    'assigned_osp': assigned_osp
+                    'assigned_osp': assigned_osp,
+                    'conversation': conversation,
+                    'project': project
                 })
-                print(f"Job summary updated with MR status counts: {mr_status_counts}")
+                
+                print("\nDEBUG - Final job summary entry:")
+                print(json.dumps(jobs_summary[-1], indent=2))
+                
+                if connections_data:
+                    all_connections.extend(connections_data)
+                if anchors:
+                    all_anchors.extend(anchors)
+            else:
+                print("No valid nodes found for job")
+        else:
+            print(f"Invalid or missing data for job {job_name}")
+            continue
             
-            if connections_data:
-                all_connections.extend(connections_data)
-            if anchors:
-                all_anchors.extend(anchors)
+        print(f"Completed processing job {index}/{total_jobs}")
         
-        print(f"Finished processing job {index}/{total_jobs}")
-        if index < total_jobs:
-            print("Waiting 2 seconds before next job...")
-            time.sleep(2)
+    print("\nAll jobs processed")
+    print(f"Total nodes: {len(all_nodes)}")
+    print(f"Total connections: {len(all_connections)}")
+    print(f"Total anchors: {len(all_anchors)}")
     
-    print("\nProcessing complete. Saving results...")
-    master_zip_path = None
     if all_nodes or all_connections or all_anchors:
         print("Saving data to master GeoPackage...")
         workspace_path = CONFIG['WORKSPACE_PATH']
@@ -1922,11 +2115,8 @@ def main(email_list):
         saveMasterGeoPackage(all_nodes, all_connections, all_anchors, master_geopkg_filename)
         print("Master GeoPackage saved successfully")
         
-        # Save to shapefiles and create master zip
+        # Add call to save shapefiles
         print("\nSaving data to shapefiles...")
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M")
-        master_zip_name = f"KatapultMaster_{timestamp}.zip"
-        master_zip_path = os.path.join(workspace_path, master_zip_name)
         saveToShapefiles(all_nodes, all_connections, all_anchors, workspace_path)
     else:
         print("No data extracted for any job. Nothing to save.")
