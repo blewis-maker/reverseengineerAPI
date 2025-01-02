@@ -125,12 +125,28 @@ def getJobList():
                     print(f"Response content: {jobs_dict}")
                     continue
 
-                # Retrieve all jobs without filtering for status
-                all_jobs = [
-                    {'id': job_id, 'name': job_details.get('name', 'Unknown'), 'status': job_details.get('status', 'Unknown')}
-                    for job_id, job_details in jobs_dict.items()
-                    if isinstance(job_details, dict)  # Ensure we only process dictionary entries
-                ]
+                # Process each job to get the correct name
+                all_jobs = []
+                for job_id, job_details in jobs_dict.items():
+                    if isinstance(job_details, dict):
+                        # Try to get name from metadata first
+                        metadata = job_details.get('metadata', {})
+                        job_name = metadata.get('name')
+                        
+                        # If no name in metadata, try job_details directly
+                        if not job_name:
+                            job_name = job_details.get('name')
+                        
+                        # If still no name, use job ID
+                        if not job_name:
+                            job_name = f"Job {job_id}"
+                            
+                        job_status = metadata.get('job_status', 'Unknown')
+                        all_jobs.append({
+                            'id': job_id,
+                            'name': job_name,
+                            'status': job_status
+                        })
                 
                 if all_jobs:
                     print(f"Successfully retrieved {len(all_jobs)} jobs")
@@ -360,7 +376,21 @@ def extractNodes(job_data, job_name, job_id, user_map):
 
                 # Extract pole attributes
                 pole_tag = attributes.get('pole_tag', {})
-                company = pole_tag.get('-Imported', {}).get('company') or pole_tag.get('button_added', {}).get('company') or "Unknown"
+                
+                # First try to get company from -Imported or button_added
+                company = pole_tag.get('-Imported', {}).get('company') or pole_tag.get('button_added', {}).get('company')
+                
+                # If not found, look for company in any direct child of pole_tag
+                if not company:
+                    for key, value in pole_tag.items():
+                        if isinstance(value, dict) and 'company' in value:
+                            company = value['company']
+                            break
+                
+                # If still not found, use default
+                if not company:
+                    company = "Unknown"
+                
                 fldcompl_value = attributes.get('field_completed', {}).get('value', "Unknown")
                 fldcompl = 'yes' if fldcompl_value == 1 else 'no' if fldcompl_value == 2 else 'Unknown'
                 
@@ -885,45 +915,12 @@ def saveMasterGeoPackage(all_nodes, all_connections, all_anchors, filename):
     print("Master GeoPackage saved successfully")
 
 def update_sharepoint_spreadsheet(df, site_url=None, drive_path=None):
-    """Update the spreadsheet in SharePoint with new data."""
+    """Update the spreadsheet in SharePoint with new data while preserving formatting."""
     try:
         print("\nUpdating SharePoint spreadsheet...")
         
-        # Format the data for SharePoint
-        headers = [
-            'Job Name',
-            'Utility',
-            'Job Status',
-            'OSP Engineer',
-            'Last Edit',
-            'Field %',
-            'Trace %',
-            'No MR',
-            'Comm MR',
-            'Electric MR',
-            'PCO Required',
-            'Pole Count'
-        ]
-        
-        formatted_data = [headers]  # First row is headers
-        
-        # Add data rows
-        for _, row in df.iterrows():
-            formatted_row = [
-                row['Job Name'],
-                row['Utility'],
-                row['Job Status'],
-                row['OSP Engineer'],
-                row['Last Edit'],
-                row['Field %'],
-                row['Trace %'],
-                row['No MR'],
-                row['Comm MR'],
-                row['Electric MR'],
-                row['PCO Required'],
-                row['Pole Count']
-            ]
-            formatted_data.append(formatted_row)
+        # Format the data for SharePoint (exclude headers)
+        formatted_data = df.values.tolist()  # Only include data rows
         
         # Use configured paths or fallback to parameters
         site_url = site_url or CONFIG['SHAREPOINT']['SITE_URL']
@@ -1004,53 +1001,48 @@ def update_sharepoint_spreadsheet(df, site_url=None, drive_path=None):
                     print(f"Failed to get worksheet. Status code: {worksheet_response.status_code}")
                     return False
                     
-                # Update timestamp in cell A2
-                timestamp_response = graph_client.patch(
-                    f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/worksheets/Aerial%20Status%20Report/range(address='A2')",
-                    headers={"workbook-session-id": session_id},
-                    json={
-                        "values": [[datetime.now().strftime('%-m/%-d/%Y %-I:%M %p MST')]]
-                    }
-                )
-                
-                if timestamp_response.status_code != 200:
-                    print(f"Failed to update timestamp. Status code: {timestamp_response.status_code}")
-                
-                # Clear existing content (except title and timestamp)
-                clear_range = f"A3:L{1000}"  # Clear a large range to ensure all data is removed
+                # First, clear the existing data range (starting from row 4)
+                clear_range = f"A4:L1000"  # Clear data rows only, preserve headers
                 clear_response = graph_client.post(
                     f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/worksheets/Aerial%20Status%20Report/range(address='{clear_range}')/clear",
                     headers={"workbook-session-id": session_id}
                 )
                 
-                # Note: 204 is a valid success response for clear operation
-                if clear_response.status_code not in [200, 204]:
-                    print(f"Failed to clear content. Status code: {clear_response.status_code}")
+                if clear_response.status_code not in [200, 204]:  # 204 means success with no content
+                    print(f"Failed to clear data range. Status code: {clear_response.status_code}")
                     return False
-                
-                # Update with new data
-                data_range = f"A3:L{len(formatted_data) + 1}"  # +1 because we start at row 3
-                update_response = graph_client.patch(
-                    f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/worksheets/Aerial%20Status%20Report/range(address='{data_range}')",
+                    
+                # Update timestamp in row 2
+                current_time = datetime.now().strftime('%-m/%-d/%Y %-I:%M %p MST')
+                timestamp_response = graph_client.patch(
+                    f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/worksheets/Aerial%20Status%20Report/range(address='A2:L2')",
                     headers={"workbook-session-id": session_id},
                     json={
-                        "values": formatted_data[1:],  # Skip headers since they're already in the file
-                        "format": {
-                            "borders": {
-                                "allBorders": {
-                                    "style": "thin",
-                                    "color": "#000000"
-                                }
-                            }
-                        }
+                        "values": [[current_time] + [""] * 11]  # Empty strings for the rest of the row
                     }
                 )
                 
-                if update_response.status_code != 200:
-                    print(f"Failed to update content. Status code: {update_response.status_code}")
-                    return False
+                if timestamp_response.status_code != 200:
+                    print(f"Failed to update timestamp. Status code: {timestamp_response.status_code}")
                     
-                print("Successfully updated data")
+                # Update data starting at A4 (preserving headers)
+                if formatted_data:
+                    num_rows = len(formatted_data)
+                    data_range = f"A4:L{num_rows + 3}"  # +3 because we start at row 4 and Excel is 1-based
+                    update_response = graph_client.patch(
+                        f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/worksheets/Aerial%20Status%20Report/range(address='{data_range}')",
+                        headers={"workbook-session-id": session_id},
+                        json={
+                            "values": formatted_data
+                        }
+                    )
+                    
+                    if update_response.status_code != 200:
+                        print(f"Failed to update content. Status code: {update_response.status_code}")
+                        print(f"Response: {update_response.text}")
+                        return False
+                        
+                print("Successfully updated data while preserving formatting")
                 return True
                 
             finally:
@@ -1062,9 +1054,9 @@ def update_sharepoint_spreadsheet(df, site_url=None, drive_path=None):
                     )
                 except Exception as e:
                     print(f"Error closing session: {str(e)}")
-        
+                    
         else:
-            print("File doesn't exist, creating new file...")
+            print("File doesn't exist or cannot be accessed")
             return False
             
     except Exception as e:
@@ -1086,17 +1078,21 @@ def create_report(jobs_summary):
         field_complete_pct = job.get('field_complete_pct', 0)
         trace_complete_pct = job.get('trace_complete_pct', 0)
         utility = job.get('utility', 'Unknown')
-        most_recent_editor = job.get('most_recent_editor', 'Unknown')
+        assigned_osp = job.get('assigned_osp', 'Unknown')
         last_edit_time = job.get('last_edit_time', 'Unknown')
+
+        # Format percentages as strings with one decimal place
+        field_pct_str = f"{field_complete_pct:.1f}" if isinstance(field_complete_pct, (int, float)) else "0.0"
+        trace_pct_str = f"{trace_complete_pct:.1f}" if isinstance(trace_complete_pct, (int, float)) else "0.0"
 
         report_data.append({
             'Job Name': job_name,
             'Utility': utility,
             'Job Status': job_status,
-            'OSP Engineer': most_recent_editor,  # Changed from 'Last Editor'
+            'Assigned OSP': assigned_osp,
             'Last Edit': last_edit_time,
-            'Field %': f"{field_complete_pct:.1f}%",
-            'Trace %': f"{trace_complete_pct:.1f}%",
+            'Field %': field_pct_str,
+            'Trace %': trace_pct_str,
             'No MR': mr_status_counts.get('No MR', 0),
             'Comm MR': mr_status_counts.get('Comm MR', 0),
             'Electric MR': mr_status_counts.get('Electric MR', 0),
@@ -1155,7 +1151,7 @@ def create_report(jobs_summary):
             ("Job Name", 44, "CCFFCC"),
             ("Utility", 15, "CCFFCC"),
             ("Job Status", 23.71, "CCFFCC"),
-            ("OSP Engineer", 30, "CCFFCC"),  # Changed from "Last Editor"
+            ("Assigned OSP", 30, "CCFFCC"),
             ("Last Edit", 20, "CCFFCC"),
             ("Field %", 10, "CCFFCC"),
             ("Trace %", 10, "CCFFCC"),
@@ -1193,61 +1189,6 @@ def create_report(jobs_summary):
                            bottom=Side(style='thin'))
 
         for row in ws.iter_rows(min_row=1, max_row=ws.max_row, min_col=1, max_col=len(df_report.columns)):
-            for cell in row:
-                cell.border = thin_border
-
-        # Add Job Status Summary Headers with colors and proper spacing
-        status_summary_start_row = 6
-        job_statuses = [
-            ("Pending Field Collection", "CCFFCC"),
-            ("Pending Photo Annotation", "B7DEE8"),
-            ("Sent to PE", "CCC0DA"),
-            ("Pending EMR", "FFC000"),
-            ("Approved for Construction", "9BBB59"),
-            ("Hold", "BFBFBF"),
-            ("As Built", "FABF8F"),
-            ("Delivered", "92D050")
-        ]
-
-        # Calculate job status counts
-        job_status_counts = {status[0]: 0 for status in job_statuses}
-        for job in jobs_summary:
-            job_status = job.get('job_status', 'Unknown').strip()
-            if job_status in job_status_counts:
-                job_status_counts[job_status] += 1
-
-        # Add status headers and counts in two rows, starting from column N (14)
-        for idx, (status, color) in enumerate(job_statuses[:4]):
-            header_cell = ws.cell(row=status_summary_start_row, column=idx + 14)
-            count_cell = ws.cell(row=status_summary_start_row + 1, column=idx + 14)
-            
-            header_cell.value = status
-            header_cell.font = Font(bold=True)
-            header_cell.fill = PatternFill(start_color=color, end_color=color, fill_type="solid")
-            header_cell.alignment = Alignment(horizontal="center", vertical="center")
-            
-            count_cell.value = job_status_counts[status]
-            count_cell.alignment = Alignment(horizontal="center", vertical="center")
-            
-            ws.column_dimensions[header_cell.column_letter].width = 24.14
-
-        # Add second row of statuses
-        for idx, (status, color) in enumerate(job_statuses[4:]):
-            header_cell = ws.cell(row=status_summary_start_row + 3, column=idx + 14)
-            count_cell = ws.cell(row=status_summary_start_row + 4, column=idx + 14)
-            
-            header_cell.value = status
-            header_cell.font = Font(bold=True)
-            header_cell.fill = PatternFill(start_color=color, end_color=color, fill_type="solid")
-            header_cell.alignment = Alignment(horizontal="center", vertical="center")
-            
-            count_cell.value = job_status_counts[status]
-            count_cell.alignment = Alignment(horizontal="center", vertical="center")
-
-        # Add borders to status summary
-        for row in ws.iter_rows(min_row=status_summary_start_row,
-                              max_row=status_summary_start_row + 4,
-                              min_col=14, max_col=17):
             for cell in row:
                 cell.border = thin_border
 
@@ -1776,7 +1717,36 @@ def main(email_list):
     
     if TEST_ONLY_SPECIFIC_JOB:
         print(f"Testing specific job with ID: {TEST_JOB_IDS}")
-        all_jobs = [{'id': job_id, 'name': 'Test Job'} for job_id in TEST_JOB_IDS]
+        # Get job list to find actual job names
+        try:
+            conn = http.client.HTTPSConnection("katapultpro.com", timeout=30)
+            conn.request("GET", f"/api/v2/jobs?api_key={CONFIG['API_KEY']}")
+            res = conn.getresponse()
+            data = res.read().decode("utf-8")
+            all_jobs_dict = json.loads(data)
+            
+            # Create job list with actual names
+            all_jobs = []
+            for job_id in TEST_JOB_IDS:
+                job_data = all_jobs_dict.get(job_id, {})
+                # Get job name from metadata or fallback to name field
+                metadata = job_data.get('metadata', {})
+                job_name = metadata.get('name')
+                if not job_name:
+                    job_name = job_data.get('name')
+                if not job_name:  # If still no name found, use job ID
+                    job_name = f"Job {job_id}"
+                all_jobs.append({'id': job_id, 'name': job_name})
+                print(f"Job ID: {job_id}, Name: {job_name}")
+        except Exception as e:
+            print(f"Error getting job names: {e}")
+            # If we fail to get names, create jobs list with IDs as names
+            all_jobs = [{'id': job_id, 'name': f"Job {job_id}"} for job_id in TEST_JOB_IDS]
+            if 'data' in locals():
+                print(f"Response data: {data[:200]}...")  # Print first 200 chars of response
+        finally:
+            if conn:
+                conn.close()
     else:
         print("Getting list of all jobs...")
         all_jobs = getJobList()
@@ -1814,9 +1784,25 @@ def main(email_list):
             # Extract nodes and connections from job data
             nodes = job_data.get('nodes', {})
             connections = job_data.get('connections', {})
+            metadata = job_data.get('metadata', {})
+            
+            # Update job name from metadata if available
+            if metadata:
+                metadata_name = metadata.get('name')
+                if metadata_name:
+                    job_name = metadata_name
+                    print(f"Using job name from metadata: {job_name}")
+                else:
+                    # Try to get name from job data directly
+                    job_data_name = job_data.get('name')
+                    if job_data_name:
+                        job_name = job_data_name
+                        print(f"Using name from job data: {job_name}")
+                    else:
+                        print(f"Using existing job name: {job_name}")
             
             print("Extracting nodes...")
-            nodes_data = extractNodes(job_data, job_name, job_id, user_map)  # Pass user_map to extractNodes
+            nodes_data = extractNodes(job_data, job_name, job_id, user_map)
             print(f"Found {len(nodes_data)} nodes")
             
             print("Extracting connections...")
@@ -1831,14 +1817,14 @@ def main(email_list):
                 all_nodes.extend(nodes_data)
                 
                 # Calculate field completion percentage for poles only
-                poles = {node_id: node_data for node_id, node_data in job_data.get('nodes', {}).items()
+                poles = {node_id: node_data for node_id, node_data in nodes.items()
                         if any(node_data.get('attributes', {}).get(type_field, {}).get(source) == 'pole'
                             for type_field in ['node_type', 'pole_type']
                             for source in ['button_added', '-Imported', 'value', 'auto_calced'])}
                 
                 total_poles = len(poles)
                 field_completed = sum(1 for node in poles.values() 
-                                   if node.get('attributes', {}).get('field_completed', {}).get('value') == True)
+                                   if node.get('attributes', {}).get('field_completed', {}).get('value') == 1)
                 field_complete_pct = (field_completed / total_poles * 100) if total_poles > 0 else 0
                 
                 # Find most recent editor and edit time
@@ -1876,20 +1862,24 @@ def main(email_list):
                 # Get utility from first pole with a company value
                 utility = 'Unknown'
                 for node_data in job_data.get('nodes', {}).values():
-                    company_attr = node_data.get('attributes', {}).get('company', {})
-                    # Check all possible sources for company value
-                    for source in ['-Imported', 'button_added', 'value', 'auto_calced']:
-                        company = company_attr.get(source)
-                        if company:
-                            utility = company
-                            break
-                    if utility != 'Unknown':
+                    pole_tag = node_data.get('attributes', {}).get('pole_tag', {})
+                    # First try to get company from -Imported or button_added
+                    company = pole_tag.get('-Imported', {}).get('company') or pole_tag.get('button_added', {}).get('company')
+                    
+                    # If not found, look for company in any direct child of pole_tag
+                    if not company:
+                        for key, value in pole_tag.items():
+                            if isinstance(value, dict) and 'company' in value:
+                                company = value['company']
+                                break
+                    
+                    if company:
+                        utility = company
                         break
                 
-                # Get last modified date
-                last_modified = job_data.get('metadata', {}).get('last_modified', 'Unknown')
-                if last_modified != 'Unknown':
-                    last_modified = datetime.fromtimestamp(last_modified).strftime('%Y-%m-%d')
+                # Get job status and assigned OSP from metadata
+                job_status = metadata.get('job_status', 'Unknown')
+                assigned_osp = metadata.get('assigned_OSP', 'Unknown')
                 
                 # Summarize MR Status counts for the job
                 mr_status_counts = {}
@@ -1901,14 +1891,14 @@ def main(email_list):
                 
                 jobs_summary.append({
                     'job_name': job_name,
-                    'job_status': job_data.get('metadata', {}).get('job_status', 'Unknown'),
+                    'job_status': job_status,
                     'mr_status_counts': mr_status_counts,
-                    'last_modified': last_modified,
                     'field_complete_pct': field_complete_pct,
                     'trace_complete_pct': trace_complete_pct,
                     'utility': utility,
                     'most_recent_editor': most_recent_editor,
-                    'last_edit_time': last_edit_time
+                    'last_edit_time': last_edit_time,
+                    'assigned_osp': assigned_osp
                 })
                 print(f"Job summary updated with MR status counts: {mr_status_counts}")
             
