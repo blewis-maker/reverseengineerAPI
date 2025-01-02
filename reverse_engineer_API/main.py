@@ -1006,6 +1006,9 @@ def update_sharepoint_spreadsheet(df, site_url=None, drive_path=None):
     try:
         print("\nUpdating SharePoint spreadsheet...")
         
+        # Ensure Conversation field is treated as text
+        df['Conversation'] = df['Conversation'].astype(str)
+        
         # Format the data for SharePoint (exclude headers)
         formatted_data = df.values.tolist()  # Only include data rows
         
@@ -1089,7 +1092,7 @@ def update_sharepoint_spreadsheet(df, site_url=None, drive_path=None):
                     return False
                     
                 # First, clear the existing data range (starting from row 4)
-                clear_range = f"A4:N1000"  # Clear data rows only, preserve headers
+                clear_range = f"A4:O1000"  # Clear data rows only, preserve headers
                 clear_response = graph_client.post(
                     f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/worksheets/Aerial%20Status%20Report/range(address='{clear_range}')/clear",
                     headers={"workbook-session-id": session_id}
@@ -1102,10 +1105,10 @@ def update_sharepoint_spreadsheet(df, site_url=None, drive_path=None):
                 # Update timestamp in row 2
                 current_time = datetime.now().strftime('%-m/%-d/%Y %-I:%M %p MST')
                 timestamp_response = graph_client.patch(
-                    f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/worksheets/Aerial%20Status%20Report/range(address='A2:N2')",
+                    f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/worksheets/Aerial%20Status%20Report/range(address='A2:O2')",
                     headers={"workbook-session-id": session_id},
                     json={
-                        "values": [[current_time] + [""] * 13]  # Empty strings for the rest of the row
+                        "values": [[current_time] + [""] * 14]  # Empty strings for the rest of the row
                     }
                 )
                 
@@ -1115,7 +1118,7 @@ def update_sharepoint_spreadsheet(df, site_url=None, drive_path=None):
                 # Update data starting at A4 (preserving headers)
                 if formatted_data:
                     num_rows = len(formatted_data)
-                    data_range = f"A4:N{num_rows + 3}"  # +3 because we start at row 4 and Excel is 1-based
+                    data_range = f"A4:O{num_rows + 3}"  # +3 because we start at row 4 and Excel is 1-based
                     update_response = graph_client.patch(
                         f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/worksheets/Aerial%20Status%20Report/range(address='{data_range}')",
                         headers={"workbook-session-id": session_id},
@@ -1167,13 +1170,14 @@ def create_report(jobs_summary):
         utility = job.get('utility', 'Unknown')
         most_recent_editor = job.get('most_recent_editor', 'Unknown')
         last_edit_time = job.get('last_edit_time', 'Unknown')
-        conversation = job.get('conversation', '')
+        conversation = str(job.get('conversation', ''))  # Ensure conversation is a string
         project = job.get('project', '')
         assigned_osp = job.get('assigned_osp', 'Unknown')
+        comments = job.get('comments', '')
 
         report_data.append({
             'Job Name': job_name,
-            'Conversation': conversation,
+            'Conversation': f"'{conversation}",  # Add leading apostrophe to force text format
             'Project': project,
             'Utility': utility,
             'Job Status': job_status,
@@ -1185,11 +1189,15 @@ def create_report(jobs_summary):
             'Comm MR': mr_status_counts.get('Comm MR', 0),
             'Electric MR': mr_status_counts.get('Electric MR', 0),
             'PCO Required': mr_status_counts.get('PCO Required', 0),
-            'Pole Count': pole_count
+            'Pole Count': pole_count,
+            'Comments': comments
         })
 
     # Create a DataFrame from the report data
     df_report = pd.DataFrame(report_data)
+    
+    # Ensure Conversation column is treated as text
+    df_report['Conversation'] = df_report['Conversation'].astype(str)
 
     # Sort the DataFrame first by Utility, then by Job Status
     df_report = df_report.sort_values(by=['Utility', 'Job Status'])
@@ -1250,7 +1258,8 @@ def create_report(jobs_summary):
             "Comm MR": 10,
             "Electric MR": 12,
             "PCO Required": 12,
-            "Pole Count": 12
+            "Pole Count": 12,
+            "Comments": 50  # Add width for Comments column
         }
 
         header_colors = {
@@ -1267,7 +1276,8 @@ def create_report(jobs_summary):
             "Comm MR": "FFFF00",
             "Electric MR": "FFC000",
             "PCO Required": "FF0000",
-            "Pole Count": "CCFFCC"
+            "Pole Count": "CCFFCC",
+            "Comments": "CCFFCC"  # Add color for Comments column
         }
 
         for col_num, column_title in enumerate(df_report.columns, 1):
@@ -2055,12 +2065,14 @@ def main(email_list):
                 assigned_osp = metadata.get('assigned_OSP', 'Unknown')
                 conversation = metadata.get('conversation', '')
                 project = metadata.get('project', '')
+                comments = metadata.get('comments', '')  # Extract comments from metadata
                 
                 print("\nDEBUG - Metadata fields:")
                 print(f"Job Status: {job_status}")
                 print(f"Assigned OSP: {assigned_osp}")
                 print(f"Conversation: {conversation}")
                 print(f"Project: {project}")
+                print(f"Comments: {comments}")
                 
                 # Summarize MR Status counts for the job
                 mr_status_counts = {}
@@ -2084,7 +2096,8 @@ def main(email_list):
                     'last_edit_time': last_edit_time,
                     'assigned_osp': assigned_osp,
                     'conversation': conversation,
-                    'project': project
+                    'project': project,
+                    'comments': comments  # Add comments to job summary
                 })
                 
                 print("\nDEBUG - Final job summary entry:")
