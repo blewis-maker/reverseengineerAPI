@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  scheduler:
+    build: .
+    container_name: aerial-status-scheduler
+    volumes:
+      - .:/app
+      - ./logs:/app/logs
+      - ./metrics:/app/metrics
+    env_file:
+      - .env
+    restart: always
+    environment:
+      - TZ=America/Denver  # Set timezone for accurate scheduling 

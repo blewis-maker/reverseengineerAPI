@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 *.so
 .Python
+env/
 build/
 develop-eggs/
 dist/
@@ -20,24 +21,20 @@ wheels/
 .installed.cfg
 *.egg
 
-# Environment variables and secrets
+# Environment variables
 .env
-*.env
-.env.*
-o365_token.txt
 
 # Logs
 *.log
 logs/
-katapult_automation.log
-script_log.txt
 
-# Workspace
-workspace/
+# Docker
+.docker/
+docker-compose.override.yml
 
 # IDE
-.vscode/
 .idea/
+.vscode/
 *.swp
 *.swo
 

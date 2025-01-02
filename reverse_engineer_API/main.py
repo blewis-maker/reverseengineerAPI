@@ -42,7 +42,7 @@ logging.basicConfig(
 load_dotenv()
 
 # Toggle to enable/disable testing a specific job
-TEST_ONLY_SPECIFIC_JOB = True
+TEST_ONLY_SPECIFIC_JOB = False
 
 # IDs of the test jobs
 TEST_JOB_IDS = [
