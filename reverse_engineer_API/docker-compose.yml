@@ -13,3 +13,5 @@ services:
     restart: always
     environment:
       - TZ=America/Denver  # Set timezone for accurate scheduling 
+      - KATAPULT_API_KEY=${KATAPULT_API_KEY}
+      - PYTHONPATH=/app 

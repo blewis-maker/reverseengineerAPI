@@ -1,12 +1,6 @@
-pandas>=2.0.0
-geopandas>=0.13.2
-shapely>=2.0.1
+requests>=2.31.0
+pandas>=2.1.4
 openpyxl>=3.1.2
 python-dotenv>=1.0.0
-msal>=1.20.0
-requests>=2.31.0
-O365>=2.0.26
-schedule==1.2.0
 matplotlib>=3.7.1
-seaborn>=0.12.2
-Pillow>=10.0.0  # Required for openpyxl image support 
+seaborn>=0.12.2 

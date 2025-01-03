@@ -4,302 +4,238 @@ import json
 import logging
 from datetime import datetime, timedelta
 import pandas as pd
+import requests
 from pathlib import Path
-import matplotlib.pyplot as plt
-import seaborn as sns
-from openpyxl import Workbook
-from openpyxl.chart import BarChart, LineChart, Reference
-from openpyxl.drawing.image import Image
+import openpyxl
+from io import BytesIO
 from openpyxl.utils.dataframe import dataframe_to_rows
+from dotenv import load_dotenv
+import time
+import random
 
-# Import shared utilities from main.py
-from main import (
-    getJobData,
-    extractNodes,
-    extractConnections,
-    extractAnchors,
-    update_sharepoint_spreadsheet,
-    send_email_notification
-)
+# Load environment variables
+load_dotenv()
 
-# Ensure required directories exist
+# Ensure required directories exist in Docker environment
 os.makedirs('/app/logs', exist_ok=True)
-os.makedirs('/app/metrics', exist_ok=True)
 
-# Configure logging
+# Configure logging for Docker environment
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[
         logging.FileHandler('/app/logs/incremental_update.log'),
-        logging.StreamHandler(sys.stdout)  # Also log to console for Docker logs
+        logging.StreamHandler(sys.stdout)
     ]
 )
 logger = logging.getLogger(__name__)
 
-class JobUpdateTracker:
-    def __init__(self):
-        self.tracker_file = "/app/metrics/job_update_tracker.json"
-        self.load_tracker()
+# Load API key from environment
+API_KEY = os.getenv('KATAPULT_API_KEY')
+if not API_KEY:
+    raise ValueError("KATAPULT_API_KEY environment variable is not set")
 
-    def load_tracker(self):
-        """Load the last update timestamp and metrics from tracker file"""
-        if os.path.exists(self.tracker_file):
-            with open(self.tracker_file, 'r') as f:
-                self.tracker_data = json.load(f)
-        else:
-            self.tracker_data = {
-                'last_daily_update': None,
-                'last_weekly_update': None,
-                'weekly_metrics': {}
-            }
-
-    def save_tracker(self):
-        """Save current tracker state to file"""
-        with open(self.tracker_file, 'w') as f:
-            json.dump(self.tracker_data, f, indent=2)
-
-    def get_last_update_time(self, update_type='daily'):
-        """Get the timestamp of last update for given type"""
-        return self.tracker_data.get(f'last_{update_type}_update')
-
-    def update_timestamp(self, update_type='daily'):
-        """Update the timestamp for given update type"""
-        self.tracker_data[f'last_{update_type}_update'] = datetime.utcnow().isoformat()
-        self.save_tracker()
-
-def get_modified_jobs(since_timestamp=None):
-    """Get list of jobs modified since the given timestamp"""
-    try:
-        # Get all jobs
-        all_jobs = getJobList()
-        
-        if not since_timestamp:
-            return all_jobs
+def make_api_request(url, params, max_retries=3, base_delay=2):
+    """Make API request with retry logic for rate limiting"""
+    # Enforce rate limit between calls
+    time.sleep(2)
+    
+    for attempt in range(max_retries):
+        try:
+            response = requests.get(url, params=params)
             
-        # Filter jobs modified since timestamp
-        modified_jobs = []
-        for job in all_jobs:
-            job_data = getJobData(job['id'])
-            if job_data and job_data.get('metadata', {}).get('last_modified'):
-                last_modified = datetime.fromisoformat(job_data['metadata']['last_modified'])
-                if last_modified > since_timestamp:
-                    modified_jobs.append(job)
-                    
-        return modified_jobs
+            if response.status_code == 429:  # Rate limited
+                delay = base_delay * (2 ** attempt) + random.random()  # Exponential backoff with jitter
+                logger.warning(f"Rate limited. Waiting {delay:.2f} seconds before retry {attempt + 1}/{max_retries}")
+                time.sleep(delay)
+                continue
+                
+            return response
+            
+        except Exception as e:
+            if attempt == max_retries - 1:
+                raise
+            delay = base_delay * (2 ** attempt) + random.random()
+            logger.warning(f"Request failed. Waiting {delay:.2f} seconds before retry {attempt + 1}/{max_retries}")
+            time.sleep(delay)
+    
+    return None
+
+def get_updated_jobs(hours=24):
+    """Get list of jobs updated in the last specified hours using Katapult API"""
+    try:
+        # Calculate the date range
+        to_date = datetime.now()
+        from_date = to_date - timedelta(hours=hours)
+        
+        # Format dates for Katapult API
+        to_date_str = to_date.strftime('%m/%d/%y')
+        from_date_str = from_date.strftime('%m/%d/%y')
+        
+        # Katapult API endpoint for updated jobs
+        url = "https://katapultpro.com/api/v2/updatedjobslist"
+        params = {
+            'fromDate': from_date_str,
+            'toDate': to_date_str,
+            'useToday': 'true',
+            'api_key': API_KEY
+        }
+        
+        logger.info(f"Requesting jobs updated between {from_date_str} and {to_date_str}")
+        response = make_api_request(url, params)
+        
+        if not response:
+            logger.error("Failed to get updated jobs after retries")
+            return []
+            
+        if response.status_code == 401:
+            logger.error("Authentication failed. Please check API key.")
+            return []
+        elif response.status_code != 200:
+            logger.error(f"Failed to get updated jobs. Status code: {response.status_code}")
+            logger.error(f"Response: {response.text}")
+            return []
+            
+        jobs = response.json()
+        logger.info(f"Retrieved {len(jobs)} updated jobs")
+        return jobs
         
     except Exception as e:
-        logger.error(f"Error getting modified jobs: {str(e)}")
+        logger.error(f"Error getting updated jobs: {str(e)}")
         return []
 
-def process_jobs(jobs):
-    """Process a list of jobs and return metrics"""
-    metrics = {
-        'total_jobs': len(jobs),
-        'total_nodes': 0,
-        'total_connections': 0,
-        'total_anchors': 0,
-        'jobs_processed': []
-    }
-    
-    all_nodes = []
-    all_connections = []
-    all_anchors = []
-    jobs_summary = []
-    
-    for job in jobs:
-        try:
-            job_data = getJobData(job['id'])
+def get_job_data(job_id):
+    """Get detailed job data using Katapult API"""
+    try:
+        url = f"https://katapultpro.com/api/v2/jobs/{job_id}"
+        params = {
+            'api_key': API_KEY
+        }
+        
+        response = make_api_request(url, params)
+        if not response:
+            logger.error(f"Failed to get job data for {job_id} after retries")
+            return None
+            
+        if response.status_code != 200:
+            logger.error(f"Failed to get job data for {job_id}. Status code: {response.status_code}")
+            return None
+            
+        job_data = response.json()
+        logger.info(f"Retrieved data for job {job_id}")
+        return job_data
+        
+    except Exception as e:
+        logger.error(f"Error getting job data for {job_id}: {str(e)}")
+        return None
+
+def process_job_data(job_data):
+    """Process job data and extract relevant information"""
+    try:
+        if not job_data:
+            return None
+            
+        # Extract basic job info
+        job_info = {
+            'Job ID': job_data.get('id'),
+            'Job Name': job_data.get('name'),
+            'Status': job_data.get('metadata', {}).get('status', 'Unknown'),
+            'Utility': job_data.get('metadata', {}).get('utility', 'Unknown'),
+            'Assigned OSP': job_data.get('metadata', {}).get('assigned_osp', 'Unassigned'),
+            'Conversation': job_data.get('metadata', {}).get('conversation', ''),
+            'Project': job_data.get('metadata', {}).get('project', 'Unknown'),
+            'Comments': job_data.get('metadata', {}).get('comments', ''),
+            'Last Edit': job_data.get('metadata', {}).get('last_modified', datetime.now().isoformat())
+        }
+        
+        return job_info
+        
+    except Exception as e:
+        logger.error(f"Error processing job data: {str(e)}")
+        return None
+
+def update_sharepoint_tracker(job_data_list):
+    """Update SharePoint Aerial Status Tracker with new job data"""
+    try:
+        # SharePoint file details
+        site_url = os.getenv('SHAREPOINT_SITE_URL', 'deeplydigital.sharepoint.com:/sites/OSPIntegrationTestingSite')
+        drive_path = os.getenv('SHAREPOINT_DRIVE_PATH', 'Documents')
+        file_name = os.getenv('SHAREPOINT_FILE_NAME', 'Aerial_Status_Tracker.xlsx')
+        
+        # For testing, use a local copy
+        test_file = 'test_data/Aerial_Status_Tracker.xlsx'
+        os.makedirs('test_data', exist_ok=True)
+        
+        # If file doesn't exist, create a new one with basic structure
+        if not os.path.exists(test_file):
+            df = pd.DataFrame(columns=[
+                'Job ID', 'Job Name', 'Status', 'Utility', 'Assigned OSP',
+                'Conversation', 'Project', 'Comments', 'Last Edit'
+            ])
+            df.to_excel(test_file, index=False)
+            logger.info(f"Created new tracker file at {test_file}")
+        
+        # Read existing spreadsheet
+        existing_df = pd.read_excel(test_file)
+        
+        # Process each job
+        for job_data in job_data_list:
             if not job_data:
                 continue
                 
-            # Extract data
-            nodes = extractNodes(job_data)
-            connections = extractConnections(job_data)
-            anchors = extractAnchors(job_data)
+            job_name = job_data['Job Name']
             
-            # Update metrics
-            metrics['total_nodes'] += len(nodes)
-            metrics['total_connections'] += len(connections)
-            metrics['total_anchors'] += len(anchors)
-            
-            # Add to collections
-            all_nodes.extend(nodes)
-            all_connections.extend(connections)
-            all_anchors.extend(anchors)
-            
-            # Add job summary
-            job_summary = {
-                'job_id': job['id'],
-                'job_name': job['name'],
-                'nodes': len(nodes),
-                'connections': len(connections),
-                'anchors': len(anchors)
-            }
-            jobs_summary.append(job_summary)
-            metrics['jobs_processed'].append(job_summary)
-            
-        except Exception as e:
-            logger.error(f"Error processing job {job['id']}: {str(e)}")
-            continue
-            
-    # Create and update report
-    report_path = create_report(jobs_summary)
-    if report_path:
-        logger.info(f"Report created: {report_path}")
+            # Check if job exists
+            if job_name in existing_df['Job Name'].values:
+                # Update existing row
+                idx = existing_df[existing_df['Job Name'] == job_name].index[0]
+                for col in job_data.keys():
+                    if col in existing_df.columns:
+                        existing_df.at[idx, col] = job_data[col]
+            else:
+                # Add new row
+                new_df = pd.DataFrame([job_data])
+                existing_df = pd.concat([existing_df, new_df], ignore_index=True)
         
-    return metrics
-
-def daily_update():
-    """Run daily update process"""
-    logger.info("Starting daily update...")
-    
-    tracker = JobUpdateTracker()
-    last_update = tracker.get_last_update_time('daily')
-    
-    if last_update:
-        since_timestamp = datetime.fromisoformat(last_update)
-    else:
-        # If no previous update, process last 24 hours
-        since_timestamp = datetime.utcnow() - timedelta(days=1)
+        # Sort by Job Name
+        existing_df.sort_values('Job Name', inplace=True)
         
-    # Get modified jobs
-    modified_jobs = get_modified_jobs(since_timestamp)
-    logger.info(f"Found {len(modified_jobs)} modified jobs since {since_timestamp}")
-    
-    # Process jobs
-    metrics = process_jobs(modified_jobs)
-    logger.info(f"Processed {metrics['total_jobs']} jobs")
-    
-    # Update tracker
-    tracker.update_timestamp('daily')
-    
-    return metrics
-
-def weekly_update():
-    """Run weekly update process"""
-    logger.info("Starting weekly update...")
-    
-    tracker = JobUpdateTracker()
-    last_update = tracker.get_last_update_time('weekly')
-    
-    if last_update:
-        since_timestamp = datetime.fromisoformat(last_update)
-    else:
-        # If no previous update, process last 7 days
-        since_timestamp = datetime.utcnow() - timedelta(days=7)
+        # Save back to file
+        existing_df.to_excel(test_file, index=False)
+        logger.info(f"Successfully updated tracker at {test_file}")
         
-    # Get modified jobs
-    modified_jobs = get_modified_jobs(since_timestamp)
-    logger.info(f"Found {len(modified_jobs)} modified jobs since {since_timestamp}")
-    
-    # Process jobs
-    metrics = process_jobs(modified_jobs)
-    logger.info(f"Processed {metrics['total_jobs']} jobs")
-    
-    # Generate weekly report with charts
-    try:
-        generate_weekly_report(metrics)
-    except Exception as e:
-        logger.error(f"Error generating weekly report: {str(e)}")
-    
-    # Update tracker
-    tracker.update_timestamp('weekly')
-    
-    return metrics
-
-def generate_weekly_report(metrics):
-    """Generate weekly report with charts and metrics"""
-    logger.info("Generating weekly report...")
-    
-    # Create report directory if it doesn't exist
-    report_dir = '/app/reports'
-    os.makedirs(report_dir, exist_ok=True)
-    
-    # Generate timestamp for report
-    timestamp = datetime.now().strftime('%Y%m%d_%H%M')
-    report_path = os.path.join(report_dir, f'weekly_report_{timestamp}.xlsx')
-    
-    try:
-        # Create Excel workbook
-        wb = Workbook()
-        ws = wb.active
-        ws.title = "Weekly Metrics"
-        
-        # Add summary metrics
-        ws['A1'] = "Weekly Status Report"
-        ws['A2'] = f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
-        ws['A4'] = "Summary Metrics"
-        ws['A5'] = "Total Jobs Processed"
-        ws['B5'] = metrics['total_jobs']
-        ws['A6'] = "Total Nodes"
-        ws['B6'] = metrics['total_nodes']
-        ws['A7'] = "Total Connections"
-        ws['B7'] = metrics['total_connections']
-        ws['A8'] = "Total Anchors"
-        ws['B8'] = metrics['total_anchors']
-        
-        # Add job details
-        ws['A10'] = "Job Details"
-        headers = ['Job ID', 'Job Name', 'Nodes', 'Connections', 'Anchors']
-        for col, header in enumerate(headers, 1):
-            ws.cell(row=11, column=col, value=header)
-            
-        row = 12
-        for job in metrics['jobs_processed']:
-            ws.cell(row=row, column=1, value=job['job_id'])
-            ws.cell(row=row, column=2, value=job['job_name'])
-            ws.cell(row=row, column=3, value=job['nodes'])
-            ws.cell(row=row, column=4, value=job['connections'])
-            ws.cell(row=row, column=5, value=job['anchors'])
-            row += 1
-            
-        # Create charts
-        create_weekly_charts(wb, metrics)
-        
-        # Save workbook
-        wb.save(report_path)
-        logger.info(f"Weekly report saved to: {report_path}")
-        
-        # Send email notification
-        send_email_notification(
-            subject="Weekly Status Report Generated",
-            body=f"The weekly status report has been generated and saved to: {report_path}",
-            attachment_path=report_path
-        )
+        # TODO: Implement actual SharePoint upload once credentials are configured
+        logger.warning("SharePoint upload not implemented yet - using local file for testing")
         
     except Exception as e:
-        logger.error(f"Error creating weekly report: {str(e)}")
+        logger.error(f"Error updating SharePoint tracker: {str(e)}")
         raise
 
-def create_weekly_charts(wb, metrics):
-    """Create charts for weekly report"""
-    # Add a new worksheet for charts
-    ws_charts = wb.create_sheet(title="Charts")
-    
-    # Create job metrics chart
-    chart1 = BarChart()
-    chart1.title = "Job Metrics Distribution"
-    chart1.y_axis.title = "Count"
-    chart1.x_axis.title = "Metric Type"
-    
-    # Add data for chart
-    ws_charts['A1'] = "Metric"
-    ws_charts['B1'] = "Count"
-    metrics_data = [
-        ("Nodes", metrics['total_nodes']),
-        ("Connections", metrics['total_connections']),
-        ("Anchors", metrics['total_anchors'])
-    ]
-    
-    for row, (metric, count) in enumerate(metrics_data, 2):
-        ws_charts.cell(row=row, column=1, value=metric)
-        ws_charts.cell(row=row, column=2, value=count)
+def process_daily_update():
+    """Process daily updates for jobs modified in the last 24 hours"""
+    try:
+        # Get updated jobs
+        updated_jobs = get_updated_jobs(hours=24)
+        if not updated_jobs:
+            logger.info("No jobs updated in the last 24 hours")
+            return
+            
+        # Process each job
+        processed_jobs = []
+        for job in updated_jobs:
+            job_data = get_job_data(job.get('jobId'))  # make_api_request already handles the 2-second delay
+            if job_data:
+                processed_data = process_job_data(job_data)
+                if processed_data:
+                    processed_jobs.append(processed_data)
         
-    data = Reference(ws_charts, min_col=2, min_row=1, max_row=4, max_col=2)
-    cats = Reference(ws_charts, min_col=1, min_row=2, max_row=4)
-    chart1.add_data(data, titles_from_data=True)
-    chart1.set_categories(cats)
-    
-    # Add chart to worksheet
-    ws_charts.add_chart(chart1, "A6") 
+        if processed_jobs:
+            # Update SharePoint tracker
+            update_sharepoint_tracker(processed_jobs)
+            logger.info(f"Successfully processed {len(processed_jobs)} jobs")
+        else:
+            logger.info("No jobs to update in SharePoint")
+            
+    except Exception as e:
+        logger.error(f"Error in daily update process: {str(e)}")
+        raise 

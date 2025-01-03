@@ -1,45 +1,40 @@
+import os
 import logging
-from incremental_update import daily_update, weekly_update
+import sys
+from datetime import datetime
+from incremental_update import process_daily_update
 
-# Configure logging
+# Ensure required directories exist in Docker environment
+os.makedirs('/app/logs', exist_ok=True)
+
+# Configure logging for Docker environment
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(sys.stdout),
+        logging.FileHandler('/app/logs/test_updates.log')
+    ]
 )
 logger = logging.getLogger(__name__)
 
-def test_daily_update():
-    """Test daily update functionality"""
-    logger.info("Testing daily update...")
+def test_daily_sync():
+    """Test daily sync functionality in Docker environment"""
+    logger.info("Starting daily sync test in Docker container...")
+    
     try:
-        metrics = daily_update()
-        logger.info(f"Daily update test completed. Processed {metrics['total_jobs']} jobs")
+        # Ensure we're in the correct directory
+        os.chdir('/app')
+        
+        # Run the daily update process
+        process_daily_update()
+        logger.info("Daily sync test completed successfully")
         return True
+        
     except Exception as e:
-        logger.error(f"Error in daily update test: {str(e)}")
+        logger.error(f"Error in daily sync test: {str(e)}")
         return False
 
-def test_weekly_update():
-    """Test weekly update functionality"""
-    logger.info("Testing weekly update...")
-    try:
-        metrics = weekly_update()
-        logger.info(f"Weekly update test completed. Processed {metrics['total_jobs']} jobs")
-        return True
-    except Exception as e:
-        logger.error(f"Error in weekly update test: {str(e)}")
-        return False
-
-if __name__ == "__main__":
-    logger.info("Starting update tests...")
-    
-    # Test daily update
-    daily_success = test_daily_update()
-    
-    # Test weekly update
-    weekly_success = test_weekly_update()
-    
-    # Report results
-    logger.info("\nTest Results:")
-    logger.info(f"Daily Update: {'SUCCESS' if daily_success else 'FAILED'}")
-    logger.info(f"Weekly Update: {'SUCCESS' if weekly_success else 'FAILED'}") 
+if __name__ == '__main__':
+    success = test_daily_sync()
+    exit(0 if success else 1) 
