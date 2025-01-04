@@ -109,7 +109,55 @@ class ArcGISUpdater:
         except Exception as e:
             print(f"Error deleting features: {str(e)}")
 
-    def update_features(self, layer_name, features):
+    def clear_all_features(self, layer_name):
+        """Delete all features from a layer"""
+        if layer_name not in self.feature_services:
+            raise ValueError(f"Feature service for {layer_name} not found")
+            
+        service_url = self.feature_services[layer_name]
+        
+        try:
+            # Query for all features
+            query_url = f"{service_url}/query"
+            query_params = {
+                'f': 'json',
+                'token': self.token,
+                'where': '1=1',  # Get all features
+                'returnIdsOnly': 'true'
+            }
+            
+            response = requests.post(query_url, data=query_params, verify=False)
+            result = response.json()
+            
+            if 'objectIds' in result and result['objectIds']:
+                object_ids = result['objectIds']
+                print(f"Found {len(object_ids)} existing features to delete from {layer_name}")
+                
+                # Delete features in chunks
+                chunk_size = 100
+                for i in range(0, len(object_ids), chunk_size):
+                    chunk = object_ids[i:i + chunk_size]
+                    delete_params = {
+                        'f': 'json',
+                        'token': self.token,
+                        'objectIds': ','.join(map(str, chunk))
+                    }
+                    
+                    delete_url = f"{service_url}/deleteFeatures"
+                    delete_response = requests.post(delete_url, data=delete_params, verify=False)
+                    delete_result = delete_response.json()
+                    
+                    if 'error' in delete_result:
+                        print(f"Error deleting features: {delete_result['error']}")
+                    else:
+                        print(f"Successfully deleted {len(chunk)} features")
+            else:
+                print(f"No existing features found in {layer_name}")
+                
+        except Exception as e:
+            print(f"Error clearing features: {str(e)}")
+
+    def update_features(self, layer_name, features, test_mode=True):
         """Add new features to the layer (after deleting existing ones)"""
         if layer_name not in self.feature_services:
             raise ValueError(f"Feature service for {layer_name} not found")
@@ -134,6 +182,11 @@ class ArcGISUpdater:
             service_info = response.json()
             logging.info(f"Successfully connected to feature service: {layer_name}")
             logging.info(f"Service info: {json.dumps(service_info, indent=2)}")
+            
+            # In test mode, clear all existing features
+            if test_mode:
+                logging.info(f"Test mode: Clearing all existing features from {layer_name}")
+                self.clear_all_features(layer_name)
             
             # Map fields according to feature service schema
             mapped_features = []
