@@ -135,9 +135,52 @@ class ArcGISUpdater:
             logging.info(f"Successfully connected to feature service: {layer_name}")
             logging.info(f"Service info: {json.dumps(service_info, indent=2)}")
             
+            # Map fields according to feature service schema
+            mapped_features = []
+            for feature in features:
+                mapped_feature = {
+                    'geometry': feature['geometry']
+                }
+                
+                # Map attributes based on layer type
+                attrs = feature.get('attributes', {})
+                if layer_name == 'poles':
+                    mapped_feature['attributes'] = {
+                        'node_id': attrs.get('node_id', ''),
+                        'job_name': attrs.get('job_name', ''),
+                        'job_stat': attrs.get('job_status', ''),
+                        'mr_status': attrs.get('mr_status', ''),
+                        'utility': attrs.get('utility', ''),
+                        'completed': attrs.get('completed', ''),
+                        'pole_tag': attrs.get('pole_tag', ''),
+                        'poa_ht': attrs.get('poa_ht', ''),
+                        'conv': attrs.get('conv', ''),
+                        'proj': attrs.get('proj', ''),
+                        'scid': attrs.get('scid', ''),
+                        'editor': attrs.get('last_editor', ''),
+                        'edit_time': attrs.get('last_edit', '')
+                    }
+                elif layer_name == 'connections':
+                    mapped_feature['attributes'] = {
+                        'conn_id': attrs.get('conn_id', ''),
+                        'conn_type': attrs.get('conn_type', ''),
+                        'mid_ht': attrs.get('att_height', ''),
+                        'node1_id': attrs.get('node_id_1', ''),
+                        'node2_id': attrs.get('node_id_2', ''),
+                        'wire_spec': attrs.get('wire_spec', '')
+                    }
+                elif layer_name == 'anchors':
+                    mapped_feature['attributes'] = {
+                        'anch_spec': attrs.get('anch_spec', ''),
+                        'job_id': attrs.get('job_id', ''),
+                        'anchor_typ': attrs.get('anchor_type', '')
+                    }
+                
+                mapped_features.append(mapped_feature)
+            
             # Get unique job names from features
             job_names = set()
-            for feature in features:
+            for feature in mapped_features:
                 job_name = feature.get('attributes', {}).get('job_name', '')
                 if job_name:
                     job_names.add(job_name)
@@ -152,8 +195,8 @@ class ArcGISUpdater:
             successful_adds = 0
             failed_adds = 0
             
-            for i in range(0, len(features), chunk_size):
-                chunk = features[i:i + chunk_size]
+            for i in range(0, len(mapped_features), chunk_size):
+                chunk = mapped_features[i:i + chunk_size]
                 chunk_start = i + 1
                 chunk_end = min(i + chunk_size, total_features)
                 
