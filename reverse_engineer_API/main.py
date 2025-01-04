@@ -46,7 +46,7 @@ logging.basicConfig(
 load_dotenv()
 
 # Toggle to enable/disable testing a specific job
-TEST_ONLY_SPECIFIC_JOB = False
+TEST_ONLY_SPECIFIC_JOB = True
 
 # IDs of the test jobs
 TEST_JOB_IDS = [
@@ -1005,12 +1005,37 @@ def saveMasterGeoPackage(all_nodes, all_connections, all_anchors, filename):
     print("Master GeoPackage saved successfully")
 
 def update_sharepoint_spreadsheet(df, site_url=None, drive_path=None):
-    """Update the spreadsheet in SharePoint with new data while preserving formatting."""
+    """
+    Update the spreadsheet in SharePoint with new data, supporting co-authoring
+    """
     try:
         print("\nUpdating SharePoint spreadsheet...")
         
-        # Format the data for SharePoint (exclude headers)
-        formatted_data = df.values.tolist()  # Only include data rows
+        # Debug info
+        print(f"\nDataFrame Info:")
+        print(f"Shape: {df.shape}")
+        print(f"Columns: {list(df.columns)}")
+        print(f"Sample of first row: {df.iloc[0].to_dict()}")
+        
+        # Sort DataFrame by Utility and Job Status
+        df = df.sort_values(by=['Utility', 'Job Status'])
+        
+        # Format the data for SharePoint - ensure all values are strings
+        formatted_data = []
+        for _, row in df.iterrows():
+            formatted_row = []
+            for value in row:
+                if pd.isna(value):
+                    formatted_row.append("")
+                else:
+                    formatted_row.append(str(value))
+            formatted_data.append(formatted_row)
+        
+        # Debug formatted data
+        print(f"\nFormatted Data Info:")
+        print(f"Number of rows: {len(formatted_data)}")
+        if formatted_data:
+            print(f"Sample formatted row: {formatted_data[0]}")
         
         # Use configured paths or fallback to parameters
         site_url = site_url or CONFIG['SHAREPOINT']['SITE_URL']
@@ -1104,6 +1129,19 @@ def update_sharepoint_spreadsheet(df, site_url=None, drive_path=None):
                 if timestamp_response.status_code != 200:
                     print(f"Failed to update timestamp. Status code: {timestamp_response.status_code}")
                     
+                # Clear existing data first (from row 4 onwards)
+                clear_range = f"A4:O1000"  # Clear a large range to ensure all data is removed
+                clear_response = graph_client.patch(
+                    f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/worksheets/Aerial%20Status%20Report/range(address='{clear_range}')",
+                    headers={"workbook-session-id": session_id},
+                    json={
+                        "values": [[""]*15]*997  # 997 rows of empty values (1000-3)
+                    }
+                )
+                
+                if clear_response.status_code != 200:
+                    print(f"Failed to clear existing data. Status code: {clear_response.status_code}")
+                    
                 # Update data starting at A4 (preserving headers)
                 if formatted_data:
                     num_rows = len(formatted_data)
@@ -1118,14 +1156,20 @@ def update_sharepoint_spreadsheet(df, site_url=None, drive_path=None):
                     if format_response.status_code == 200:
                         existing_format = format_response.json()
                         
-                        # Update values while preserving format
+                        # Debug print the exact data structure
+                        print("\nDebug - SharePoint Update Data Structure:")
+                        print(f"Data Range: {data_range}")
+                        print("Update Payload:")
+                        update_payload = {
+                            "values": formatted_data
+                        }
+                        print(json.dumps(update_payload, indent=2))
+                        
+                        # Update values only, without format
                         update_response = graph_client.patch(
                             f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/worksheets/Aerial%20Status%20Report/range(address='{data_range}')",
                             headers={"workbook-session-id": session_id},
-                            json={
-                                "values": formatted_data,
-                                "format": existing_format
-                            }
+                            json=update_payload
                         )
                         
                         if update_response.status_code != 200:

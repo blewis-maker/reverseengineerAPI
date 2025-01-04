@@ -143,7 +143,9 @@ def process_daily_update():
                 continue
             
             # Extract job name and metadata
-            job_name = job_data.get('metadata', {}).get('name', f"Job {job_id}")
+            metadata = job_data.get('metadata', {})
+            job_name = metadata.get('name', f"Job {job_id}")
+            job_status = metadata.get('status', 'Unknown')
             
             # Extract nodes, connections, and anchors
             nodes_data = extractNodes(job_data, job_name, job_id)
@@ -161,6 +163,44 @@ def process_daily_update():
                 anchors = extractAnchors(job_data, job_name, job_id)
                 if anchors:
                     all_anchors.extend(anchors)
+                    
+                # Collect job summary data
+                mr_status_counts = {'No MR': 0, 'Comm MR': 0, 'Electric MR': 0, 'PCO Required': 0}
+                field_complete = 0
+                trace_complete = 0
+                utility = 'Unknown'
+                most_recent_editor = 'Unknown'
+                last_edit_time = 'Unknown'
+                
+                for node in nodes_data:
+                    if node.get('type') == 'pole':
+                        mr_status = node.get('mr_status', 'No MR')
+                        mr_status_counts[mr_status] = mr_status_counts.get(mr_status, 0) + 1
+                        if node.get('field_complete'):
+                            field_complete += 1
+                        if node.get('trace_complete'):
+                            trace_complete += 1
+                        utility = node.get('utility', utility)
+                        editor = node.get('last_editor', most_recent_editor)
+                        edit_time = node.get('last_edit', last_edit_time)
+                        if edit_time > last_edit_time or last_edit_time == 'Unknown':
+                            most_recent_editor = editor
+                            last_edit_time = edit_time
+                
+                total_poles = sum(mr_status_counts.values())
+                field_complete_pct = (field_complete / total_poles * 100) if total_poles > 0 else 0
+                trace_complete_pct = (trace_complete / total_poles * 100) if total_poles > 0 else 0
+                
+                jobs_summary.append({
+                    'job_name': job_name,
+                    'job_status': job_status,
+                    'mr_status_counts': mr_status_counts,
+                    'field_complete_pct': field_complete_pct,
+                    'trace_complete_pct': trace_complete_pct,
+                    'utility': utility,
+                    'most_recent_editor': most_recent_editor,
+                    'last_edit_time': last_edit_time
+                })
             
             logging.info(f"Completed processing job {job_id}")
         
@@ -173,15 +213,25 @@ def process_daily_update():
             else:
                 logging.error("Failed to update ArcGIS feature services")
             
-            # Save to shapefiles and update SharePoint
+            # Save to shapefiles
             workspace_path = CONFIG['WORKSPACE_PATH']
             logging.info("Saving data to shapefiles...")
             saveToShapefiles(all_nodes, all_connections, all_anchors, workspace_path)
+            
+            # Generate and update report
+            if jobs_summary:
+                logging.info("Generating report...")
+                report_path = create_report(jobs_summary)
+                if report_path:
+                    logging.info(f"Report generated at: {report_path}")
+                else:
+                    logging.error("Failed to generate report")
+            
+            return True
         else:
             logging.info("No data extracted for any job. Nothing to save.")
-        
-        return True
-        
+            return False
+            
     except Exception as e:
         logging.error(f"Error in process_daily_update: {str(e)}")
         return False 
