@@ -2,8 +2,6 @@ import os
 import json
 import requests
 from datetime import datetime
-import geopandas as gpd
-from arcgis.gis import GIS
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -12,125 +10,59 @@ load_dotenv()
 class ArcGISUpdater:
     def __init__(self):
         # Load credentials from environment variables
-        self.portal_url = os.getenv('ARCGIS_PORTAL_URL')
+        self.base_url = os.getenv('ARCGIS_URL')
         self.username = os.getenv('ARCGIS_USERNAME')
         self.password = os.getenv('ARCGIS_PASSWORD')
         
-        if not all([self.portal_url, self.username, self.password]):
+        if not all([self.base_url, self.username, self.password]):
             raise ValueError("Missing required ArcGIS Enterprise credentials in environment variables")
         
-        # Initialize GIS connection
-        self.gis = GIS(self.portal_url, self.username, self.password)
+        # Get token
+        self.token = self._get_token()
         print(f"Successfully connected to ArcGIS Enterprise as {self.username}")
         
-        # Store feature service URLs after creation
-        self.feature_services = {}
+        # Store feature service URLs using the correct layer IDs
+        self.feature_services = {
+            'poles': f"{self.base_url}/1",
+            'connections': f"{self.base_url}/3",
+            'anchors': f"{self.base_url}/2"
+        }
     
-    def create_feature_services(self):
-        """Create feature services for poles, connections, and anchors if they don't exist"""
+    def _get_token(self):
+        """Get an authentication token from ArcGIS Enterprise Portal"""
+        token_url = "https://gis.clearnetworx.com/portal/sharing/rest/generateToken"
+        username = "brandan.lewis"  # Try with username format
         
-        # Define schemas for each feature type
-        schemas = {
-            'poles': {
-                'geometry_type': 'esriGeometryPoint',
-                'fields': [
-                    {'name': 'job_name', 'type': 'esriFieldTypeString', 'length': 255},
-                    {'name': 'job_status', 'type': 'esriFieldTypeString', 'length': 50},
-                    {'name': 'mr_status', 'type': 'esriFieldTypeString', 'length': 50},
-                    {'name': 'utility', 'type': 'esriFieldTypeString', 'length': 100},
-                    {'name': 'completed', 'type': 'esriFieldTypeString', 'length': 50},
-                    {'name': 'pole_tag', 'type': 'esriFieldTypeString', 'length': 100},
-                    {'name': 'poa_ht', 'type': 'esriFieldTypeString', 'length': 50},
-                    {'name': 'last_editor', 'type': 'esriFieldTypeString', 'length': 100},
-                    {'name': 'last_edit', 'type': 'esriFieldTypeString', 'length': 100}
-                ]
-            },
-            'connections': {
-                'geometry_type': 'esriGeometryPolyline',
-                'fields': [
-                    {'name': 'conn_id', 'type': 'esriFieldTypeString', 'length': 100},
-                    {'name': 'conn_type', 'type': 'esriFieldTypeString', 'length': 100},
-                    {'name': 'att_height', 'type': 'esriFieldTypeString', 'length': 50},
-                    {'name': 'node_id_1', 'type': 'esriFieldTypeString', 'length': 100},
-                    {'name': 'node_id_2', 'type': 'esriFieldTypeString', 'length': 100}
-                ]
-            },
-            'anchors': {
-                'geometry_type': 'esriGeometryPoint',
-                'fields': [
-                    {'name': 'anch_spec', 'type': 'esriFieldTypeString', 'length': 100},
-                    {'name': 'job_id', 'type': 'esriFieldTypeString', 'length': 100},
-                    {'name': 'anchor_type', 'type': 'esriFieldTypeString', 'length': 100}
-                ]
-            }
+        params = {
+            'f': 'json',
+            'username': username,
+            'password': self.password,
+            'client': 'referer',
+            'referer': 'https://www.arcgis.com',
+            'expiration': 60
         }
         
-        for layer_name, schema in schemas.items():
-            try:
-                # Check if service already exists
-                existing_items = self.gis.content.search(
-                    f'title:"KatapultPro_{layer_name}" AND type:Feature Service',
-                    item_type="Feature Service"
-                )
-                
-                if existing_items:
-                    print(f"Feature service for {layer_name} already exists")
-                    self.feature_services[layer_name] = existing_items[0].url
-                    continue
-                
-                # Create new feature service
-                service_create_params = {
-                    'name': f'KatapultPro_{layer_name}',
-                    'serviceDescription': f'KatapultPro {layer_name} data',
-                    'hasStaticData': False,
-                    'maxRecordCount': 10000,
-                    'supportedQueryFormats': 'JSON',
-                    'capabilities': 'Create,Delete,Query,Update,Editing',
-                    'description': f'Feature service for KatapultPro {layer_name}',
-                    'copyrightText': f'Generated on {datetime.now().strftime("%Y-%m-%d")}',
-                    'initialExtent': {
-                        'xmin': -180,
-                        'ymin': -90,
-                        'xmax': 180,
-                        'ymax': 90,
-                        'spatialReference': {'wkid': 4326}
-                    },
-                    'spatialReference': {'wkid': 4326},
-                    'layers': [{
-                        'name': layer_name,
-                        'type': 'Feature Layer',
-                        'displayField': 'OBJECTID',
-                        'geometryType': schema['geometry_type'],
-                        'hasM': False,
-                        'hasZ': False,
-                        'fields': [
-                            {'name': 'OBJECTID', 'type': 'esriFieldTypeOID', 'alias': 'OBJECTID'},
-                            *schema['fields']
-                        ]
-                    }]
-                }
-                
-                # Create the service
-                new_service = self.gis.content.create_service(
-                    f'KatapultPro_{layer_name}',
-                    create_params=service_create_params
-                )
-                
-                print(f"Successfully created feature service for {layer_name}")
-                self.feature_services[layer_name] = new_service.url
-                
-            except Exception as e:
-                print(f"Error creating feature service for {layer_name}: {str(e)}")
+        print(f"Debug - Using credentials - Username: {username}")
+        print(f"Debug - Token URL: {token_url}")
+        
+        try:
+            response = requests.post(token_url, data=params, verify=False)
+            response.raise_for_status()
+            result = response.json()
+            
+            if 'error' in result:
+                raise ValueError(f"Error getting token: {result}")
+            
+            return result['token']
+        except Exception as e:
+            raise ValueError(f"Failed to get token: {str(e)}")
     
     def update_features(self, layer_name, features):
-        """Update features in a specific layer"""
+        """Update features in a specific layer using REST API"""
         if layer_name not in self.feature_services:
             raise ValueError(f"Feature service for {layer_name} not found")
             
         service_url = self.feature_services[layer_name]
-        
-        # Get token
-        token = self.gis._con.token
         
         # Update features in chunks to handle rate limits
         chunk_size = 100
@@ -138,18 +70,18 @@ class ArcGISUpdater:
             chunk = features[i:i + chunk_size]
             
             try:
-                response = requests.post(
-                    f"{service_url}/updateFeatures",
-                    params={
-                        'f': 'json',
-                        'token': token
-                    },
-                    json={
-                        'features': chunk
-                    }
-                )
+                # Prepare the update request
+                update_url = f"{service_url}/updateFeatures"
+                params = {
+                    'f': 'json',
+                    'token': self.token,
+                    'features': json.dumps(chunk)
+                }
                 
+                response = requests.post(update_url, data=params)
+                response.raise_for_status()
                 result = response.json()
+                
                 if 'error' in result:
                     print(f"Error updating features: {result['error']}")
                 else:
@@ -157,6 +89,20 @@ class ArcGISUpdater:
                     
             except Exception as e:
                 print(f"Error updating chunk: {str(e)}")
+                # Try to refresh token if it might have expired
+                if 'token' in str(e).lower():
+                    try:
+                        self.token = self._get_token()
+                        print("Token refreshed, retrying update...")
+                        # Retry the update with new token
+                        params['token'] = self.token
+                        response = requests.post(update_url, data=params)
+                        response.raise_for_status()
+                        result = response.json()
+                        if 'error' not in result:
+                            print(f"Successfully updated {len(chunk)} features in {layer_name} after token refresh")
+                    except Exception as retry_error:
+                        print(f"Error retrying update after token refresh: {str(retry_error)}")
     
     def process_shapefile(self, shapefile_path, layer_name):
         """Process a shapefile and update the corresponding feature service"""

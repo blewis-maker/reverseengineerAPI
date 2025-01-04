@@ -31,6 +31,9 @@ import zipfile
 from io import BytesIO
 warnings.filterwarnings('ignore')
 
+# Add to imports at the top
+from arcgis_updater import ArcGISUpdater
+
 # Add at start of script
 logging.basicConfig(
     filename='katapult_automation.log',
@@ -608,7 +611,6 @@ def extractAnchors(job_data, job_name, job_id):
     print("------------------------")
 
     return anchor_points
-
 # Extract connections (lines, cables, etc.) from job data
 def extractConnections(connections, nodes, job_data=None):
     """Extract connection data with enhanced wire specification and height information."""
@@ -1006,9 +1008,6 @@ def update_sharepoint_spreadsheet(df, site_url=None, drive_path=None):
     try:
         print("\nUpdating SharePoint spreadsheet...")
         
-        # Ensure Conversation field is treated as text
-        df['Conversation'] = df['Conversation'].astype(str)
-        
         # Format the data for SharePoint (exclude headers)
         formatted_data = df.values.tolist()  # Only include data rows
         
@@ -1091,17 +1090,6 @@ def update_sharepoint_spreadsheet(df, site_url=None, drive_path=None):
                     print(f"Failed to get worksheet. Status code: {worksheet_response.status_code}")
                     return False
                     
-                # First, clear the existing data range (starting from row 4)
-                clear_range = f"A4:O1000"  # Clear data rows only, preserve headers
-                clear_response = graph_client.post(
-                    f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/worksheets/Aerial%20Status%20Report/range(address='{clear_range}')/clear",
-                    headers={"workbook-session-id": session_id}
-                )
-                
-                if clear_response.status_code not in [200, 204]:  # 204 means success with no content
-                    print(f"Failed to clear data range. Status code: {clear_response.status_code}")
-                    return False
-                    
                 # Update timestamp in row 2
                 current_time = datetime.now().strftime('%-m/%-d/%Y %-I:%M %p MST')
                 timestamp_response = graph_client.patch(
@@ -1119,17 +1107,32 @@ def update_sharepoint_spreadsheet(df, site_url=None, drive_path=None):
                 if formatted_data:
                     num_rows = len(formatted_data)
                     data_range = f"A4:O{num_rows + 3}"  # +3 because we start at row 4 and Excel is 1-based
-                    update_response = graph_client.patch(
-                        f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/worksheets/Aerial%20Status%20Report/range(address='{data_range}')",
-                        headers={"workbook-session-id": session_id},
-                        json={
-                            "values": formatted_data
-                        }
+                    
+                    # Get existing format
+                    format_response = graph_client.get(
+                        f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/worksheets/Aerial%20Status%20Report/range(address='{data_range}')/format",
+                        headers={"workbook-session-id": session_id}
                     )
                     
-                    if update_response.status_code != 200:
-                        print(f"Failed to update content. Status code: {update_response.status_code}")
-                        print(f"Response: {update_response.text}")
+                    if format_response.status_code == 200:
+                        existing_format = format_response.json()
+                        
+                        # Update values while preserving format
+                        update_response = graph_client.patch(
+                            f"sites/{site_id}/drives/{drive_id}/items/{file_id}/workbook/worksheets/Aerial%20Status%20Report/range(address='{data_range}')",
+                            headers={"workbook-session-id": session_id},
+                            json={
+                                "values": formatted_data,
+                                "format": existing_format
+                            }
+                        )
+                        
+                        if update_response.status_code != 200:
+                            print(f"Failed to update content. Status code: {update_response.status_code}")
+                            print(f"Response: {update_response.text}")
+                            return False
+                    else:
+                        print(f"Failed to get existing format. Status code: {format_response.status_code}")
                         return False
                         
                 print("Successfully updated data while preserving formatting")
@@ -1865,6 +1868,89 @@ def getUserList():
 
     return user_map
 
+def update_arcgis_features(nodes, connections, anchors):
+    """Update ArcGIS feature services with the latest data"""
+    try:
+        print("\nUpdating ArcGIS feature services...")
+        updater = ArcGISUpdater()
+        
+        # Set the specific feature service URLs for the test environment
+        updater.feature_services = {
+            'poles': f"{os.getenv('ARCGIS_URL')}/0",
+            'connections': f"{os.getenv('ARCGIS_URL')}/1",
+            'anchors': f"{os.getenv('ARCGIS_URL')}/2"
+        }
+        
+        # Process poles
+        if nodes:
+            pole_features = []
+            for node in nodes:
+                feature = {
+                    'geometry': {
+                        'x': node['lng'],
+                        'y': node['lat'],
+                        'spatialReference': {'wkid': 4326}
+                    },
+                    'attributes': {
+                        'node_id': node.get('node_id', ''),
+                        'job_name': node.get('jobname', ''),
+                        'job_status': node.get('job_status', ''),
+                        'mr_status': node.get('MR_statu', ''),
+                        'utility': node.get('company', ''),
+                        'completed': node.get('fldcompl', ''),
+                        'pole_tag': node.get('tag', ''),
+                        'poa_ht': node.get('POA_Height', ''),
+                        'last_editor': node.get('last_editor', ''),
+                        'last_edit': node.get('last_edit', '')
+                    }
+                }
+                pole_features.append(feature)
+            updater.update_features('poles', pole_features)
+
+        # Process connections
+        if connections:
+            connection_features = []
+            for conn in connections:
+                properties = conn.get('properties', {})
+                feature = {
+                    'geometry': conn['geometry'],
+                    'attributes': {
+                        'conn_id': properties.get('connection_id', ''),
+                        'conn_type': properties.get('connection_type', ''),
+                        'att_height': properties.get('attachment_height', ''),
+                        'node_id_1': properties.get('node_id_1', ''),
+                        'node_id_2': properties.get('node_id_2', '')
+                    }
+                }
+                connection_features.append(feature)
+            updater.update_features('connections', connection_features)
+
+        # Process anchors
+        if anchors:
+            anchor_features = []
+            for anchor in anchors:
+                feature = {
+                    'geometry': {
+                        'x': anchor['longitude'],
+                        'y': anchor['latitude'],
+                        'spatialReference': {'wkid': 4326}
+                    },
+                    'attributes': {
+                        'anch_spec': anchor.get('anchor_spec', ''),
+                        'job_id': anchor.get('job_id', ''),
+                        'anchor_type': anchor.get('anchor_type', '')
+                    }
+                }
+                anchor_features.append(feature)
+            updater.update_features('anchors', anchor_features)
+
+        print("Successfully updated all ArcGIS feature services")
+        return True
+
+    except Exception as e:
+        print(f"Error updating ArcGIS feature services: {str(e)}")
+        return False
+
 # Main function to run the job for testing
 def main(email_list):
     """Main function to process jobs and generate reports."""
@@ -2121,14 +2207,17 @@ def main(email_list):
     print(f"Total anchors: {len(all_anchors)}")
     
     if all_nodes or all_connections or all_anchors:
-        print("Saving data to master GeoPackage...")
         workspace_path = CONFIG['WORKSPACE_PATH']
-        master_geopkg_filename = "Master.gpkg"
-        master_geopkg_path = os.path.join(workspace_path, master_geopkg_filename)
-        saveMasterGeoPackage(all_nodes, all_connections, all_anchors, master_geopkg_filename)
-        print("Master GeoPackage saved successfully")
         
-        # Add call to save shapefiles
+        # Update ArcGIS feature services
+        print("\nUpdating ArcGIS feature services...")
+        arcgis_success = update_arcgis_features(all_nodes, all_connections, all_anchors)
+        if arcgis_success:
+            print("ArcGIS feature services updated successfully")
+        else:
+            print("Failed to update ArcGIS feature services")
+
+        # Save to shapefiles and update SharePoint
         print("\nSaving data to shapefiles...")
         saveToShapefiles(all_nodes, all_connections, all_anchors, workspace_path)
     else:
@@ -2149,7 +2238,6 @@ def main(email_list):
     print("\nMain function completed")
     return True
 
-
 if __name__ == "__main__":
     # Email list to notify when the report is done
     email_list = [
@@ -2161,3 +2249,5 @@ if __name__ == "__main__":
     end_time = time.time()
     elapsed_time = end_time - start_time
     print(f"Total execution time: {elapsed_time:.2f} seconds")
+
+

@@ -6,12 +6,22 @@ from datetime import datetime, timedelta
 import pandas as pd
 import requests
 from pathlib import Path
-import openpyxl
-from io import BytesIO
-from openpyxl.utils.dataframe import dataframe_to_rows
-from dotenv import load_dotenv
 import time
 import random
+from dotenv import load_dotenv
+
+# Import functions from main.py
+from main import (
+    getJobData,
+    extractNodes,
+    extractConnections,
+    extractAnchors,
+    create_report,
+    getUserList,
+    update_sharepoint_spreadsheet,
+    CONFIG,
+    update_arcgis_features
+)
 
 # Load environment variables
 load_dotenv()
@@ -104,138 +114,74 @@ def get_updated_jobs(hours=24):
         logger.error(f"Error getting updated jobs: {str(e)}")
         return []
 
-def get_job_data(job_id):
-    """Get detailed job data using Katapult API"""
-    try:
-        url = f"https://katapultpro.com/api/v2/jobs/{job_id}"
-        params = {
-            'api_key': API_KEY
-        }
-        
-        response = make_api_request(url, params)
-        if not response:
-            logger.error(f"Failed to get job data for {job_id} after retries")
-            return None
-            
-        if response.status_code != 200:
-            logger.error(f"Failed to get job data for {job_id}. Status code: {response.status_code}")
-            return None
-            
-        job_data = response.json()
-        logger.info(f"Retrieved data for job {job_id}")
-        return job_data
-        
-    except Exception as e:
-        logger.error(f"Error getting job data for {job_id}: {str(e)}")
-        return None
-
-def process_job_data(job_data):
-    """Process job data and extract relevant information"""
-    try:
-        if not job_data:
-            return None
-            
-        # Extract basic job info
-        job_info = {
-            'Job ID': job_data.get('id'),
-            'Job Name': job_data.get('name'),
-            'Status': job_data.get('metadata', {}).get('status', 'Unknown'),
-            'Utility': job_data.get('metadata', {}).get('utility', 'Unknown'),
-            'Assigned OSP': job_data.get('metadata', {}).get('assigned_osp', 'Unassigned'),
-            'Conversation': job_data.get('metadata', {}).get('conversation', ''),
-            'Project': job_data.get('metadata', {}).get('project', 'Unknown'),
-            'Comments': job_data.get('metadata', {}).get('comments', ''),
-            'Last Edit': job_data.get('metadata', {}).get('last_modified', datetime.now().isoformat())
-        }
-        
-        return job_info
-        
-    except Exception as e:
-        logger.error(f"Error processing job data: {str(e)}")
-        return None
-
-def update_sharepoint_tracker(job_data_list):
-    """Update SharePoint Aerial Status Tracker with new job data"""
-    try:
-        # SharePoint file details
-        site_url = os.getenv('SHAREPOINT_SITE_URL', 'deeplydigital.sharepoint.com:/sites/OSPIntegrationTestingSite')
-        drive_path = os.getenv('SHAREPOINT_DRIVE_PATH', 'Documents')
-        file_name = os.getenv('SHAREPOINT_FILE_NAME', 'Aerial_Status_Tracker.xlsx')
-        
-        # For testing, use a local copy
-        test_file = 'test_data/Aerial_Status_Tracker.xlsx'
-        os.makedirs('test_data', exist_ok=True)
-        
-        # If file doesn't exist, create a new one with basic structure
-        if not os.path.exists(test_file):
-            df = pd.DataFrame(columns=[
-                'Job ID', 'Job Name', 'Status', 'Utility', 'Assigned OSP',
-                'Conversation', 'Project', 'Comments', 'Last Edit'
-            ])
-            df.to_excel(test_file, index=False)
-            logger.info(f"Created new tracker file at {test_file}")
-        
-        # Read existing spreadsheet
-        existing_df = pd.read_excel(test_file)
-        
-        # Process each job
-        for job_data in job_data_list:
-            if not job_data:
-                continue
-                
-            job_name = job_data['Job Name']
-            
-            # Check if job exists
-            if job_name in existing_df['Job Name'].values:
-                # Update existing row
-                idx = existing_df[existing_df['Job Name'] == job_name].index[0]
-                for col in job_data.keys():
-                    if col in existing_df.columns:
-                        existing_df.at[idx, col] = job_data[col]
-            else:
-                # Add new row
-                new_df = pd.DataFrame([job_data])
-                existing_df = pd.concat([existing_df, new_df], ignore_index=True)
-        
-        # Sort by Job Name
-        existing_df.sort_values('Job Name', inplace=True)
-        
-        # Save back to file
-        existing_df.to_excel(test_file, index=False)
-        logger.info(f"Successfully updated tracker at {test_file}")
-        
-        # TODO: Implement actual SharePoint upload once credentials are configured
-        logger.warning("SharePoint upload not implemented yet - using local file for testing")
-        
-    except Exception as e:
-        logger.error(f"Error updating SharePoint tracker: {str(e)}")
-        raise
-
 def process_daily_update():
-    """Process daily updates for jobs modified in the last 24 hours"""
+    """Process daily updates for jobs"""
     try:
-        # Get updated jobs
-        updated_jobs = get_updated_jobs(hours=24)
-        if not updated_jobs:
-            logger.info("No jobs updated in the last 24 hours")
-            return
-            
-        # Process each job
-        processed_jobs = []
-        for job in updated_jobs:
-            job_data = get_job_data(job.get('jobId'))  # make_api_request already handles the 2-second delay
-            if job_data:
-                processed_data = process_job_data(job_data)
-                if processed_data:
-                    processed_jobs.append(processed_data)
+        # Get user list for mapping IDs to names
+        user_map = getUserList()
         
-        if processed_jobs:
-            # Update SharePoint tracker
-            update_sharepoint_tracker(processed_jobs)
-            logger.info(f"Successfully processed {len(processed_jobs)} jobs")
-        else:
-            logger.info("No jobs to update in SharePoint")
+        # Get list of jobs to process
+        jobs_to_process = get_updated_jobs()
+        
+        if not jobs_to_process:
+            logging.info("No jobs found for processing")
+            return
+        
+        all_nodes = []
+        all_connections = []
+        all_anchors = []
+        jobs_summary = []
+        
+        # Process each job
+        for job_id in jobs_to_process:
+            logging.info(f"Processing job {job_id}")
             
+            # Get job data
+            job_data = getJobData(job_id)
+            if not job_data:
+                logging.warning(f"No data found for job {job_id}")
+                continue
+            
+            # Extract job name and metadata
+            job_name = job_data.get('metadata', {}).get('name', f"Job {job_id}")
+            
+            # Extract nodes, connections, and anchors
+            nodes_data = extractNodes(job_data, job_name, job_id)
+            if nodes_data:
+                all_nodes.extend(nodes_data)
+                
+                # Extract connections if we have valid nodes
+                connections = job_data.get('connections', {})
+                nodes = {node['node_id']: node for node in nodes_data}
+                connections_data = extractConnections(connections, nodes, job_data)
+                if connections_data:
+                    all_connections.extend(connections_data)
+                
+                # Extract anchors
+                anchors = extractAnchors(job_data, job_name, job_id)
+                if anchors:
+                    all_anchors.extend(anchors)
+            
+            logging.info(f"Completed processing job {job_id}")
+        
+        if all_nodes or all_connections or all_anchors:
+            # Update ArcGIS feature services
+            logging.info("Updating ArcGIS feature services...")
+            arcgis_success = update_arcgis_features(all_nodes, all_connections, all_anchors)
+            if arcgis_success:
+                logging.info("ArcGIS feature services updated successfully")
+            else:
+                logging.error("Failed to update ArcGIS feature services")
+            
+            # Save to shapefiles and update SharePoint
+            workspace_path = CONFIG['WORKSPACE_PATH']
+            logging.info("Saving data to shapefiles...")
+            saveToShapefiles(all_nodes, all_connections, all_anchors, workspace_path)
+        else:
+            logging.info("No data extracted for any job. Nothing to save.")
+        
+        return True
+        
     except Exception as e:
-        logger.error(f"Error in daily update process: {str(e)}")
-        raise 
+        logging.error(f"Error in process_daily_update: {str(e)}")
+        return False 
