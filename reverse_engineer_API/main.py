@@ -29,6 +29,7 @@ import base64
 import warnings
 import zipfile
 from io import BytesIO
+import traceback
 warnings.filterwarnings('ignore')
 
 # Add to imports at the top
@@ -1871,15 +1872,8 @@ def getUserList():
 def update_arcgis_features(nodes, connections, anchors):
     """Update ArcGIS feature services with the latest data"""
     try:
-        print("\nUpdating ArcGIS feature services...")
+        logging.info("\nUpdating ArcGIS feature services...")
         updater = ArcGISUpdater()
-        
-        # Set the specific feature service URLs for the test environment
-        updater.feature_services = {
-            'poles': f"{os.getenv('ARCGIS_URL')}/0",
-            'connections': f"{os.getenv('ARCGIS_URL')}/1",
-            'anchors': f"{os.getenv('ARCGIS_URL')}/2"
-        }
         
         # Process poles
         if nodes:
@@ -1905,7 +1899,9 @@ def update_arcgis_features(nodes, connections, anchors):
                     }
                 }
                 pole_features.append(feature)
-            updater.update_features('poles', pole_features)
+            if not updater.update_features('poles', pole_features):
+                logging.error("Failed to update poles feature service")
+                return False
 
         # Process connections
         if connections:
@@ -1923,7 +1919,9 @@ def update_arcgis_features(nodes, connections, anchors):
                     }
                 }
                 connection_features.append(feature)
-            updater.update_features('connections', connection_features)
+            if not updater.update_features('connections', connection_features):
+                logging.error("Failed to update connections feature service")
+                return False
 
         # Process anchors
         if anchors:
@@ -1942,13 +1940,16 @@ def update_arcgis_features(nodes, connections, anchors):
                     }
                 }
                 anchor_features.append(feature)
-            updater.update_features('anchors', anchor_features)
+            if not updater.update_features('anchors', anchor_features):
+                logging.error("Failed to update anchors feature service")
+                return False
 
-        print("Successfully updated all ArcGIS feature services")
+        logging.info("Successfully updated all ArcGIS feature services")
         return True
 
     except Exception as e:
-        print(f"Error updating ArcGIS feature services: {str(e)}")
+        logging.error(f"Error updating ArcGIS feature services: {str(e)}")
+        logging.error(f"Stack trace: {traceback.format_exc()}")
         return False
 
 # Main function to run the job for testing
