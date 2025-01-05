@@ -30,23 +30,26 @@ import warnings
 import zipfile
 from io import BytesIO
 import traceback
+from flask import Flask, request, jsonify
 warnings.filterwarnings('ignore')
 
 # Add to imports at the top
 from arcgis_updater import ArcGISUpdater
 
+app = Flask(__name__)
+
 # Add at start of script
 logging.basicConfig(
-    filename='katapult_automation.log',
     level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[logging.StreamHandler()]
 )
 
 # Load environment variables from .env file
 load_dotenv()
 
 # Toggle to enable/disable testing a specific job
-TEST_ONLY_SPECIFIC_JOB = True
+TEST_ONLY_SPECIFIC_JOB = False
 
 # IDs of the test jobs
 TEST_JOB_IDS = [
@@ -1404,7 +1407,7 @@ def send_email_notification(recipients, report_path):
         client_id = os.getenv('AZURE_CLIENT_ID')
         client_secret = os.getenv('AZURE_CLIENT_SECRET')
         tenant_id = os.getenv('AZURE_TENANT_ID')
-        user_email = os.getenv('EMAIL_USER')
+        user_email = EMAIL_CONFIG['user_email']  # Use email from config instead of env var
 
         # Initialize MSAL client
         authority = f"https://login.microsoftonline.com/{tenant_id}"
@@ -2296,16 +2299,44 @@ def main(email_list):
     print("\nMain function completed")
     return True
 
-if __name__ == "__main__":
-    # Email list to notify when the report is done
-    email_list = [
-        "brandan.lewis@deeplydigital.com",
-        
-    ]
-    start_time = time.time()  # Record the start time
-    main(email_list)
-    end_time = time.time()
-    elapsed_time = end_time - start_time
-    print(f"Total execution time: {elapsed_time:.2f} seconds")
+def run_job():
+    try:
+        # Put your main script logic here
+        logging.info("==============================================")
+        logging.info("STARTING KATAPULT AUTOMATION JOB")
+        logging.info("==============================================")
+        email_list = [
+            "brandan.lewis@deeplydigital.com"
+        ]
+        result = main(email_list)
+        if result:
+            logging.info("Job completed successfully")
+            return {"status": "success", "message": "Job completed successfully"}
+        else:
+            logging.error("Job failed")
+            return {"status": "error", "message": "Job failed"}
+    except Exception as e:
+        logging.error(f"Error in job execution: {str(e)}")
+        return {"status": "error", "message": str(e)}
+
+@app.route('/', methods=['POST'])
+def handle_request():
+    """Handle incoming HTTP POST requests"""
+    try:
+        result = run_job()
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route('/', methods=['GET'])
+def health_check():
+    """Handle health check requests"""
+    return jsonify({"status": "healthy"}), 200
+
+if __name__ == '__main__':
+    # Get port from environment variable or default to 8080
+    port = int(os.environ.get('PORT', 8080))
+    # Run the Flask app
+    app.run(host='0.0.0.0', port=port)
 
 

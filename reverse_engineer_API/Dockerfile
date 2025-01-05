@@ -40,6 +40,9 @@ RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir wheel setuptools && \
     pip install --no-cache-dir -r requirements.txt
 
+# Install gunicorn
+RUN pip install gunicorn
+
 # Copy application code
 COPY . .
 
@@ -51,5 +54,8 @@ RUN mkdir -p /app/logs && \
 ENV TZ=America/Denver
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-# Command to run the script
-CMD ["python3", "main.py"]
+# Expose port 8080
+EXPOSE 8080
+
+# Command to run the Flask app with gunicorn
+CMD exec gunicorn --bind :8080 --workers 1 --threads 8 --timeout 0 main:app
