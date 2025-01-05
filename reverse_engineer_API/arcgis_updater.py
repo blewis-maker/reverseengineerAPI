@@ -166,6 +166,16 @@ class ArcGISUpdater:
         total_features = len(features)
         logging.info(f"\nAttempting to add {total_features} {layer_name}")
         
+        if layer_name == 'connections':
+            # Log sample connection for debugging
+            if features:
+                sample = features[0]
+                logging.info(f"\nSample connection feature:")
+                logging.info(f"Geometry: {json.dumps(sample['geometry'], indent=2)}")
+                logging.info(f"Attributes: {json.dumps(sample['attributes'], indent=2)}")
+                logging.info(f"Wire spec present in {sum(1 for f in features if f['attributes'].get('wire_spec'))} features")
+                logging.info(f"Connection types: {set(f['attributes'].get('conn_type', '') for f in features)}")
+        
         try:
             # Test the service URL before proceeding
             test_url = f"{service_url}?f=json&token={self.token}"

@@ -3,7 +3,6 @@ FROM python:3.9-slim
 # Configure apt and install packages
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    cron \
     gdal-bin \
     libgdal-dev \
     gcc \
@@ -45,18 +44,12 @@ RUN pip install --no-cache-dir --upgrade pip && \
 COPY . .
 
 # Create log directory
-RUN mkdir -p /app/logs
+RUN mkdir -p /app/logs && \
+    chmod -R 777 /app/logs
 
 # Set timezone
-RUN ln -snf /usr/share/zoneinfo/America/Denver /etc/localtime && echo America/Denver > /etc/timezone
+ENV TZ=America/Denver
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-# Setup cron job
-COPY crontab /etc/cron.d/app-cron
-RUN chmod 0644 /etc/cron.d/app-cron && \
-    crontab /etc/cron.d/app-cron
-
-# Create a startup script
-RUN echo '#!/bin/sh\ntouch /app/logs/cron.log\nchmod 0666 /app/logs/cron.log\n/etc/init.d/cron start\ntail -f /app/logs/cron.log' > /start.sh && \
-    chmod +x /start.sh
-
-CMD ["/start.sh"]
+# Command to run the script
+CMD ["python3", "main.py"]

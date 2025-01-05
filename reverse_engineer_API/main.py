@@ -46,7 +46,7 @@ logging.basicConfig(
 load_dotenv()
 
 # Toggle to enable/disable testing a specific job
-TEST_ONLY_SPECIFIC_JOB = False
+TEST_ONLY_SPECIFIC_JOB = True
 
 # IDs of the test jobs
 TEST_JOB_IDS = [
@@ -774,6 +774,13 @@ def extractConnections(connections, nodes, job_data=None):
             # Create the line geometry and feature
             line = LineString([(start_lon, start_lat), (end_lon, end_lat)])
             
+            # Get wire specification if available
+            wire_spec = ''
+            if 'wire_spec' in sections:
+                wire_spec = sections['wire_spec']
+            elif 'wire_specification' in sections:
+                wire_spec = sections['wire_specification']
+
             feature = {
                 'type': 'Feature',
                 'geometry': mapping(line),
@@ -781,8 +788,7 @@ def extractConnections(connections, nodes, job_data=None):
                     'connection_id': connection_id,
                     'connection_type': connection_type,
                     'attachment_height': attachment_height,
-                    'wire_spec': wire_spec,
-                    'mid_ht': mid_ht_str,
+                    'wire_spec': wire_spec,  # Add wire specification
                     'StartX': start_lon,
                     'StartY': start_lat,
                     'EndX': end_lon,
@@ -1953,13 +1959,20 @@ def update_arcgis_features(nodes, connections, anchors):
             for conn in connections:
                 properties = conn.get('properties', {})
                 feature = {
-                    'geometry': conn['geometry'],
+                    'geometry': {
+                        'paths': [[
+                            [conn['geometry']['coordinates'][0][0], conn['geometry']['coordinates'][0][1]],
+                            [conn['geometry']['coordinates'][1][0], conn['geometry']['coordinates'][1][1]]
+                        ]],
+                        'spatialReference': {'wkid': 4326}
+                    },
                     'attributes': {
                         'conn_id': properties.get('connection_id', ''),
                         'conn_type': properties.get('connection_type', ''),
                         'att_height': properties.get('attachment_height', ''),
                         'node_id_1': properties.get('node_id_1', ''),
-                        'node_id_2': properties.get('node_id_2', '')
+                        'node_id_2': properties.get('node_id_2', ''),
+                        'wire_spec': properties.get('wire_spec', '')  # Add wire_spec field
                     }
                 }
                 connection_features.append(feature)
