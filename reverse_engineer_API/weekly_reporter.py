@@ -186,23 +186,43 @@ class WeeklyMetrics:
                         'utility': utility
                     })
             
-            # Update backlog metrics
-            if job_status not in ['Approved for Construction', 'Hold', 'Junk']:
-                backlog_category = 'field' if job_status == 'Pending Field Collection' else 'back_office'
-                self.backlog[backlog_category]['total_poles'] += total_poles
-                self.backlog[backlog_category]['jobs'].add(job_id)
-                self.backlog[backlog_category]['utilities'].add(utility)
+            # Initialize backlog categories if not exists
+            if 'backlog' not in self.burndown:
+                self.burndown['backlog'] = {
+                    'field': {'total_poles': 0, 'jobs': set(), 'utilities': set()},
+                    'back_office': {'total_poles': 0, 'jobs': set(), 'utilities': set()},
+                    'approve_construction': {'total_poles': 0, 'jobs': set(), 'utilities': set()}
+                }
+            
+            # Process nodes for field completion status
+            field_incomplete_count = sum(1 for node in nodes if not node.get('field_completed', False))
+            
+            # Update backlog metrics based on status and field completion
+            if job_status == 'Pending Field Collection' or field_incomplete_count > 0:
+                self.burndown['backlog']['field']['total_poles'] += field_incomplete_count
+                self.burndown['backlog']['field']['jobs'].add(job_id)
+                self.burndown['backlog']['field']['utilities'].add(utility)
+                
+            if job_status in ['Pending Photo Annotation', 'Sent to PE']:
+                self.burndown['backlog']['back_office']['total_poles'] += len(nodes)
+                self.burndown['backlog']['back_office']['jobs'].add(job_id)
+                self.burndown['backlog']['back_office']['utilities'].add(utility)
+                
+            if job_status != 'Approved for Construction':
+                self.burndown['backlog']['approve_construction']['total_poles'] += len(nodes)
+                self.burndown['backlog']['approve_construction']['jobs'].add(job_id)
+                self.burndown['backlog']['approve_construction']['utilities'].add(utility)
             
             # Update burndown metrics
             self._update_burndown_metrics(utility, project_id, total_poles, job_status)
             
             # Update user production metrics
-            self._update_user_production(nodes, job_id, total_poles, utility, status_date, assigned_users)
+            self._update_user_production(nodes, job_id, total_poles, utility, status_date, assigned_users, job_status)
             
         except Exception as e:
             logger.error(f"Error updating job metrics: {str(e)}")
             logger.error(f"Job data: {job_data}")
-            
+
     def _get_status_category(self, status: str) -> str:
         """Map job status to status category."""
         status_mapping = {
@@ -257,68 +277,66 @@ class WeeklyMetrics:
                     metrics['estimated_completion'] = (datetime.now() + timedelta(days=days_to_completion)).strftime('%Y-%m-%d')
 
     def _update_user_production(self, nodes: List[Dict], job_id: str, total_poles: int, 
-                              utility: str, status_date: datetime, assigned_users: Set[str]):
-        """Update user production metrics."""
+                              utility: str, status_date: datetime, assigned_users: Set[str], job_status: str = None):
+        """Update user production metrics based on the type of work performed."""
         # Ensure status_date is a datetime object
         if isinstance(status_date, str):
             status_date = parse_date(status_date)
         elif not isinstance(status_date, datetime):
             status_date = datetime.now()
             
+        # Track field users (those who completed field work)
         for node in nodes:
-            # Field collection metrics
-            if field_user := node.get('field_completed_by'):
-                if field_user not in self.user_production['field']:
-                    self.user_production['field'][field_user] = {
-                        'completed_poles': [],
-                        'utilities': set(),
-                        'dates': []
-                    }
-                self.user_production['field'][field_user]['completed_poles'].append(node['id'])
-                self.user_production['field'][field_user]['utilities'].add(utility)
-                self.user_production['field'][field_user]['dates'].append(status_date)
+            if node.get('field_completed', {}).get('value') is True:
+                field_user = node.get('field_completed_by')
+                if field_user:
+                    if field_user not in self.user_production['field']:
+                        self.user_production['field'][field_user] = {
+                            'completed_poles': [],
+                            'utilities': set(),
+                            'dates': []
+                        }
+                    self.user_production['field'][field_user]['completed_poles'].append(node['id'])
+                    self.user_production['field'][field_user]['utilities'].add(utility)
+                    self.user_production['field'][field_user]['dates'].append(status_date)
                 
-            # Back office metrics
-            if annotator := node.get('annotated_by'):
-                if annotator not in self.user_production['back_office']['annotation']:
-                    self.user_production['back_office']['annotation'][annotator] = {
-                        'completed_poles': [],
-                        'jobs': [],
-                        'dates': [],
-                        'utilities': set()
-                    }
-                self.user_production['back_office']['annotation'][annotator]['completed_poles'].append(node['id'])
-                self.user_production['back_office']['annotation'][annotator]['jobs'].append(job_id)
-                self.user_production['back_office']['annotation'][annotator]['dates'].append(status_date)
-                self.user_production['back_office']['annotation'][annotator]['utilities'].add(utility)
+            # Track back office users (those who did annotation work)
+            if node.get('done', {}).get('button_added') or node.get('done', {}).get('-Imported') or node.get('done', {}).get('multi_added'):
+                annotator = node.get('annotated_by')
+                if annotator:
+                    if annotator not in self.user_production['back_office']['annotation']:
+                        self.user_production['back_office']['annotation'][annotator] = {
+                            'completed_poles': [],
+                            'jobs': [],
+                            'dates': [],
+                            'utilities': set()
+                        }
+                    self.user_production['back_office']['annotation'][annotator]['completed_poles'].append(node['id'])
+                    self.user_production['back_office']['annotation'][annotator]['jobs'].append(job_id)
+                    self.user_production['back_office']['annotation'][annotator]['dates'].append(status_date)
+                    self.user_production['back_office']['annotation'][annotator]['utilities'].add(utility)
+        
+        # Track other back office activities (sent to PE, delivery, EMR, approved)
+        if job_status:
+            status_category = self._get_status_category(job_status)
+            if status_category in ['sent_to_pe', 'delivery', 'emr', 'approved']:
+                for user in assigned_users:
+                    if user not in self.user_production['back_office'][status_category]['users']:
+                        self.user_production['back_office'][status_category]['users'][user] = {
+                            'jobs': [],
+                            'pole_count': 0,
+                            'dates': [],
+                            'utilities': set()
+                        }
+                    user_data = self.user_production['back_office'][status_category]['users'][user]
+                    user_data['jobs'].append(job_id)
+                    user_data['pole_count'] += total_poles
+                    user_data['dates'].append(status_date)
+                    user_data['utilities'].add(utility)
                 
-        # Update sent to PE metrics
-        for user in assigned_users:
-            if user not in self.user_production['back_office']['sent_to_pe']['users']:
-                self.user_production['back_office']['sent_to_pe']['users'][user] = {
-                    'jobs': [],
-                    'pole_count': 0,
-                    'dates': [],
-                    'utilities': set()
-                }
-            self.user_production['back_office']['sent_to_pe']['users'][user]['jobs'].append(job_id)
-            self.user_production['back_office']['sent_to_pe']['users'][user]['pole_count'] += total_poles
-            self.user_production['back_office']['sent_to_pe']['users'][user]['dates'].append(status_date)
-            self.user_production['back_office']['sent_to_pe']['users'][user]['utilities'].add(utility)
-            
-        # Update delivery metrics
-        for user in assigned_users:
-            if user not in self.user_production['back_office']['delivery']['users']:
-                self.user_production['back_office']['delivery']['users'][user] = {
-                    'jobs': [],
-                    'pole_count': 0,
-                    'dates': [],
-                    'utilities': set()
-                }
-            self.user_production['back_office']['delivery']['users'][user]['jobs'].append(job_id)
-            self.user_production['back_office']['delivery']['users'][user]['pole_count'] += total_poles
-            self.user_production['back_office']['delivery']['users'][user]['dates'].append(status_date)
-            self.user_production['back_office']['delivery']['users'][user]['utilities'].add(utility)
+        logger.debug(f"Updated user production metrics for job {job_id}")
+        logger.debug(f"Field users: {self.user_production['field'].keys()}")
+        logger.debug(f"Back office users: {[u for c in self.user_production['back_office'].values() for u in c.get('users', {}).keys()]}")
 
     def get_weekly_status(self):
         """Get weekly status metrics in a format suitable for reporting."""
@@ -333,7 +351,10 @@ class WeeklyMetrics:
             },
             'status_changes': self.status_changes,
             'backlog': self.backlog,
-            'projects': []
+            'projects': [],
+            'utility_metrics': {},
+            'burndown': self.burndown,
+            'schedule': self.schedule
         }
         
         # Process field metrics
@@ -365,7 +386,7 @@ class WeeklyMetrics:
                         'utilities': list(data['utilities']),
                         'dates': [d.strftime('%Y-%m-%d') if isinstance(d, datetime) else d for d in data['dates']]
                     })
-            
+
         # Process project metrics
         for project_id, data in self.projects.items():
             status['projects'].append({
@@ -375,6 +396,15 @@ class WeeklyMetrics:
                 'back_office_users': len(data['back_office_users']),
                 'field_users': len(data['field_users'])
             })
+            
+        # Process utility metrics
+        for utility, metrics in self.burndown['by_utility'].items():
+            status['utility_metrics'][utility] = {
+                'total_poles': metrics['total_poles'],
+                'completed_poles': metrics['completed_poles'],
+                'run_rate': metrics['run_rate'],
+                'estimated_completion': metrics['estimated_completion']
+            }
             
         return status
 

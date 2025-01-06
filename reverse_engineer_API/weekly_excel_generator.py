@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 class WeeklyReportGenerator:
     def __init__(self, metrics, report_date=None):
         self.metrics = metrics
+        self.current_row = 1  # Initialize current_row
         # Ensure report_date is a datetime object
         if isinstance(report_date, str):
             try:
@@ -36,6 +37,7 @@ class WeeklyReportGenerator:
         """Generate the weekly report Excel file."""
         try:
             logger.info(f"Starting weekly report generation at {output_path}")
+            logger.info(f"Report period: {(self.report_date - timedelta(days=7)).strftime('%Y-%m-%d')} to {self.report_date.strftime('%Y-%m-%d')}")
             
             # Create sheets
             weekly_metrics = self.wb.active
@@ -49,20 +51,88 @@ class WeeklyReportGenerator:
             # Generate each section
             logger.info("Generating report sections...")
             self._generate_header(weekly_metrics)
+            
+            # Generate and log utility progress
+            logger.info("Generating Utility Progress section")
+            utility_metrics = self.metrics.get_weekly_status()['utility_metrics']
+            logger.info(f"Processing metrics for {len(utility_metrics)} utilities:")
+            for utility, metrics in utility_metrics.items():
+                logger.info(f"  {utility}:")
+                logger.info(f"    Total Poles: {metrics['total_poles']}")
+                logger.info(f"    Completed Poles: {metrics['completed_poles']}")
+                logger.info(f"    Run Rate: {metrics['run_rate']:.1f} poles/week")
+                if metrics.get('estimated_completion'):
+                    logger.info(f"    Est. Completion: {metrics['estimated_completion']}")
+            weekly_status = self.metrics.get_weekly_status()
             self._generate_utility_progress(weekly_metrics)
+            
+            # Generate and log OSP productivity
+            logger.info("Generating OSP Productivity section")
+            user_metrics = self.metrics.get_weekly_status()['user_production']
+            for category in ['field', 'annotation', 'sent_to_pe', 'delivery', 'emr', 'approved']:
+                logger.info(f"  {category.title()} Users:")
+                users = user_metrics.get(category, [])
+                for user_data in users:
+                    logger.info(f"    {user_data.get('user', 'Unknown')}:")
+                    logger.info(f"      Completed Poles: {user_data.get('completed_poles', user_data.get('pole_count', 0))}")
+                    logger.info(f"      Utilities: {', '.join(user_data.get('utilities', []))}")
             self._generate_osp_productivity(weekly_metrics)
-            self._generate_status_tracking(weekly_metrics)
-            self._generate_burndown_metrics(burndown)
-            self._generate_schedule_metrics(schedule)
+            
+            # Generate and log status tracking
+            logger.info("Generating Status Tracking section")
+            status_changes = self.metrics.get_weekly_status()['status_changes']
+            for status, changes in status_changes.items():
+                logger.info(f"  {status}: {len(changes)} changes")
+                for change in changes:
+                    logger.info(f"    Job {change['job_id']}: {change['pole_count']} poles, {change['utility']}, {change['date']}")
+            self._generate_status_tracking(weekly_metrics, weekly_status)
+            
+            # Generate and log burndown metrics
+            logger.info("Generating Burndown Metrics section")
+            burndown_metrics = self.metrics.get_weekly_status()['burndown']
+            logger.info("Utility Burndown:")
+            for utility, metrics in burndown_metrics['by_utility'].items():
+                logger.info(f"  {utility}:")
+                logger.info(f"    Total Poles: {metrics['total_poles']}")
+                logger.info(f"    Completed: {metrics['completed_poles']}")
+                logger.info(f"    Run Rate: {metrics['run_rate']:.1f}")
+                if metrics.get('estimated_completion'):
+                    logger.info(f"    Est. Completion: {metrics['estimated_completion']}")
+            
+            logger.info("Backlog Analysis:")
+            for category, stats in burndown_metrics['backlog'].items():
+                logger.info(f"  {category}:")
+                logger.info(f"    Total Poles: {stats['total_poles']}")
+                logger.info(f"    Jobs: {len(stats['jobs'])}")
+                logger.info(f"    Utilities: {len(stats['utilities'])}")
+            self._generate_burndown_metrics(burndown, weekly_status)
+            
+            # Generate and log schedule metrics
+            logger.info("Generating Schedule Metrics section")
+            schedule_metrics = self.metrics.get_weekly_status()['schedule']
+            logger.info(f"Processing {len(schedule_metrics['projects'])} projects:")
+            for project in schedule_metrics['projects']:
+                logger.info(f"  {project['project_id']}:")
+                logger.info(f"    Total Poles: {project['total_poles']}")
+                logger.info(f"    Completed: {project['completed_poles']}")
+                progress = (project['completed_poles'] / project['total_poles'] * 100) if project['total_poles'] > 0 else 0
+                logger.info(f"    Progress: {progress:.1f}%")
+                logger.info(f"    Field Users: {project['field_users']}")
+                logger.info(f"    Back Office Users: {project['back_office_users']}")
+                logger.info(f"    End Date: {project.get('end_date', 'TBD')}")
+            self._generate_schedule_metrics(schedule, weekly_status)
+            
+            # Generate charts
             self._generate_charts(charts)
             
             # Save the workbook
             self.wb.save(output_path)
-            logger.info("Weekly report generated successfully")
+            logger.info(f"Report saved to {output_path}")
             return True
             
         except Exception as e:
             logger.error(f"Error generating report: {str(e)}")
+            logger.error("Failed to generate report")
             return False
             
     def _generate_header(self, ws):
@@ -76,203 +146,280 @@ class WeeklyReportGenerator:
         for cell in ['A1', 'A2', 'A3']:
             ws[cell].font = Font(bold=True)
             
-    def _generate_status_tracking(self, ws):
-        """Generate the Status Tracking section."""
-        logger.info("Generating Status Tracking section")
-        current_row = ws.max_row + 2
+    def _generate_status_tracking(self, worksheet, weekly_status):
+        """Generate status tracking section of the report."""
+        logging.info("Generating status tracking section")
         
-        # Section header
-        ws.cell(row=current_row, column=1, value="Status Tracking").font = Font(bold=True)
-        current_row += 1
-        
-        # Headers
-        headers = ['Status', 'Job ID', 'Pole Count', 'Utility', 'Original Status Date']
-        for col, header in enumerate(headers, 1):
-            cell = ws.cell(row=current_row, column=col)
+        # Set up headers
+        headers = ['Status', 'Job ID', 'Utility', 'Pole Count', 'Date']
+        for col, header in enumerate(headers):
+            cell = worksheet.cell(row=self.current_row, column=col + 1)
             cell.value = header
             cell.font = Font(bold=True)
-        current_row += 1
+            cell.fill = PatternFill(start_color='CCCCCC', end_color='CCCCCC', fill_type='solid')
+            
+        self.current_row += 1
         
-        # Data rows for each status category
-        status_categories = {
-            'EMR Status': self.metrics.status_changes['emr'],
-            'Approved for Construction': self.metrics.status_changes['approved'],
-            'Field Collection': self.metrics.status_changes['field_collection'],
-            'Annotation': self.metrics.status_changes['annotation'],
-            'Sent to PE': self.metrics.status_changes['sent_to_pe'],
-            'Delivery': self.metrics.status_changes['delivery']
+        # Add status changes
+        total_changes = 0
+        for status, changes in weekly_status['status_changes'].items():
+            for change in changes:
+                row = [
+                    status,
+                    change['job_id'],
+                    change['utility'],
+                    change['pole_count'],
+                    change['date'].strftime('%Y-%m-%d') if isinstance(change['date'], datetime) else change['date']
+                ]
+                for col, value in enumerate(row):
+                    cell = worksheet.cell(row=self.current_row, column=col + 1)
+                    cell.value = value
+                self.current_row += 1
+                total_changes += 1
+                
+        logging.info(f"Added {total_changes} status changes")
+        
+        # Add spacing
+        self.current_row += 2
+
+    def _generate_burndown_metrics(self, worksheet, weekly_status):
+        """Generate burndown metrics section of the report."""
+        logging.info("Generating burndown metrics section")
+        
+        # Set up headers for utility burndown
+        headers = ['Utility', 'Total Poles', 'Completed Poles', 'Run Rate', 'Est. Completion']
+        for col, header in enumerate(headers):
+            cell = worksheet.cell(row=self.current_row, column=col + 1)
+            cell.value = header
+            cell.font = Font(bold=True)
+            cell.fill = PatternFill(start_color='CCCCCC', end_color='CCCCCC', fill_type='solid')
+            
+        self.current_row += 1
+        
+        # Add utility burndown metrics
+        burndown = weekly_status['burndown']
+        for utility, metrics in burndown['by_utility'].items():
+            row = [
+                utility,
+                metrics['total_poles'],
+                metrics['completed_poles'],
+                f"{metrics['run_rate']:.1f} poles/week",
+                metrics['estimated_completion'].strftime('%Y-%m-%d') if isinstance(metrics['estimated_completion'], datetime) else metrics['estimated_completion'] or 'TBD'
+            ]
+            for col, value in enumerate(row):
+                cell = worksheet.cell(row=self.current_row, column=col + 1)
+                cell.value = value
+            self.current_row += 1
+            
+        # Add spacing
+        self.current_row += 2
+        
+        # Add project burndown metrics header
+        headers = ['Project', 'Total Poles', 'Completed Poles', 'Run Rate', 'Est. Completion']
+        for col, header in enumerate(headers):
+            cell = worksheet.cell(row=self.current_row, column=col + 1)
+            cell.value = header
+            cell.font = Font(bold=True)
+            cell.fill = PatternFill(start_color='CCCCCC', end_color='CCCCCC', fill_type='solid')
+            
+        self.current_row += 1
+        
+        # Add project burndown metrics
+        for project, metrics in burndown['by_project'].items():
+            row = [
+                project,
+                metrics['total_poles'],
+                metrics['completed_poles'],
+                f"{metrics['run_rate']:.1f} poles/week",
+                metrics['estimated_completion'].strftime('%Y-%m-%d') if isinstance(metrics['estimated_completion'], datetime) else metrics['estimated_completion'] or 'TBD'
+            ]
+            for col, value in enumerate(row):
+                cell = worksheet.cell(row=self.current_row, column=col + 1)
+                cell.value = value
+            self.current_row += 1
+            
+        # Add spacing
+        self.current_row += 2
+        
+        # Add backlog analysis header
+        worksheet.cell(row=self.current_row, column=1).value = "Backlog Analysis"
+        worksheet.cell(row=self.current_row, column=1).font = Font(bold=True)
+        self.current_row += 1
+        
+        # Set up headers for backlog
+        headers = ['Category', 'Total Poles', 'Jobs', 'Utilities']
+        for col, header in enumerate(headers):
+            cell = worksheet.cell(row=self.current_row, column=col + 1)
+            cell.value = header
+            cell.font = Font(bold=True)
+            cell.fill = PatternFill(start_color='CCCCCC', end_color='CCCCCC', fill_type='solid')
+            
+        self.current_row += 1
+        
+        # Add backlog metrics
+        backlog = burndown['backlog']
+        categories = {
+            'field': 'Field Collection',
+            'back_office': 'Back Office',
+            'approve_construction': 'Approve for Construction'
         }
         
-        total_changes = 0
-        for status, changes in status_categories.items():
-            logger.info(f"Processing {len(changes)} changes for status: {status}")
-            for change in changes:
-                ws.cell(row=current_row, column=1).value = status
-                ws.cell(row=current_row, column=2).value = change['job_id']
-                ws.cell(row=current_row, column=3).value = change['pole_count']
-                ws.cell(row=current_row, column=4).value = change['utility']
-                ws.cell(row=current_row, column=5).value = change['date']
-                current_row += 1
-                total_changes += 1
+        for category, display_name in categories.items():
+            if category in backlog:
+                metrics = backlog[category]
+                row = [
+                    display_name,
+                    metrics['total_poles'],
+                    len(metrics['jobs']),
+                    len(metrics['utilities'])
+                ]
+                for col, value in enumerate(row):
+                    cell = worksheet.cell(row=self.current_row, column=col + 1)
+                    cell.value = value
+                self.current_row += 1
         
-        logger.info(f"Added {total_changes} status changes to report")
-                
-    def _generate_burndown_metrics(self, ws):
-        """Generate the Burndown metrics sheet."""
-        logger.info("Generating Burndown metrics")
+        logging.info("Added burndown metrics")
         
-        # Section header
-        ws['A1'] = "Burndown Analysis"
-        ws['A1'].font = Font(bold=True)
+        # Add spacing
+        self.current_row += 2
+
+    def _generate_schedule_metrics(self, worksheet, weekly_status):
+        """Generate schedule metrics section of the report."""
+        logging.info("Generating schedule metrics section")
         
-        # Utility section
-        ws['A3'] = "Utility Burndown"
-        ws['A3'].font = Font(bold=True)
-        
-        headers = ['Utility', 'Total Poles', 'Completed Poles', 'Run Rate', 'Est. Completion']
-        for col, header in enumerate(headers, 1):
-            cell = ws.cell(row=4, column=col)
+        # Set up headers
+        headers = ['Project', 'Total Poles', 'Completed Poles', 'Progress', 'Field Users', 'Back Office Users', 'End Date']
+        for col, header in enumerate(headers):
+            cell = worksheet.cell(row=self.current_row, column=col + 1)
             cell.value = header
             cell.font = Font(bold=True)
+            cell.fill = PatternFill(start_color='CCCCCC', end_color='CCCCCC', fill_type='solid')
             
-        row = 5
-        utility_count = 0
-        for utility, metrics in self.metrics.burndown['by_utility'].items():
-            ws.cell(row=row, column=1).value = utility
-            ws.cell(row=row, column=2).value = metrics['total_poles']
-            ws.cell(row=row, column=3).value = metrics['completed_poles']
-            ws.cell(row=row, column=4).value = f"{metrics['run_rate']:.2f}"
-            ws.cell(row=row, column=5).value = metrics['estimated_completion']
-            row += 1
-            utility_count += 1
-            
-        logger.info(f"Added burndown metrics for {utility_count} utilities")
-            
-        # Backlog section
-        ws.cell(row=row+2, column=1, value="Backlog Analysis").font = Font(bold=True)
-        row += 3
+        self.current_row += 1
         
-        backlog_headers = ['Category', 'Total Poles', 'Jobs', 'Utilities']
-        for col, header in enumerate(backlog_headers, 1):
-            cell = ws.cell(row=row, column=col)
-            cell.value = header
-            cell.font = Font(bold=True)
-        row += 1
-        
-        for category in ['field', 'back_office']:
-            ws.cell(row=row, column=1).value = category.replace('_', ' ').title()
-            ws.cell(row=row, column=2).value = self.metrics.backlog[category]['total_poles']
-            ws.cell(row=row, column=3).value = len(self.metrics.backlog[category]['jobs'])
-            ws.cell(row=row, column=4).value = len(self.metrics.backlog[category]['utilities'])
-            logger.info(f"{category} backlog: {self.metrics.backlog[category]['total_poles']} poles, {len(self.metrics.backlog[category]['jobs'])} jobs")
-            row += 1
-            
-    def _generate_schedule_metrics(self, ws):
-        """Generate the Schedule metrics sheet."""
-        logger.info("Generating Schedule metrics")
-        
-        # Section header
-        ws['A1'] = "Project Schedule"
-        ws['A1'].font = Font(bold=True)
-        
-        # Headers
-        headers = ['Project', 'Total Poles', 'Completed', 'Progress', 'Field Users', 'Back Office Users', 'Est. Completion']
-        for col, header in enumerate(headers, 1):
-            cell = ws.cell(row=3, column=col)
-            cell.value = header
-            cell.font = Font(bold=True)
-            
-        # Data rows
-        row = 4
-        project_count = 0
-        for project in self.metrics.schedule['projects']:
-            ws.cell(row=row, column=1).value = project['project_id']
-            ws.cell(row=row, column=2).value = project['total_poles']
-            ws.cell(row=row, column=3).value = project['completed_poles']
+        # Add project metrics
+        schedule = weekly_status['schedule']
+        for project in schedule['projects']:
             progress = (project['completed_poles'] / project['total_poles'] * 100) if project['total_poles'] > 0 else 0
-            ws.cell(row=row, column=4).value = f"{progress:.1f}%"
-            ws.cell(row=row, column=5).value = project['field_users']
-            ws.cell(row=row, column=6).value = project['back_office_users']
-            ws.cell(row=row, column=7).value = project.get('end_date', 'TBD')
+            row = [
+                project['project_id'],
+                project['total_poles'],
+                project['completed_poles'],
+                f"{progress:.1f}%",
+                len(project['field_users']),
+                len(project['back_office_users']),
+                project.get('end_date', 'TBD')
+            ]
+            for col, value in enumerate(row):
+                cell = worksheet.cell(row=self.current_row, column=col + 1)
+                cell.value = value
+            self.current_row += 1
             
-            logger.info(f"Project {project['project_id']}: {progress:.1f}% complete, {project['total_poles']} total poles")
-            row += 1
-            project_count += 1
-            
-        logger.info(f"Added schedule metrics for {project_count} projects")
+        logging.info("Added schedule metrics")
+        
+        # Add spacing
+        self.current_row += 2
 
     def _generate_utility_progress(self, ws):
         """Generate the Utility Progress section."""
-        logger.info("Generating Utility Progress section")
+        logging.info("Generating Utility Progress section")
         
         # Section header
-        ws['A5'] = "Utility Progress"
-        ws['A5'].font = Font(bold=True)
+        ws.cell(row=7, column=1).value = "Utility Progress"
+        ws.cell(row=7, column=1).font = Font(bold=True)
         
         # Column headers
-        headers = ['Utility', 'Current Rate', 'Previous Rate', 'Change', 'Total Poles', 'Completed Poles']
+        headers = ['Utility', 'Total Poles', 'Completed', 'Remaining', 'Completion %', 'Est. Completion Date']
         for col, header in enumerate(headers, 1):
-            cell = ws.cell(row=6, column=col)
+            cell = ws.cell(row=8, column=col)
             cell.value = header
             cell.font = Font(bold=True)
-            
+        
         # Data rows
-        row = 7
-        logger.info("Writing utility metrics:")
-        for utility, metrics in self.metrics.burndown['by_utility'].items():
-            # Skip utilities with no poles
-            if metrics['total_poles'] == 0:
-                logger.debug(f"Skipping utility {utility} with no poles")
-                continue
-                
-            current_rate = metrics['run_rate']
-            previous_rate = 0  # TODO: Get from historical data
-            change = current_rate - previous_rate
+        row = 9
+        utility_metrics = self.metrics.burndown['by_utility']
+        logging.info(f"Processing utility metrics: {utility_metrics}")
+        
+        for utility, data in utility_metrics.items():
+            logging.debug(f"Processing utility: {utility}")
+            logging.debug(f"Utility data: {data}")
             
-            logger.info(f"  {utility}:")
-            logger.info(f"    Current Rate: {current_rate:.1f}")
-            logger.info(f"    Total Poles: {metrics['total_poles']}")
-            logger.info(f"    Completed Poles: {metrics['completed_poles']}")
+            total_poles = data.get('total_poles', 0)
+            completed = data.get('completed_poles', 0)
+            remaining = total_poles - completed
+            completion_pct = (completed / total_poles * 100) if total_poles > 0 else 0
+            est_completion = data.get('estimated_completion_date', 'N/A')
+            
+            logging.debug(f"Utility stats - Total: {total_poles}, Completed: {completed}, " 
+                         f"Remaining: {remaining}, Completion %: {completion_pct:.1f}, "
+                         f"Est. Completion: {est_completion}")
             
             ws.cell(row=row, column=1).value = utility
-            ws.cell(row=row, column=2).value = f"{current_rate:.1f}"
-            ws.cell(row=row, column=3).value = f"{previous_rate:.1f}"
-            ws.cell(row=row, column=4).value = f"{change:+.1f}"
-            ws.cell(row=row, column=5).value = metrics['total_poles']
-            ws.cell(row=row, column=6).value = metrics['completed_poles']
+            ws.cell(row=row, column=2).value = total_poles
+            ws.cell(row=row, column=3).value = completed
+            ws.cell(row=row, column=4).value = remaining
+            ws.cell(row=row, column=5).value = f"{completion_pct:.1f}%"
+            ws.cell(row=row, column=6).value = est_completion
             
             row += 1
-            
+        
+        logging.info("Completed Utility Progress section")
+
     def _generate_osp_productivity(self, ws):
         """Generate the OSP Productivity section."""
-        # Calculate start row (2 rows after utility section)
-        start_row = 7 + len(self.metrics.burndown['by_utility']) + 2
+        logging.info("Generating OSP Productivity section")
         
         # Section header
-        ws.cell(row=start_row, column=1).value = "OSP Productivity"
-        ws.cell(row=start_row, column=1).font = Font(bold=True)
+        ws.cell(row=self.current_row, column=1).value = "OSP Productivity"
+        ws.cell(row=self.current_row, column=1).font = Font(bold=True)
         
         # Column headers
-        headers = ['Worker', 'Jobs Processed', 'Poles Completed', 'Avg Poles/Job']
+        headers = ['User', 'Role', 'Completed Poles', 'Utilities', 'Last Activity']
         for col, header in enumerate(headers, 1):
-            cell = ws.cell(row=start_row + 1, column=col)
+            cell = ws.cell(row=self.current_row + 1, column=col)
             cell.value = header
             cell.font = Font(bold=True)
+        
+        self.current_row += 2
+        
+        # Get weekly status metrics
+        weekly_status = self.metrics.get_weekly_status()
+        user_metrics = weekly_status.get('user_production', {})
+        logging.info(f"Processing user productivity metrics: {user_metrics}")
+        
+        # Process field users
+        logging.info("  Field Users:")
+        field_users = user_metrics.get('field', [])
+        for user_data in field_users:
+            logging.debug(f"Processing field user: {user_data}")
             
-        # Data rows
-        row = start_row + 2
-        for user_data in self.metrics.get_weekly_status()['user_production']['annotation']:
-            jobs_processed = len(set(user_data['jobs']))
-            poles_completed = user_data['completed_poles']
-            avg_poles = poles_completed / jobs_processed if jobs_processed > 0 else 0
+            ws.cell(row=self.current_row, column=1).value = user_data.get('user', 'Unknown')
+            ws.cell(row=self.current_row, column=2).value = 'Field'
+            ws.cell(row=self.current_row, column=3).value = user_data.get('completed_poles', 0)
+            ws.cell(row=self.current_row, column=4).value = ', '.join(user_data.get('utilities', []))
+            ws.cell(row=self.current_row, column=5).value = max(user_data.get('dates', [])) if user_data.get('dates', []) else 'N/A'
             
-            ws.cell(row=row, column=1).value = user_data['user']
-            ws.cell(row=row, column=2).value = jobs_processed
-            ws.cell(row=row, column=3).value = poles_completed
-            ws.cell(row=row, column=4).value = f"{avg_poles:.1f}"
+            self.current_row += 1
             
-            row += 1
-            
+        # Process back office users by category
+        back_office_categories = ['annotation', 'sent_to_pe', 'delivery', 'emr', 'approved']
+        for category in back_office_categories:
+            logging.info(f"  {category.title()} Users:")
+            category_users = user_metrics.get(category, [])
+            for user_data in category_users:
+                logging.debug(f"Processing {category} user: {user_data}")
+                
+                ws.cell(row=self.current_row, column=1).value = user_data.get('user', 'Unknown')
+                ws.cell(row=self.current_row, column=2).value = category.replace('_', ' ').title()
+                ws.cell(row=self.current_row, column=3).value = user_data.get('completed_poles', user_data.get('pole_count', 0))
+                ws.cell(row=self.current_row, column=4).value = ', '.join(user_data.get('utilities', []))
+                ws.cell(row=self.current_row, column=5).value = max(user_data.get('dates', [])) if user_data.get('dates', []) else 'N/A'
+                
+                self.current_row += 1
+        
+        logging.info("Completed OSP Productivity section")
+        self.current_row += 2
+
     def _generate_charts(self, ws):
         """Generate the charts sheet."""
         # Utility Completion Rates Chart

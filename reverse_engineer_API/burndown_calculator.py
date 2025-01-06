@@ -53,6 +53,18 @@ class BurndownCalculator:
         self.project_metrics: Dict[str, ProjectMetrics] = {}
         self.status_metrics: Dict[str, Dict[str, int]] = {}
         self.weekly_completion_rates: Dict[str, List[float]] = {}
+        self.node_processing_stats = {
+            'total_nodes': 0,
+            'processed_nodes': 0,
+            'skipped_nodes': 0,
+            'error_nodes': 0,
+            'pole_types': {},
+            'completion_sources': {
+                'button_added': 0,
+                '-Imported': 0,
+                'multi_added': 0
+            }
+        }
         
         logger.info(f"Initialized BurndownCalculator with dates: {start_date} to {end_date}")
         logger.info(f"Standard run rates - Back Office: {self.BACK_OFFICE_RATE} poles/week, Field: {self.FIELD_RATE} poles/week")
@@ -60,7 +72,22 @@ class BurndownCalculator:
     def update_job_metrics(self, job_data: Dict[str, Any]) -> None:
         """Update metrics based on job data"""
         try:
-            logger.info(f"Processing job metrics for job: {job_data.get('id', 'Unknown')}")
+            job_id = job_data.get('id', 'Unknown')
+            logger.info(f"Processing job metrics for job: {job_id}")
+            
+            # Reset node processing stats for this job
+            job_stats = {
+                'total_nodes': 0,
+                'processed_nodes': 0,
+                'skipped_nodes': 0,
+                'error_nodes': 0,
+                'pole_types': {},
+                'completion_sources': {
+                    'button_added': 0,
+                    '-Imported': 0,
+                    'multi_added': 0
+                }
+            }
             
             # Validate job_data
             if not isinstance(job_data, dict):
@@ -72,6 +99,14 @@ class BurndownCalculator:
             if not isinstance(metadata, dict):
                 logger.error(f"Invalid metadata type: {type(metadata)}")
                 return
+
+            # Log metadata details
+            logger.info(f"Job Metadata:")
+            logger.info(f"  Project: {metadata.get('project', 'Unknown')}")
+            logger.info(f"  Status: {job_data.get('status', 'Unknown')}")
+            logger.info(f"  Assigned OSP: {metadata.get('assigned_OSP', 'None')}")
+            logger.info(f"  Start Date: {metadata.get('start_date', 'None')}")
+            logger.info(f"  End Date: {metadata.get('end_date', 'None')}")
 
             # Determine utility using same logic as main.py
             utility = 'Unknown'
@@ -118,32 +153,66 @@ class BurndownCalculator:
             # Count poles and completed poles
             pole_count = 0
             completed_poles = 0
-            for node_id, node_data in nodes.items():
-                if not isinstance(node_data, dict):
-                    continue
-                attributes = node_data.get('attributes', {})
-                if not isinstance(attributes, dict):
-                    continue
-                
-                # Check if node is a pole
-                is_pole = False
-                for type_field in ['node_type', 'pole_type']:
-                    for source in ['button_added', '-Imported', 'value', 'auto_calced']:
-                        if attributes.get(type_field, {}).get(source) == 'pole':
-                            is_pole = True
-                            break
-                    if is_pole:
-                        break
-                
-                if is_pole:
-                    pole_count += 1
-                    # Check if pole is completed using any of the three possible sources
-                    done_attr = attributes.get('done', {})
-                    if any(done_attr.get(source) == True for source in ['button_added', '-Imported', 'multi_added']):
-                        completed_poles += 1
+            job_stats['total_nodes'] = len(nodes)
             
+            for node_id, node_data in nodes.items():
+                try:
+                    if not isinstance(node_data, dict):
+                        job_stats['skipped_nodes'] += 1
+                        continue
+                        
+                    attributes = node_data.get('attributes', {})
+                    if not isinstance(attributes, dict):
+                        job_stats['skipped_nodes'] += 1
+                        continue
+                    
+                    # Track node type
+                    node_type = None
+                    for type_field in ['node_type', 'pole_type']:
+                        for source in ['button_added', '-Imported', 'value', 'auto_calced']:
+                            type_value = attributes.get(type_field, {}).get(source)
+                            if type_value:
+                                node_type = type_value
+                                job_stats['pole_types'][node_type] = job_stats['pole_types'].get(node_type, 0) + 1
+                                break
+                        if node_type:
+                            break
+                    
+                    if node_type == 'pole':
+                        pole_count += 1
+                        # Check completion status and track source
+                        done_attr = attributes.get('done', {})
+                        for source in ['button_added', '-Imported', 'multi_added']:
+                            if done_attr.get(source) == True:
+                                completed_poles += 1
+                                job_stats['completion_sources'][source] += 1
+                                logger.debug(f"Pole {node_id} completed via {source}")
+                                break
+                    
+                    job_stats['processed_nodes'] += 1
+                    
+                except Exception as e:
+                    logger.error(f"Error processing node {node_id}: {str(e)}")
+                    job_stats['error_nodes'] += 1
+            
+            # Log node processing statistics
+            logger.info(f"Node Processing Statistics:")
+            logger.info(f"  Total Nodes: {job_stats['total_nodes']}")
+            logger.info(f"  Processed: {job_stats['processed_nodes']}")
+            logger.info(f"  Skipped: {job_stats['skipped_nodes']}")
+            logger.info(f"  Errors: {job_stats['error_nodes']}")
+            logger.info(f"  Node Types: {job_stats['pole_types']}")
+            logger.info(f"  Completion Sources: {job_stats['completion_sources']}")
             logger.info(f"Pole counts - Total: {pole_count}, Completed: {completed_poles}")
             
+            # Update global stats
+            for key in ['total_nodes', 'processed_nodes', 'skipped_nodes', 'error_nodes']:
+                self.node_processing_stats[key] += job_stats[key]
+            for node_type, count in job_stats['pole_types'].items():
+                self.node_processing_stats['pole_types'][node_type] = self.node_processing_stats['pole_types'].get(node_type, 0) + count
+            for source, count in job_stats['completion_sources'].items():
+                self.node_processing_stats['completion_sources'][source] += count
+
             # Initialize utility metrics if not exists
             if utility not in self.utility_metrics:
                 self.utility_metrics[utility] = UtilityMetrics()
@@ -185,12 +254,12 @@ class BurndownCalculator:
                 assigned_osp = metadata.get('assigned_OSP')
                 if assigned_osp:
                     self.project_metrics[project].back_office_users.add(assigned_osp)
-                    logger.debug(f"Added back office user {assigned_osp} to project {project}")
+                    logger.info(f"Added back office user {assigned_osp} to project {project}")
             elif status in ['Field Collection In Progress', 'Pending Field Collection']:
                 assigned_osp = metadata.get('assigned_OSP')
                 if assigned_osp:
                     self.project_metrics[project].field_users.add(assigned_osp)
-                    logger.debug(f"Added field user {assigned_osp} to project {project}")
+                    logger.info(f"Added field user {assigned_osp} to project {project}")
             
             # Calculate run rates and estimated completion
             if self.days_elapsed > 0:
