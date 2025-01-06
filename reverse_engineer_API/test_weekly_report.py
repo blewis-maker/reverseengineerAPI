@@ -16,6 +16,7 @@ from main import (
 )
 from weekly_excel_generator import WeeklyReportGenerator
 from burndown_calculator import BurndownCalculator
+import traceback
 
 def test_job_data_collection():
     """Test collection of weekly job data"""
@@ -50,8 +51,8 @@ def test_job_data_collection():
             nodes = extractNodes(job_data, metadata.get('name', ''), job_id, user_map)
             logging.info(f"Extracted {len(nodes)} nodes")
             
-            # Count important metrics
-            field_complete = len([n for n in nodes if n.get('fld_complete')])
+            # Count important metrics using standardized field completion status
+            field_complete = len([n for n in nodes if n.get('fldcompl') == 'yes'])
             annotation_complete = len([n for n in nodes if n.get('done')])
             
             logging.info(f"Field Complete: {field_complete}")
@@ -63,11 +64,11 @@ def test_job_data_collection():
         return False
 
 def test_metrics_collection():
-    """Test collection and organization of metrics"""
+    """Test collection and organization of metrics using real API data"""
     try:
-        logging.info("\nTesting metrics collection...")
+        logging.info("\nTesting metrics collection with real API data...")
         
-        # Set up test dates - Sunday to Sunday
+        # Set up date range - Sunday to Sunday
         end_date = datetime.now()
         # Adjust end_date to next Sunday if not already Sunday
         days_until_sunday = (6 - end_date.weekday()) % 7
@@ -79,12 +80,16 @@ def test_metrics_collection():
         
         logging.info(f"Getting jobs updated between {start_date.strftime('%m/%d/%y')} and {end_date.strftime('%m/%d/%y')}")
         
-        # Get test jobs
-        jobs = get_weekly_jobs(start_date, end_date, test_mode=True)
+        # Get real jobs from API
+        logging.info("Making API call to get updated jobs...")
+        jobs = getJobList()  # Use the real API call instead of test jobs
+        
         if not jobs:
-            logging.error("No jobs found for testing")
+            logging.error("No jobs found from API")
             return False
             
+        logging.info(f"Retrieved {len(jobs)} jobs from API")
+        
         # Initialize metrics and burndown calculator
         metrics = WeeklyMetrics()
         burndown = BurndownCalculator(start_date=start_date, end_date=end_date)
@@ -95,33 +100,37 @@ def test_metrics_collection():
         
         # Get user list for mapping IDs to names
         user_map = getUserList()
+        logging.info(f"Retrieved {len(user_map)} users for mapping")
         
         # Process jobs and collect metrics
-        for job_id in jobs:
+        for index, job in enumerate(jobs, 1):
+            job_id = job['id']
+            logging.info(f"\nProcessing job {index}/{len(jobs)}: {job['name']} (ID: {job_id})")
+            
             job_data = getJobData(job_id)
             if not job_data:
+                logging.error(f"Failed to get data for job {job_id}")
+                continue
+            
+            # Log job metadata for debugging
+            metadata = job_data.get('metadata', {})
+            logging.info(f"Job Status: {job_data.get('status')}")
+            logging.info(f"Utility: {metadata.get('utility', 'Unknown')}")
+            logging.info(f"Number of nodes: {len(job_data.get('nodes', {}))}")
+            
+            # Extract nodes with detailed logging
+            nodes = extractNodes(job_data, metadata.get('name', ''), job_id, user_map)
+            if not nodes:
+                logging.error(f"No nodes extracted for job {job_id}")
                 continue
                 
-            # Add test metadata if missing
-            if 'metadata' not in job_data:
-                job_data['metadata'] = {}
+            logging.info(f"Extracted {len(nodes)} nodes")
             
-            if not job_data['metadata'].get('utility'):
-                if 'FRM' in job_data.get('name', ''):
-                    job_data['metadata']['utility'] = 'Utility A'
-                elif 'LP' in job_data.get('name', ''):
-                    job_data['metadata']['utility'] = 'Utility B'
-                elif 'GJ' in job_data.get('name', ''):
-                    job_data['metadata']['utility'] = 'Utility C'
-                else:
-                    job_data['metadata']['utility'] = 'Unknown Utility'
-                    
-            # Add test user assignments if missing
-            if not job_data.get('assigned_users'):
-                job_data['assigned_users'] = ['test_user_1', 'test_user_2']
-                
-            # Extract nodes
-            nodes = extractNodes(job_data, job_data.get('metadata', {}).get('name', ''), job_id, user_map)
+            # Log field completion status distribution
+            field_complete_count = len([n for n in nodes if n.get('fldcompl') == 'yes'])
+            field_incomplete_count = len([n for n in nodes if n.get('fldcompl') == 'no'])
+            logging.info(f"Field Complete: {field_complete_count}")
+            logging.info(f"Field Incomplete: {field_incomplete_count}")
             
             # Update metrics
             metrics.update_job_metrics(job_data, job_id, nodes)
@@ -143,6 +152,7 @@ def test_metrics_collection():
             
     except Exception as e:
         logging.error(f"Error testing metrics collection: {str(e)}")
+        logging.error(f"Stack trace: {traceback.format_exc()}")
         return False
 
 def test_weekly_report():

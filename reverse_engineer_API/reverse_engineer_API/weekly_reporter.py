@@ -1,124 +1,19 @@
-from datetime import datetime, timedelta
 import logging
-from typing import Dict, List, Set
-import os
-import json
-import http.client
-import time
-import requests
-from requests.adapters import HTTPAdapter
-from urllib3.util.retry import Retry
-import traceback
+from datetime import datetime, timedelta
+from typing import List, Dict, Set
+from burndown_calculator import BurndownCalculator
 
-from main import (
-    getJobData,
-    extractNodes,
-    extractConnections,
-    extractAnchors,
-    getUserList,
-    update_sharepoint_spreadsheet,
-    CONFIG,
-    TEST_JOB_IDS
-)
-
-from weekly_excel_generator import WeeklyReportGenerator
-
-# Configure logging
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Test mode configuration
-TEST_MODE = True  # Set to True for testing with test jobs
-
 def parse_date(date_str: str) -> datetime:
-    """Convert date string to datetime object."""
+    """Parse a date string into a datetime object."""
     try:
         return datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
-    except (ValueError, TypeError):
+    except ValueError:
         try:
             return datetime.strptime(date_str, '%Y-%m-%d')
-        except (ValueError, TypeError):
+        except ValueError:
             return datetime.now()
-
-def get_weekly_jobs(start_date: datetime, end_date: datetime, test_mode: bool = False) -> List[Dict]:
-    """Get jobs updated within the specified date range using the updatedjobslist endpoint."""
-    try:
-        if test_mode:
-            return TEST_JOB_IDS
-            
-        all_updated_jobs = []
-        current_from_date = start_date
-        
-        while True:
-            # Set up API request
-            conn = http.client.HTTPSConnection("katapultpro.com", timeout=30)
-            
-            # Format dates for API (MM/DD/YY format)
-            from_date = current_from_date.strftime('%-m/%-d/%y')
-            to_date = end_date.strftime('%-m/%-d/%y')
-            
-            # Construct URL with parameters
-            url_path = f"/api/v2/updatedjobslist?fromDate={from_date}&toDate={to_date}&useToday=false&api_key={CONFIG['API_KEY']}"
-            logging.info(f"Requesting updated jobs from {from_date} to {to_date}")
-            
-            try:
-                # Add 2-second delay before each API call
-                time.sleep(2)
-                
-                conn.request("GET", url_path)
-                res = conn.getresponse()
-                data = res.read().decode("utf-8")
-                
-                if res.status == 429:  # Rate limit exceeded
-                    logging.warning("Rate limit exceeded, waiting 2 seconds before retry...")
-                    time.sleep(2)
-                    continue
-                    
-                if res.status != 200:
-                    logging.error(f"API request failed with status {res.status}: {data}")
-                    break
-                
-                # Parse response
-                updated_jobs = json.loads(data)
-                if not updated_jobs:
-                    logging.info("No more jobs found in date range")
-                    break
-                    
-                logging.info(f"Retrieved {len(updated_jobs)} jobs")
-                all_updated_jobs.extend(updated_jobs)
-                
-                # Check if we need to paginate (got 200 results)
-                if len(updated_jobs) == 200:
-                    # Use the last job's timestamp as the new from_date
-                    last_updated = datetime.fromisoformat(updated_jobs[-1]['last_updated'].replace('Z', '+00:00'))
-                    current_from_date = last_updated
-                    logging.info(f"Retrieved maximum results, continuing from {current_from_date}")
-                else:
-                    break
-                    
-            except Exception as e:
-                logging.error(f"Error processing batch: {str(e)}")
-                break
-            finally:
-                conn.close()
-        
-        logging.info(f"Total jobs found: {len(all_updated_jobs)}")
-        
-        # Convert the response to the format expected by the rest of the code
-        formatted_jobs = []
-        for job in all_updated_jobs:
-            formatted_jobs.append({
-                'id': job['jobId'],
-                'name': f"Job {job['jobId']}",  # We'll get the actual name when we fetch full job data
-                'last_updated': job['last_updated']
-            })
-        
-        return formatted_jobs
-        
-    except Exception as e:
-        logging.error(f"Error getting weekly jobs: {str(e)}")
-        logging.error(f"Stack trace: {traceback.format_exc()}")
-        return []
 
 class WeeklyMetrics:
     def __init__(self):
@@ -187,25 +82,14 @@ class WeeklyMetrics:
     def update_job_metrics(self, job_data: Dict, job_id: str, nodes: List[Dict]):
         """Update metrics based on job data."""
         try:
-            # Extract metadata and status information
             metadata = job_data.get('metadata', {})
             utility = metadata.get('utility', 'Unknown')
             project_id = metadata.get('project_id', 'Unknown')
-            job_status = metadata.get('job_status', 'Unknown')
+            job_status = job_data.get('status', 'Unknown')
             status_date = parse_date(job_data.get('status_date', datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
-            
-            # For now, we don't have previous status tracking
-            old_status = 'Unknown'  # We'll need to implement status change tracking
-            
+            old_status = job_data.get('old_status', 'Unknown')
             assigned_users = set(job_data.get('assigned_users', []))
             total_poles = len([n for n in nodes if n.get('type') == 'pole'])
-            
-            # Debug logging
-            logging.debug(f"Processing job {job_id}:")
-            logging.debug(f"  Utility: {utility}")
-            logging.debug(f"  Status: {job_status}")
-            logging.debug(f"  Metadata: {json.dumps(metadata, indent=2)}")
-            logging.debug(f"  Total Poles: {total_poles}")
             
             # Initialize project metrics if needed
             if project_id not in self.projects:
@@ -247,17 +131,14 @@ class WeeklyMetrics:
                 }
             
             # Process nodes for field completion status
-            field_incomplete_count = sum(1 for node in nodes if not (
-                node.get('attributes', {}).get('field_completed', {}).get('value') is True or
-                node.get('fldcompl') == 'yes'
-            ))
+            field_incomplete_count = sum(1 for node in nodes if not node.get('field_completed', {}).get('value') is True)
             
             # Update backlog metrics based on status and field completion
             if job_status == 'Pending Field Collection' or field_incomplete_count > 0:
                 self.burndown['backlog']['field']['total_poles'] += field_incomplete_count
                 self.burndown['backlog']['field']['jobs'].add(job_id)
                 self.burndown['backlog']['field']['utilities'].add(utility)
-                
+            
             if job_status in ['Pending Photo Annotation', 'Sent to PE']:
                 self.burndown['backlog']['back_office']['total_poles'] += len(nodes)
                 self.burndown['backlog']['back_office']['jobs'].add(job_id)
@@ -333,23 +214,19 @@ class WeeklyMetrics:
 
     def _update_user_production(self, nodes: List[Dict], job_id: str, total_poles: int, 
                               utility: str, status_date: datetime, assigned_users: Set[str], job_status: str = None):
-        """Update user production metrics based on node data."""
+        """Update user production metrics based on the type of work performed."""
         # Ensure status_date is a datetime object
         if isinstance(status_date, str):
             status_date = parse_date(status_date)
         elif not isinstance(status_date, datetime):
             status_date = datetime.now()
-        
+            
         # Track field users (those who completed field work)
         field_completed_poles = 0
-        field_users = set()  # Track unique field users for this job
-        
         for node in nodes:
-            # Use standardized fldcompl field
-            if node.get('fldcompl') == 'yes':
+            if node.get('field_completed', {}).get('value') is True:
                 field_user = node.get('field_completed_by')
                 if field_user:
-                    field_users.add(field_user)
                     if field_user not in self.user_production['field']:
                         self.user_production['field'][field_user] = {
                             'completed_poles': [],
@@ -361,22 +238,19 @@ class WeeklyMetrics:
                     self.user_production['field'][field_user]['utilities'].add(utility)
                     self.user_production['field'][field_user]['dates'].append(status_date)
                     field_completed_poles += 1
-        
+                
         # Update job information for field users if any poles were completed
         if field_completed_poles > 0:
-            for field_user in field_users:  # Only update users who worked on this job
+            for field_user in self.user_production['field']:
                 if job_id not in self.user_production['field'][field_user]['jobs']:
                     self.user_production['field'][field_user]['jobs'][job_id] = field_completed_poles
-
+                
         # Track back office users (those who did annotation work)
         back_office_completed_poles = 0
-        back_office_users = set()  # Track unique back office users for this job
-        
         for node in nodes:
             if node.get('done', {}).get('button_added') or node.get('done', {}).get('-Imported') or node.get('done', {}).get('multi_added'):
                 annotator = node.get('annotated_by')
                 if annotator:
-                    back_office_users.add(annotator)
                     if annotator not in self.user_production['back_office']['annotation']:
                         self.user_production['back_office']['annotation'][annotator] = {
                             'completed_poles': [],
@@ -392,7 +266,7 @@ class WeeklyMetrics:
                     self.user_production['back_office']['annotation'][annotator]['dates'].append(status_date)
                     self.user_production['back_office']['annotation'][annotator]['utilities'].add(utility)
                     back_office_completed_poles += 1
-
+                    
         # Track other back office activities (sent to PE, delivery, EMR, approved)
         if job_status:
             status_category = self._get_status_category(job_status)
@@ -413,7 +287,7 @@ class WeeklyMetrics:
                     user_data['pole_count'] += total_poles
                     user_data['dates'].append(status_date)
                     user_data['utilities'].add(utility)
-            
+                
         # Update utility metrics with completed poles
         if utility not in self.burndown['by_utility']:
             self.burndown['by_utility'][utility] = {
@@ -421,13 +295,11 @@ class WeeklyMetrics:
                 'field_completed': 0,
                 'back_office_completed': 0,
                 'run_rate': 0.0,
-                'estimated_completion': None,
-                'utilities': set()  # Track actual utility names
+                'estimated_completion': None
             }
         self.burndown['by_utility'][utility]['field_completed'] += field_completed_poles
         self.burndown['by_utility'][utility]['back_office_completed'] += back_office_completed_poles
-        self.burndown['by_utility'][utility]['utilities'].add(utility)  # Add utility to the set
-            
+                
         logger.debug(f"Updated user production metrics for job {job_id}")
         logger.debug(f"Field users: {self.user_production['field'].keys()}")
         logger.debug(f"Back office users: {[u for c in self.user_production['back_office'].values() for u in c.get('users', {}).keys()]}")
@@ -523,25 +395,52 @@ class WeeklyMetrics:
             'schedule': schedule_metrics
         }
 
-def generate_weekly_report(start_date: datetime, end_date: datetime, output_path: str, test_mode: bool = False) -> bool:
-    """Generate the weekly report."""
+def get_weekly_jobs(start_date: datetime, end_date: datetime, test_mode: bool = False) -> List[str]:
+    """Get jobs updated within the specified date range."""
+    from main import TEST_JOB_IDS
+    if test_mode:
+        return TEST_JOB_IDS
+    else:
+        # TODO: Implement actual job retrieval logic
+        return []
+
+def generate_weekly_report(end_date: datetime = None, test_mode: bool = False) -> bool:
+    """Generate weekly report for the specified end date."""
     try:
-        # Initialize metrics
-        metrics = WeeklyMetrics()
+        # Set up dates
+        if end_date is None:
+            end_date = datetime.now()
         
-        # Get weekly jobs
+        # Adjust end_date to next Sunday if not already Sunday
+        days_until_sunday = (6 - end_date.weekday()) % 7
+        end_date = end_date + timedelta(days=days_until_sunday)
+        end_date = end_date.replace(hour=8, minute=0, second=0, microsecond=0)  # 8:00 AM
+        
+        # Start date is previous Sunday
+        start_date = end_date - timedelta(days=7)
+        
+        logger.info(f"Generating weekly report for period {start_date.strftime('%m/%d/%y')} to {end_date.strftime('%m/%d/%y')}")
+        
+        # Get jobs updated in the date range
         jobs = get_weekly_jobs(start_date, end_date, test_mode)
         if not jobs:
-            logging.error("No jobs found for the week")
+            logger.error("No jobs found for the specified date range")
             return False
             
-        # Get user list for mapping
+        # Initialize metrics and burndown calculator
+        metrics = WeeklyMetrics()
+        burndown = BurndownCalculator(start_date=start_date, end_date=end_date)
+        
+        # Set standard run rates
+        burndown.back_office_capacity = 100/7  # 100 poles per week per back office user
+        burndown.field_capacity = 80/7         # 80 poles per week per field user
+        
+        # Get user list for mapping IDs to names
+        from main import getUserList
         user_map = getUserList()
-        if not user_map:
-            logging.error("Failed to get user mapping")
-            return False
-            
+        
         # Process each job
+        from main import getJobData, extractNodes
         for job_id in jobs:
             job_data = getJobData(job_id)
             if not job_data:
@@ -552,256 +451,25 @@ def generate_weekly_report(start_date: datetime, end_date: datetime, output_path
             
             # Update metrics
             metrics.update_job_metrics(job_data, job_id, nodes)
+            burndown.update_job_metrics(job_data)
             
-        # Generate Excel report
-        generator = WeeklyReportGenerator(metrics)
-        generator.generate_report(output_path)
+        # Generate report
+        from weekly_excel_generator import WeeklyReportGenerator
+        report_date = end_date.strftime('%Y%m%d')
+        output_path = f'reports/weekly/weekly_report_{report_date}.xlsx'
         
-        logging.info(f"Weekly report generated successfully at {output_path}")
+        # Create report generator
+        generator = WeeklyReportGenerator(metrics, end_date)
+        
+        # Generate report
+        success = generator.generate_report(output_path)
+        if not success:
+            logger.error("Failed to generate report")
+            return False
+            
+        logger.info(f"Report generated at: {output_path}")
         return True
         
     except Exception as e:
-        logging.error(f"Error generating weekly report: {str(e)}")
-        return False
-
-def process_weekly_data(job_data: Dict, metrics: WeeklyMetrics, user_map: Dict) -> None:
-    """Process weekly data for a single job."""
-    try:
-        # Extract metadata
-        metadata = job_data.get('metadata', {})
-        utility = metadata.get('utility', 'Unknown')
-        job_id = job_data.get('id', 'Unknown')
-        status = job_data.get('status')
-        
-        # Extract nodes
-        nodes = extractNodes(job_data, metadata.get('name', ''), job_id, user_map)
-        
-        # Update metrics
-        metrics.update_job_metrics(job_data)
-        
-        # Track various metrics
-        track_field_collection(nodes, metrics, utility)
-        track_back_office(nodes, metrics, utility, job_id, status)
-        track_status_metrics(nodes, metrics, utility, job_id, status)
-        
-    except Exception as e:
-        logging.error(f"Error processing weekly data: {str(e)}")
-
-def get_sharepoint_path() -> str:
-    """Generate SharePoint path for weekly report"""
-    now = datetime.now()
-    year = now.strftime('%Y')
-    week = now.strftime('%V')
-    return f"Weekly_Reports/{year}/Week_{week}"
-
-def get_user_list():
-    """Get list of users from the API."""
-    try:
-        response = requests.get(f"{API_BASE_URL}/getUserList")
-        if response.status_code == 200:
-            data = response.json()
-            if isinstance(data, list):
-                return data
-            elif isinstance(data, dict) and 'users' in data:
-                return data['users']
-            else:
-                logging.error(f"Unexpected user list format: {data}")
-                return []
-        else:
-            logging.error(f"Failed to get user list. Status code: {response.status_code}")
-            return []
-    except Exception as e:
-        logging.error(f"Error getting user list: {str(e)}")
-        return []
-
-def get_test_jobs() -> List[Dict]:
-    """Get test jobs for testing the weekly report generation."""
-    try:
-        test_jobs = []
-        for job_id in TEST_JOB_IDS:
-            job_data = getJobData(job_id)
-            if job_data:
-                # Add required fields for metrics processing
-                job_data['job_id'] = job_id
-                job_data['utility'] = job_data.get('metadata', {}).get('utility', 'Unknown')
-                job_data['status'] = job_data.get('status', 'Unknown')
-                job_data['previous_status'] = job_data.get('previous_status')
-                job_data['start_time'] = datetime.strptime(job_data.get('start_date', '2024-01-01'), '%Y-%m-%d')
-                if job_data.get('completion_date'):
-                    job_data['completion_time'] = datetime.strptime(job_data['completion_date'], '%Y-%m-%d')
-                test_jobs.append(job_data)
-        return test_jobs
-    except Exception as e:
-        logger.error(f"Error getting test jobs: {str(e)}")
-        return []
-
-def run_weekly_report(test_mode: bool = False) -> bool:
-    """
-    Main entry point for weekly report generation.
-    Can be used both for testing and production.
-    """
-    try:
-        # Set up logging
-        logging.info("\n=== Starting Weekly Report Generation ===\n")
-        
-        # Track statistics for final summary
-        stats = {
-            'total_jobs_found': 0,
-            'jobs_processed': 0,
-            'jobs_failed': 0,
-            'total_nodes': 0,
-            'field_complete': 0,
-            'field_incomplete': 0,
-            'utilities': set(),
-            'status_counts': {},
-            'processing_time': time.time()
-        }
-        
-        # Calculate date range (Sunday to Sunday)
-        end_date = datetime.now()
-        days_until_sunday = (6 - end_date.weekday()) % 7
-        end_date = end_date + timedelta(days=days_until_sunday)
-        end_date = end_date.replace(hour=8, minute=0, second=0, microsecond=0)
-        
-        # Start date is previous Sunday
-        start_date = end_date - timedelta(days=7)
-        
-        logging.info(f"Date Range: {start_date.strftime('%Y-%m-%d')} to {end_date.strftime('%Y-%m-%d')}")
-        
-        # Get user mapping
-        user_map = getUserList()
-        if not user_map:
-            logging.error("Failed to get user mapping")
-            return False
-        logging.info(f"Retrieved {len(user_map)} users for mapping")
-        
-        # Initialize metrics
-        metrics = WeeklyMetrics()
-        
-        # Get jobs for the week
-        jobs = get_weekly_jobs(start_date, end_date, test_mode)
-        if not jobs:
-            logging.error("No jobs found for the specified date range")
-            return False
-            
-        stats['total_jobs_found'] = len(jobs)
-        logging.info(f"Retrieved {len(jobs)} jobs to process")
-        
-        # Process each job
-        for index, job in enumerate(jobs, 1):
-            job_id = job['id']
-            job_name = job['name']
-            logging.info(f"\nProcessing job {index}/{len(jobs)}: {job_name} (ID: {job_id})")
-            
-            try:
-                # Get full job data
-                logging.debug(f"\nAttempting to retrieve data for job {job_id}")
-                job_data = getJobData(job_id)
-                if not job_data:
-                    logging.error(f"Failed to get data for job {job_id}")
-                    stats['jobs_failed'] += 1
-                    continue
-                
-                # Log job metadata
-                metadata = job_data.get('metadata', {})
-                status = metadata.get('job_status', 'Unknown')
-                utility = metadata.get('utility', 'Unknown')
-                
-                # Debug logging for job data
-                logging.debug(f"Retrieved job data:")
-                logging.debug(f"  Status: {status}")
-                logging.debug(f"  Utility: {utility}")
-                logging.debug(f"  Metadata: {json.dumps(metadata, indent=2)}")
-                
-                # Update statistics
-                stats['status_counts'][status] = stats['status_counts'].get(status, 0) + 1
-                stats['utilities'].add(utility)
-                
-                logging.info(f"Job Status: {status}")
-                logging.info(f"Utility: {utility}")
-                logging.info(f"Number of nodes: {len(job_data.get('nodes', {}))}")
-                
-                # Extract and process nodes
-                nodes = extractNodes(job_data, metadata.get('name', ''), job_id, user_map)
-                if not nodes:
-                    logging.error(f"No nodes extracted for job {job_id}")
-                    stats['jobs_failed'] += 1
-                    continue
-                
-                # Update node statistics
-                stats['total_nodes'] += len(nodes)
-                field_complete = len([n for n in nodes if n.get('fldcompl') == 'yes'])
-                field_incomplete = len([n for n in nodes if n.get('fldcompl') == 'no'])
-                stats['field_complete'] += field_complete
-                stats['field_incomplete'] += field_incomplete
-                
-                logging.info(f"Field Complete: {field_complete}")
-                logging.info(f"Field Incomplete: {field_incomplete}")
-                
-                # Update metrics
-                metrics.update_job_metrics(job_data, job_id, nodes)
-                stats['jobs_processed'] += 1
-                
-            except Exception as e:
-                logging.error(f"Error processing job {job_id}: {str(e)}")
-                stats['jobs_failed'] += 1
-                continue
-        
-        # Generate report
-        output_dir = os.path.join('reports', 'weekly')
-        os.makedirs(output_dir, exist_ok=True)
-        output_path = os.path.join(output_dir, f"weekly_report_{end_date.strftime('%Y%m%d')}.xlsx")
-        
-        # Generate Excel report
-        generator = WeeklyReportGenerator(metrics, end_date)
-        success = generator.generate_report(output_path)
-        
-        # Calculate total processing time
-        processing_time = time.time() - stats['processing_time']
-        
-        # Print detailed summary
-        logging.info("\n=== Weekly Report Generation Summary ===")
-        logging.info(f"Date Range: {start_date.strftime('%Y-%m-%d')} to {end_date.strftime('%Y-%m-%d')}")
-        logging.info(f"\nJob Processing Statistics:")
-        logging.info(f"Total Jobs Found: {stats['total_jobs_found']}")
-        logging.info(f"Successfully Processed: {stats['jobs_processed']}")
-        logging.info(f"Failed to Process: {stats['jobs_failed']}")
-        
-        logging.info(f"\nNode Statistics:")
-        logging.info(f"Total Nodes Processed: {stats['total_nodes']}")
-        logging.info(f"Field Complete: {stats['field_complete']}")
-        logging.info(f"Field Incomplete: {stats['field_incomplete']}")
-        field_complete_pct = (stats['field_complete'] / stats['total_nodes'] * 100) if stats['total_nodes'] > 0 else 0
-        logging.info(f"Field Completion Rate: {field_complete_pct:.1f}%")
-        
-        logging.info(f"\nUtility Distribution:")
-        for utility in sorted(stats['utilities']):
-            logging.info(f"- {utility}")
-            
-        logging.info(f"\nJob Status Distribution:")
-        for status, count in sorted(stats['status_counts'].items()):
-            logging.info(f"- {status}: {count}")
-            
-        logging.info(f"\nProcessing Time: {processing_time:.2f} seconds")
-        logging.info(f"Output File: {output_path}")
-        logging.info("=====================================")
-        
-        if success:
-            logging.info(f"\nWeekly report generated successfully")
-            return True
-        else:
-            logging.error("Failed to generate report")
-            return False
-            
-    except Exception as e:
-        logging.error(f"Error generating weekly report: {str(e)}")
-        logging.error(f"Stack trace: {traceback.format_exc()}")
-        return False
-
-if __name__ == "__main__":
-    # When run directly, execute the weekly report
-    success = run_weekly_report(test_mode=False)  # Set to True for testing
-    if not success:
-        logging.error("Weekly report generation failed")
-        exit(1)
-    logging.info("Weekly report generation completed successfully") 
+        logger.error(f"Error generating weekly report: {str(e)}")
+        return False 

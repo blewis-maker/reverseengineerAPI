@@ -35,6 +35,7 @@ warnings.filterwarnings('ignore')
 
 # Add to imports at the top
 from arcgis_updater import ArcGISUpdater
+from database.metrics_recorder import metrics_recorder
 
 app = Flask(__name__)
 
@@ -49,7 +50,7 @@ logging.basicConfig(
 load_dotenv()
 
 # Toggle to enable/disable testing a specific job
-TEST_ONLY_SPECIFIC_JOB = False
+TEST_ONLY_SPECIFIC_JOB = True  # Changed to True to only process test jobs
 
 # IDs of the test jobs
 TEST_JOB_IDS = [
@@ -58,6 +59,12 @@ TEST_JOB_IDS = [
     "-O4RHaixdJmN3lqi0Q3m",
     "-O7_Gr-6exIhw0vtfVga"
 ]
+
+# Add test mode flag
+SKIP_SHAREPOINT_UPDATE = True  # Add this flag to skip SharePoint updates
+
+# Add test mode flag for ArcGIS
+SKIP_ARCGIS_UPDATE = True  # Add this flag to skip ArcGIS updates
 
 # Add at top of script
 CONFIG = {
@@ -383,24 +390,9 @@ def extractNodes(job_data, job_name, job_id, user_map):
                         mr_status = "Electric MR"
 
                 # Extract pole attributes
-                pole_tag = attributes.get('pole_tag', {})
-                
-                # First try to get company from -Imported or button_added
-                company = pole_tag.get('-Imported', {}).get('company') or pole_tag.get('button_added', {}).get('company')
-                
-                # If not found, look for company in any direct child of pole_tag
-                if not company:
-                    for key, value in pole_tag.items():
-                        if isinstance(value, dict) and 'company' in value:
-                            company = value['company']
-                            break
-                
-                # If still not found, use default
-                if not company:
-                    company = "Unknown"
-                
-                fldcompl_value = attributes.get('field_completed', {}).get('value', "Unknown")
-                fldcompl = 'yes' if fldcompl_value == 1 else 'no' if fldcompl_value == 2 else 'Unknown'
+                company = attributes.get('pole_tag', {}).get('-Imported', {}).get('company', "Unknown")
+                fldcompl_value = attributes.get('field_completed', {}).get('value', False)
+                fldcompl = 'yes' if fldcompl_value is True else 'no' if fldcompl_value is False else 'Unknown'
                 
                 # Extract and count pole class
                 pole_class = attributes.get('pole_class', {}).get('-Imported', "Unknown")
@@ -1017,6 +1009,10 @@ def update_sharepoint_spreadsheet(df, site_url=None, drive_path=None):
     """
     Update the spreadsheet in SharePoint with new data, supporting co-authoring
     """
+    if SKIP_SHAREPOINT_UPDATE:
+        print("Skipping SharePoint update - Test mode enabled")
+        return True
+        
     try:
         print("\nUpdating SharePoint spreadsheet...")
         
@@ -1924,6 +1920,10 @@ def getUserList():
 
 def update_arcgis_features(nodes, connections, anchors):
     """Update ArcGIS feature services with the latest data"""
+    if SKIP_ARCGIS_UPDATE:
+        print("Skipping ArcGIS update - Test mode enabled")
+        return True
+        
     try:
         logging.info("\nUpdating ArcGIS feature services...")
         updater = ArcGISUpdater()
@@ -2300,24 +2300,96 @@ def main(email_list):
     return True
 
 def run_job():
+    """Main entry point for the Cloud Run job"""
     try:
-        # Put your main script logic here
-        logging.info("==============================================")
-        logging.info("STARTING KATAPULT AUTOMATION JOB")
-        logging.info("==============================================")
-        email_list = [
-            "brandan.lewis@deeplydigital.com"
-        ]
-        result = main(email_list)
-        if result:
-            logging.info("Job completed successfully")
-            return {"status": "success", "message": "Job completed successfully"}
-        else:
-            logging.error("Job failed")
-            return {"status": "error", "message": "Job failed"}
+        current_timestamp = datetime.now()
+        logging.info(f"Starting job run at {current_timestamp}")
+        
+        # Get all jobs
+        jobs = getJobList()
+        if not jobs:
+            logging.error("No jobs retrieved")
+            return
+        
+        # Get user list for mapping
+        user_map = getUserList()
+        
+        # Process each job
+        processed_jobs = []
+        for job in jobs:
+            try:
+                # Skip test jobs if not in test mode
+                if not TEST_ONLY_SPECIFIC_JOB and job['id'] in TEST_JOB_IDS:
+                    continue
+                
+                # Get detailed job data
+                job_data = getJobData(job['id'])
+                if not job_data or not validateJobData(job_data):
+                    continue
+                
+                # Extract nodes, connections, and anchors
+                nodes = extractNodes(job_data, job['name'], job['id'], user_map)
+                connections = extractConnections(job_data.get('connections', []), nodes, job_data)
+                anchors = extractAnchors(job_data, job['name'], job['id'])
+                
+                # Record metrics in database
+                try:
+                    metrics_recorder.record_job_metrics(job_data, current_timestamp)
+                except Exception as e:
+                    logging.error(f"Failed to record metrics for job {job['id']}: {str(e)}")
+                    # Continue processing even if metrics recording fails
+                
+                processed_jobs.append({
+                    'nodes': nodes,
+                    'connections': connections,
+                    'anchors': anchors,
+                    'job_data': job_data
+                })
+                
+            except Exception as e:
+                logging.error(f"Error processing job {job['id']}: {str(e)}")
+                continue
+        
+        if processed_jobs:
+            # Combine all features
+            all_nodes = []
+            all_connections = []
+            all_anchors = []
+            
+            for job in processed_jobs:
+                all_nodes.extend(job['nodes'])
+                all_connections.extend(job['connections'])
+                all_anchors.extend(job['anchors'])
+            
+            # Update ArcGIS features
+            update_arcgis_features(all_nodes, all_connections, all_anchors)
+            
+            # Update SharePoint tracker
+            create_report(processed_jobs)
+            
+            # Update daily summaries and burndown metrics
+            try:
+                # Get unique utilities from processed jobs
+                utilities = {job['job_data'].get('metadata', {}).get('utility') 
+                           for job in processed_jobs 
+                           if job['job_data'].get('metadata', {}).get('utility')}
+                
+                # Update daily summaries
+                metrics_recorder.update_daily_summary(current_timestamp)
+                
+                # Update burndown metrics for each utility
+                for utility in utilities:
+                    if utility:
+                        metrics_recorder.update_burndown_metrics(utility, current_timestamp)
+                
+            except Exception as e:
+                logging.error(f"Failed to update summary metrics: {str(e)}")
+        
+        logging.info("Job run completed successfully")
+        
     except Exception as e:
-        logging.error(f"Error in job execution: {str(e)}")
-        return {"status": "error", "message": str(e)}
+        logging.error(f"Failed to run job: {str(e)}")
+        raise
 
 @app.route('/', methods=['POST'])
 def handle_request():
