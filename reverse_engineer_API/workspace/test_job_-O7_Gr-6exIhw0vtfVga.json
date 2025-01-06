@@ -3642,6 +3642,21 @@
           }
         }
       }
+    },
+    "-OFxAbDxSYTHBUUtzyC4": {
+      "_created": {
+        "method": "desktop",
+        "timestamp": 1736193242045,
+        "uid": "V7Ey625xkfgvcIqA11Sn6dtNpPD2"
+      },
+      "attributes": {
+        "connection_type": {
+          "button_added": "down guy"
+        }
+      },
+      "button": "anchor",
+      "node_id_1": "-OFxAbDv3T7jmFVElYXn",
+      "node_id_2": "-O7_KgaYDLsMaxA0Zg4K"
     }
   },
   "date_created": 1727202291860,
@@ -5970,7 +5985,8 @@
       "m": 1,
       "n": {
         "-O9zLEUsduMsrK9B2Quq": 2,
-        "-OFwE4of5p6XGZIQ6ELv": 1
+        "-OFwE4of5p6XGZIQ6ELv": 1,
+        "-OFxAbDxSYTHBUUtzyC4": 2
       },
       "s": "16",
       "t": "n",
@@ -5979,7 +5995,7 @@
     },
     "-O9zLEUsduMsrK9B2Quq~2": {
       "c": "#faf",
-      "d": 30.4,
+      "d": 30.2,
       "g": "9wfy3kfgrb",
       "is": [
         {
@@ -5996,8 +6012,8 @@
         -108.57377150856638
       ],
       "l2": [
-        39.094047040611855,
-        -108.57366506919723
+        39.09403767298638,
+        -108.57366506919722
       ],
       "o": 0.7,
       "p": "solid",
@@ -6034,6 +6050,35 @@
       "u": "i0",
       "w": 7,
       "z": 16
+    },
+    "-OFxAbDxSYTHBUUtzyC4~2": {
+      "c": "#faf",
+      "d": 20.1,
+      "g": "9wfy3kfgrb",
+      "is": [
+        {
+          "c": "#faf",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i7",
+          "w": 7,
+          "z": 10
+        }
+      ],
+      "l": [
+        39.09403747872256,
+        -108.57377150856638
+      ],
+      "l2": [
+        39.09403649988655,
+        -108.5737005043136
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i7",
+      "w": 7,
+      "z": 10
     },
     "-O9u4mibjhyEyx2uC-So:midpoint_section": {
       "c": "#00f",
@@ -6333,35 +6378,35 @@
       "w": 7,
       "z": 10
     },
-    "-O9zLEUrtHTUbPZNj4MV": {
-      "c": "#faf",
-      "g": "9wfy3kg564",
+    "-OFxAbDv3T7jmFVElYXn": {
+      "c": "#8bc34a",
+      "g": "9wfy3kg532",
       "i": "katapult-map:triangle-down",
       "is": [
         {
-          "c": "#faf",
+          "c": "#8bc34a",
           "i": "katapult-map:triangle-down",
           "s": 16,
-          "u": "i29",
-          "z": 11
+          "u": "i30",
+          "z": 10
         }
       ],
       "l": [
-        39.094047040611855,
-        -108.57366506919723
+        39.09403649988655,
+        -108.5737005043136
       ],
       "n": {
-        "-O9zLEUsduMsrK9B2Quq": 1
+        "-OFxAbDxSYTHBUUtzyC4": 1
       },
       "s": 16,
       "t": "n",
-      "u": "i29",
-      "z": 11
+      "u": "i30",
+      "z": 10
     },
-    "-O9zLEUsduMsrK9B2Quq~1": {
+    "-OFxAbDxSYTHBUUtzyC4~1": {
       "c": "#faf",
-      "d": 30.4,
-      "g": "9wfy3kg564",
+      "d": 20.1,
+      "g": "9wfy3kg532",
       "is": [
         {
           "c": "#faf",
@@ -6373,8 +6418,62 @@
         }
       ],
       "l": [
-        39.094047040611855,
-        -108.57366506919723
+        39.09403649988655,
+        -108.5737005043136
+      ],
+      "l2": [
+        39.09403747872256,
+        -108.57377150856638
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i7",
+      "w": 7,
+      "z": 10
+    },
+    "-O9zLEUrtHTUbPZNj4MV": {
+      "c": "#faf",
+      "g": "9wfy3kg560",
+      "i": "katapult-map:triangle-down",
+      "is": [
+        {
+          "c": "#faf",
+          "i": "katapult-map:triangle-down",
+          "s": 16,
+          "u": "i29",
+          "z": 11
+        }
+      ],
+      "l": [
+        39.09403767298638,
+        -108.57366506919722
+      ],
+      "n": {
+        "-O9zLEUsduMsrK9B2Quq": 1
+      },
+      "s": 16,
+      "t": "n",
+      "u": "i29",
+      "z": 11
+    },
+    "-O9zLEUsduMsrK9B2Quq~1": {
+      "c": "#faf",
+      "d": 30.2,
+      "g": "9wfy3kg560",
+      "is": [
+        {
+          "c": "#faf",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i7",
+          "w": 7,
+          "z": 10
+        }
+      ],
+      "l": [
+        39.09403767298638,
+        -108.57366506919722
       ],
       "l2": [
         39.09403747872256,
@@ -15492,7 +15591,7 @@
     "-O7_KgaRkSFLry4fiZJ0": {
       "attributes": {
         "done": {
-          "-Imported": false
+          "-Imported": true
         },
         "field_completed": {
           "value": true
@@ -15501,7 +15600,7 @@
           "-OFwoGBtzo4FJspG_5gF": "NESC - 250B - Heavy - C - Elsewhere"
         },
         "loading_result": {
-          "-OFwoTY9DzTMVyOkba9k": ""
+          "-OFwoTY9DzTMVyOkba9k": "pass"
         },
         "mr_state": {
           "auto_calced": "No MR"
@@ -15516,7 +15615,7 @@
           "-Imported": "40 Feet"
         },
         "pole_spec": {
-          "-Imported": ""
+          "-Imported": "40-4 SOUTHERN PINE (NESC Standard)"
         },
         "pole_tag": {
           "-Imported": {
@@ -16230,7 +16329,7 @@
           "-Imported": "40 Feet"
         },
         "pole_spec": {
-          "-Imported": ""
+          "-Imported": "40-4 SOUTHERN PINE (NESC Standard)"
         },
         "pole_tag": {
           "-Imported": {
@@ -16287,7 +16386,7 @@
     "-O7_KgaSQ_uKICIPV_Mt": {
       "attributes": {
         "done": {
-          "-Imported": false
+          "-Imported": true
         },
         "field_completed": {
           "value": true
@@ -16296,7 +16395,7 @@
           "-OFwoGBtzo4FJspG_5gN": "NESC - 250B - Heavy - C - Elsewhere"
         },
         "loading_result": {
-          "-OFwoTY9DzTMVyOkba9u": ""
+          "-OFwoTY9DzTMVyOkba9u": "pass"
         },
         "mr_state": {
           "auto_calced": "No MR"
@@ -16305,13 +16404,13 @@
           "-Imported": "pole"
         },
         "pole_class": {
-          "-Imported": "Unknown"
+          "-Imported": "4"
         },
         "pole_height": {
-          "-Imported": "Unknown"
+          "-Imported": "40"
         },
         "pole_spec": {
-          "-Imported": ""
+          "-Imported": "40-4 SOUTHERN PINE (NESC Standard)"
         },
         "pole_tag": {
           "-Imported": {
@@ -16877,7 +16976,7 @@
     "-O7_KgaVOd49-WCO5HAv": {
       "attributes": {
         "done": {
-          "-Imported": false
+          "-Imported": true
         },
         "field_completed": {
           "value": true
@@ -16886,7 +16985,7 @@
           "-OFwoGBtzo4FJspG_5gV": "NESC - 250B - Heavy - C - Elsewhere"
         },
         "loading_result": {
-          "-OFwoTY9DzTMVyOkbaA1": ""
+          "-OFwoTY9DzTMVyOkbaA1": "pass"
         },
         "mr_state": {
           "auto_calced": "No MR"
@@ -16895,13 +16994,13 @@
           "-Imported": "pole"
         },
         "pole_class": {
-          "-Imported": "Unknown"
+          "-Imported": "4"
         },
         "pole_height": {
-          "-Imported": "Unknown"
+          "-Imported": "40"
         },
         "pole_spec": {
-          "-Imported": ""
+          "-Imported": "40-4 SOUTHERN PINE (NESC Standard)"
         },
         "pole_tag": {
           "-Imported": {
@@ -16962,7 +17061,7 @@
     "-O7_KgaVOd49-WCO5HAw": {
       "attributes": {
         "done": {
-          "-Imported": false
+          "-Imported": true
         },
         "field_completed": {
           "value": true
@@ -16971,7 +17070,7 @@
           "-OFwoGBtzo4FJspG_5gW": "NESC - 250B - Heavy - C - Elsewhere"
         },
         "loading_result": {
-          "-OFwoTY9DzTMVyOkbaA2": ""
+          "-OFwoTY9DzTMVyOkbaA2": "pass"
         },
         "mr_state": {
           "auto_calced": "No MR"
@@ -17124,7 +17223,7 @@
     "-O7_KgaVOd49-WCO5HAy": {
       "attributes": {
         "done": {
-          "-Imported": false
+          "-Imported": true
         },
         "field_completed": {
           "value": true
@@ -17133,7 +17232,7 @@
           "-OFwoGBtzo4FJspG_5gY": "NESC - 250B - Heavy - C - Elsewhere"
         },
         "loading_result": {
-          "-OFwoTY9DzTMVyOkbaA4": ""
+          "-OFwoTY9DzTMVyOkbaA4": "pass"
         },
         "mr_state": {
           "auto_calced": "No MR"
@@ -17145,10 +17244,10 @@
           "-Imported": "5"
         },
         "pole_height": {
-          "-Imported": "30 Feet"
+          "-Imported": "40"
         },
         "pole_spec": {
-          "-Imported": ""
+          "-Imported": "40-4 SOUTHERN PINE (NESC Standard)"
         },
         "pole_tag": {
           "-Imported": {
@@ -17380,7 +17479,7 @@
     "-O7_KgaVOd49-WCO5HB3": {
       "attributes": {
         "done": {
-          "-Imported": false
+          "-Imported": true
         },
         "field_completed": {
           "value": true
@@ -17389,7 +17488,7 @@
           "-OFwoGBtzo4FJspG_5ga": "NESC - 250B - Heavy - C - Elsewhere"
         },
         "loading_result": {
-          "-OFwoTY9DzTMVyOkbaA7": ""
+          "-OFwoTY9DzTMVyOkbaA7": "pass"
         },
         "mr_state": {
           "auto_calced": "MR Resolved"
@@ -17398,13 +17497,13 @@
           "-Imported": "pole"
         },
         "pole_class": {
-          "-Imported": "Unknown"
+          "-Imported": "4"
         },
         "pole_height": {
-          "-Imported": "Unknown"
+          "-Imported": "40"
         },
         "pole_spec": {
-          "-Imported": ""
+          "-Imported": "40-4 SOUTHERN PINE (NESC Standard)"
         },
         "pole_tag": {
           "-Imported": {
@@ -17461,7 +17560,7 @@
     "-O7_KgaVOd49-WCO5HB4": {
       "attributes": {
         "done": {
-          "-Imported": false
+          "-Imported": true
         },
         "field_completed": {
           "value": true
@@ -17470,7 +17569,7 @@
           "-OFwoGBtzo4FJspG_5gb": "NESC - 250B - Heavy - C - Elsewhere"
         },
         "loading_result": {
-          "-OFwoTY9DzTMVyOkbaA8": ""
+          "-OFwoTY9DzTMVyOkbaA8": "pass"
         },
         "mr_state": {
           "auto_calced": "No MR"
@@ -17479,13 +17578,13 @@
           "-Imported": "pole"
         },
         "pole_class": {
-          "-Imported": "Unknown"
+          "-Imported": "5"
         },
         "pole_height": {
-          "-Imported": "Unknown"
+          "-Imported": "35"
         },
         "pole_spec": {
-          "-Imported": ""
+          "-Imported": "35-5 SOUTHERN PINE (NESC Standard)"
         },
         "pole_tag": {
           "-Imported": {
@@ -18345,7 +18444,7 @@
     "-O7_KgaXI0tCOFzL7gN6": {
       "attributes": {
         "done": {
-          "-Imported": false
+          "-Imported": true
         },
         "field_completed": {
           "value": true
@@ -18354,7 +18453,7 @@
           "-OFwoGBtzo4FJspG_5gl": "NESC - 250B - Heavy - C - Elsewhere"
         },
         "loading_result": {
-          "-OFwoTY9DzTMVyOkbaAI": ""
+          "-OFwoTY9DzTMVyOkbaAI": "pass"
         },
         "mr_state": {
           "auto_calced": "MR Resolved"
@@ -18369,7 +18468,7 @@
           "-Imported": "40 Feet"
         },
         "pole_spec": {
-          "-Imported": ""
+          "-Imported": "40-4 SOUTHERN PINE (NESC Standard)"
         },
         "pole_tag": {
           "-Imported": {
@@ -18430,7 +18529,7 @@
     "-O7_KgaXI0tCOFzL7gN7": {
       "attributes": {
         "done": {
-          "-Imported": false
+          "-Imported": true
         },
         "field_completed": {
           "value": true
@@ -18439,7 +18538,7 @@
           "-OFwoGBtzo4FJspG_5gm": "NESC - 250B - Heavy - C - Elsewhere"
         },
         "loading_result": {
-          "-OFwoTY9DzTMVyOkbaAJ": ""
+          "-OFwoTY9DzTMVyOkbaAJ": "pass"
         },
         "mr_state": {
           "auto_calced": "No MR"
@@ -18451,10 +18550,10 @@
           "-Imported": "5"
         },
         "pole_height": {
-          "-Imported": "35 Feet"
+          "-Imported": "45"
         },
         "pole_spec": {
-          "-Imported": ""
+          "-Imported": "45-5 SOUTHERN PINE (NESC Standard)"
         },
         "pole_tag": {
           "-Imported": {
@@ -18503,7 +18602,7 @@
     "-O7_KgaYDLsMaxA0Zg4G": {
       "attributes": {
         "done": {
-          "-Imported": false
+          "-Imported": true
         },
         "field_completed": {
           "value": true
@@ -18512,7 +18611,7 @@
           "-OFwoGBtzo4FJspG_5gn": "NESC - 250B - Heavy - C - Elsewhere"
         },
         "loading_result": {
-          "-OFwoTY9DzTMVyOkbaAK": ""
+          "-OFwoTY9DzTMVyOkbaAK": "pass"
         },
         "mr_state": {
           "auto_calced": "No MR"
@@ -18527,7 +18626,7 @@
           "-Imported": "40 Feet"
         },
         "pole_spec": {
-          "-Imported": ""
+          "-Imported": "40-4 SOUTHERN PINE (NESC Standard)"
         },
         "pole_tag": {
           "-Imported": {
@@ -18612,7 +18711,7 @@
           "-Imported": "40 Feet"
         },
         "pole_spec": {
-          "-Imported": ""
+          "-Imported": "40-4 SOUTHERN PINE (NESC Standard)"
         },
         "pole_tag": {
           "-Imported": {
@@ -18677,7 +18776,7 @@
     "-O7_KgaYDLsMaxA0Zg4I": {
       "attributes": {
         "done": {
-          "-Imported": false
+          "-Imported": true
         },
         "field_completed": {
           "value": true
@@ -18686,7 +18785,7 @@
           "-OFwoGBtzo4FJspG_5gp": "NESC - 250B - Heavy - C - Elsewhere"
         },
         "loading_result": {
-          "-OFwoTY9DzTMVyOkbaAM": ""
+          "-OFwoTY9DzTMVyOkbaAM": "pass"
         },
         "mr_state": {
           "auto_calced": "MR Resolved"
@@ -18701,7 +18800,7 @@
           "-Imported": "40 Feet"
         },
         "pole_spec": {
-          "-Imported": ""
+          "-Imported": "40-4 SOUTHERN PINE (NESC Standard)"
         },
         "pole_tag": {
           "-Imported": {
@@ -18774,7 +18873,7 @@
     "-O7_KgaYDLsMaxA0Zg4J": {
       "attributes": {
         "done": {
-          "-Imported": false
+          "-Imported": true
         },
         "field_completed": {
           "value": true
@@ -18783,7 +18882,7 @@
           "-OFwoGBtzo4FJspG_5gq": "NESC - 250B - Heavy - C - Elsewhere"
         },
         "loading_result": {
-          "-OFwoTY9DzTMVyOkbaAN": ""
+          "-OFwoTY9DzTMVyOkbaAN": "pass"
         },
         "mr_state": {
           "auto_calced": "MR Resolved"
@@ -18792,13 +18891,13 @@
           "-Imported": "pole"
         },
         "pole_class": {
-          "-Imported": "5"
+          "-Imported": "4"
         },
         "pole_height": {
-          "-Imported": "35 Feet"
+          "-Imported": "40"
         },
         "pole_spec": {
-          "-Imported": ""
+          "-Imported": "40-4 SOUTHERN PINE (NESC Standard)"
         },
         "pole_tag": {
           "-Imported": {
@@ -18863,7 +18962,7 @@
     "-O7_KgaYDLsMaxA0Zg4K": {
       "attributes": {
         "done": {
-          "-Imported": false
+          "-Imported": true
         },
         "field_completed": {
           "value": true
@@ -18872,7 +18971,7 @@
           "-OFwoGBtzo4FJspG_5gr": "NESC - 250B - Heavy - C - Elsewhere"
         },
         "loading_result": {
-          "-OFwoTY9DzTMVyOkbaAO": ""
+          "-OFwoTY9DzTMVyOkbaAO": "pass"
         },
         "mr_state": {
           "auto_calced": "No MR"
@@ -18887,7 +18986,7 @@
           "-Imported": "40 Feet"
         },
         "pole_spec": {
-          "-Imported": ""
+          "-Imported": "40-4 SOUTHERN PINE (NESC Standard)"
         },
         "pole_tag": {
           "-Imported": {
@@ -19960,7 +20059,7 @@
       },
       "attributes": {
         "done": {
-          "button_added": false
+          "button_added": true
         },
         "field_completed": {
           "value": true
@@ -19972,13 +20071,16 @@
           "-OFwoGBtzo4FJspG_5gv": "NESC - 250B - Heavy - C - Elsewhere"
         },
         "loading_result": {
-          "-OFwoTY9DzTMVyOkbaAl": ""
+          "-OFwoTY9DzTMVyOkbaAl": "pass"
         },
         "mr_state": {
           "auto_calced": "No MR"
         },
         "node_type": {
           "button_added": "pole"
+        },
+        "pole_spec": {
+          "-OFx8PwBmMBgEHG6oYdA": "35-5 SOUTHERN PINE (NESC Standard)"
         },
         "scid": {
           "auto_button": "039"
@@ -20847,7 +20949,7 @@
           "button_added": "1"
         },
         "anchor_spec": {
-          "button_added": ""
+          "button_added": "Expanding - 10\" - Soil Class 4"
         },
         "existing_aux_eye": {
           "button_added": "0"
@@ -20862,15 +20964,15 @@
           "button_added": "1"
         },
         "sizes_of_attached_dn_guys": {
-          "button_added": "10M"
+          "button_added": "7/16 ehs"
         },
         "soil_type": {
-          "button_added": ""
+          "button_added": "Soil Class 4"
         }
       },
       "button": "anchor",
-      "latitude": 39.094047040611855,
-      "longitude": -108.57366506919723
+      "latitude": 39.09403767298638,
+      "longitude": -108.57366506919722
     },
     "-O9zLstV6YGxYcP26xCy": {
       "_created": {
@@ -22388,6 +22490,42 @@
       "button": "power_reference",
       "latitude": 39.09685802055898,
       "longitude": -108.57080186553856
+    },
+    "-OFxAbDv3T7jmFVElYXn": {
+      "_created": {
+        "method": "desktop",
+        "timestamp": 1736193242043,
+        "uid": "V7Ey625xkfgvcIqA11Sn6dtNpPD2"
+      },
+      "attributes": {
+        "anc_elevation": {
+          "button_added": "0"
+        },
+        "anchor_eyes": {
+          "button_added": "1"
+        },
+        "anchor_spec": {
+          "button_added": "Expanding - 10\" - Soil Class 4"
+        },
+        "existing_aux_eye": {
+          "button_added": "0"
+        },
+        "node_type": {
+          "button_added": "new anchor"
+        },
+        "rod_size": {
+          "button_added": "1"
+        },
+        "sizes_of_attached_dn_guys": {
+          "button_added": "5/16 ehs"
+        },
+        "soil_type": {
+          "button_added": "Soil Class 4"
+        }
+      },
+      "button": "anchor",
+      "latitude": 39.09403649988655,
+      "longitude": -108.5737005043136
     }
   },
   "numAssociated": 523,
@@ -48055,6 +48193,11 @@
           }
         }
       },
+      "pla": {
+        "version": {
+          "2-0-2": "2025-01-06"
+        }
+      },
       "shutter_speed": 0.003125,
       "status": "upload_complete",
       "stick_align": {
@@ -48824,6 +48967,11 @@
               }
             ]
           }
+        }
+      },
+      "pla": {
+        "version": {
+          "2-0-2": "2025-01-06"
         }
       },
       "shutter_speed": 0.003125,
@@ -49760,6 +49908,11 @@
               }
             ]
           }
+        }
+      },
+      "pla": {
+        "version": {
+          "2-0-2": "2025-01-06"
         }
       },
       "shutter_speed": 0.003125,
@@ -52643,6 +52796,11 @@
           }
         }
       },
+      "pla": {
+        "version": {
+          "2-0-2": "2025-01-06"
+        }
+      },
       "shutter_speed": 0.005,
       "status": "upload_complete",
       "stick_align": {
@@ -53016,7 +53174,8 @@
                 "percentX": 51.74880402611415,
                 "percentY": 27.12085557630189
               }
-            ]
+            ],
+            "wire_spec": "EHS 7/16"
           }
         },
         "insulator": {
@@ -53069,6 +53228,7 @@
               }
             },
             "_measured_height": 242.54,
+            "bearing": "90.6",
             "insulator_spec": "Three Bolt",
             "pixel_selection": [
               {
@@ -53173,6 +53333,11 @@
               }
             ]
           }
+        }
+      },
+      "pla": {
+        "version": {
+          "2-0-2": "2025-01-06"
         }
       },
       "shutter_speed": 0.003125,
@@ -54128,7 +54293,8 @@
                 "percentX": 54.143365912610506,
                 "percentY": 29.196181233107005
               }
-            ]
+            ],
+            "wire_spec": "EHS 5/16"
           },
           "-OFhn8Fuy5omQ1bxvI0m": {
             "_measured_height": 281.05,
@@ -54140,7 +54306,8 @@
                 "percentX": 53.76270558880135,
                 "percentY": 31.95143691020191
               }
-            ]
+            ],
+            "wire_spec": "EHS 5/16"
           },
           "-OFhnFUyFB_7oz30sm_M": {
             "_measured_height": 237,
@@ -54152,7 +54319,8 @@
                 "percentX": 53.78666015639267,
                 "percentY": 41.02365990835679
               }
-            ]
+            ],
+            "wire_spec": "EHS 5/16"
           }
         },
         "insulator": {
@@ -54301,6 +54469,11 @@
               }
             ]
           }
+        }
+      },
+      "pla": {
+        "version": {
+          "2-0-2": "2025-01-06"
         }
       },
       "shutter_speed": 0.00625,
@@ -54980,7 +55153,8 @@
                 "percentX": 48.08401293928493,
                 "percentY": 30.854780528868126
               }
-            ]
+            ],
+            "wire_spec": "EHS 5/16"
           },
           "-OFhnvhBOT90Nkoq6NCJ": {
             "_measured_height": 207.5,
@@ -54992,7 +55166,8 @@
                 "percentX": 47.63338917484477,
                 "percentY": 36.96323600239032
               }
-            ]
+            ],
+            "wire_spec": "EHS 5/16"
           },
           "-OFho0QJZROT8hmNq_0N": {
             "_measured_height": 196,
@@ -55004,7 +55179,8 @@
                 "percentX": 49.019016647192984,
                 "percentY": 39.73210637793545
               }
-            ]
+            ],
+            "wire_spec": "EHS 5/16"
           }
         },
         "insulator": {
@@ -55112,6 +55288,11 @@
               }
             ]
           }
+        }
+      },
+      "pla": {
+        "version": {
+          "2-0-2": "2025-01-06"
         }
       },
       "shutter_speed": 0.0025,
@@ -56007,6 +56188,11 @@
               }
             ]
           }
+        }
+      },
+      "pla": {
+        "version": {
+          "2-0-2": "2025-01-06"
         }
       },
       "shutter_speed": 0.003125,
@@ -56909,6 +57095,11 @@
               }
             ]
           }
+        }
+      },
+      "pla": {
+        "version": {
+          "2-0-2": "2025-01-06"
         }
       },
       "shutter_speed": 0.003125,
@@ -61630,7 +61821,8 @@
                 "percentX": 45.59525461530528,
                 "percentY": 55.06007107026883
               }
-            ]
+            ],
+            "wire_spec": "EHS 5/16"
           }
         },
         "insulator": {
@@ -61771,6 +61963,11 @@
               }
             ]
           }
+        }
+      },
+      "pla": {
+        "version": {
+          "2-0-2": "2025-01-06"
         }
       },
       "shutter_speed": 0.0025,
@@ -62242,6 +62439,7 @@
             "_measured_height": 315.77,
             "_routine_instance_id": "-OFwF9e1EPEZ2G_jYl0W",
             "_trace": "-OFwF9qxfi9GROcoEujV",
+            "anchor_id": "-O9zLEUrtHTUbPZNj4MV",
             "guying_type": "down guy",
             "pixel_selection": [
               {
@@ -62250,6 +62448,19 @@
               }
             ],
             "wire_spec": "EHS 7/16"
+          },
+          "-OFxAgqsquC-kAcycrNT": {
+            "_measured_height": 194.85,
+            "_trace": "-OFxAgqsquC-kAcycrNU",
+            "anchor_id": "-OFxAbDv3T7jmFVElYXn",
+            "guying_type": "down guy",
+            "pixel_selection": [
+              {
+                "percentX": 46.091920326187754,
+                "percentY": 45.67659298125448
+              }
+            ],
+            "wire_spec": "EHS 5/16"
           }
         },
         "insulator": {
@@ -62301,6 +62512,7 @@
               }
             },
             "_measured_height": 255.02,
+            "bearing": "270.5",
             "insulator_spec": "Spool 3\"",
             "pixel_selection": [
               {
@@ -62337,6 +62549,11 @@
               }
             ]
           }
+        }
+      },
+      "pla": {
+        "version": {
+          "2-0-2": "2025-01-06"
         }
       },
       "shutter_speed": 0.003125,
@@ -62876,6 +63093,11 @@
             ],
             "point_load_end": true
           }
+        }
+      },
+      "pla": {
+        "version": {
+          "2-0-2": "2025-01-06"
         }
       },
       "shutter_speed": 0.003125,
@@ -64051,7 +64273,8 @@
                 "percentX": 49.59874827338843,
                 "percentY": 36.963904187480864
               }
-            ]
+            ],
+            "wire_spec": "EHS 5/16"
           },
           "-OFwIZIZ-150eXBAmYPz": {
             "_measured_height": 237,
@@ -64063,7 +64286,8 @@
                 "percentX": 49.989667356073795,
                 "percentY": 41.614474746274276
               }
-            ]
+            ],
+            "wire_spec": "EHS 5/16"
           },
           "-OFwIbt4VuPgqsZ2lk6r": {
             "_measured_height": 237,
@@ -64075,7 +64299,8 @@
                 "percentX": 49.989667356073795,
                 "percentY": 41.614474746274276
               }
-            ]
+            ],
+            "wire_spec": "EHS 5/16"
           }
         },
         "insulator": {
@@ -64203,7 +64428,7 @@
                 "percentY": 28.043082021519055
               }
             ],
-            "point_load_end": true
+            "point_load_end": false
           },
           "-OFwGMQ8RdjF47b6yyl6": {
             "_measured_height": 237,
@@ -64215,6 +64440,11 @@
               }
             ]
           }
+        }
+      },
+      "pla": {
+        "version": {
+          "2-0-2": "2025-01-06"
         }
       },
       "shutter_speed": 0.004,
@@ -64978,7 +65208,7 @@
             "_measured_height": 367.26,
             "_routine_instance_id": "-OFhpMxubok7rhmE-4HZ",
             "_trace": "-OFhpN9-2yTXV6yt9FGa",
-            "anchor_id": "-O9zLEUrtHTUbPZNj4MV",
+            "anchor_id": "-O9zMXat71OMp1bWfIi0",
             "guying_type": "down guy",
             "pixel_selection": [
               {
@@ -65157,6 +65387,11 @@
               }
             ]
           }
+        }
+      },
+      "pla": {
+        "version": {
+          "2-0-2": "2025-01-06"
         }
       },
       "shutter_speed": 0.003125,
@@ -65877,7 +66112,8 @@
                 "percentX": 43.497284555641556,
                 "percentY": 31.66893853035954
               }
-            ]
+            ],
+            "wire_spec": "EHS 7/16"
           },
           "-OFhGh_qA4OCd3-An7-M": {
             "_measured_height": 226.26,
@@ -66026,6 +66262,11 @@
               }
             ]
           }
+        }
+      },
+      "pla": {
+        "version": {
+          "2-0-2": "2025-01-06"
         }
       },
       "shutter_speed": 0.003125,
@@ -66502,6 +66743,11 @@
               }
             ]
           }
+        }
+      },
+      "pla": {
+        "version": {
+          "2-0-2": "2025-01-06"
         }
       },
       "shutter_speed": 0.004,
@@ -74076,6 +74322,11 @@
         "cable_type": "Power Guy",
         "company": "Xcel Energy",
         "label": ""
+      },
+      "-OFxAgqsquC-kAcycrNU": {
+        "_trace_type": "down_guy",
+        "company": "Clearnetworx",
+        "proposed": true
       }
     },
     "trace_items": {
@@ -78325,6 +78576,13 @@
         "a023c1b4-428b-4864-a38c-5f5d1d5f925e": {
           "wire": {
             "-OFx1R47h1Se_xvZeSac": true
+          }
+        }
+      },
+      "-OFxAgqsquC-kAcycrNU": {
+        "e74373c2-9d00-4101-95d2-fd250d9141b1": {
+          "guying": {
+            "-OFxAgqsquC-kAcycrNT": true
           }
         }
       }
