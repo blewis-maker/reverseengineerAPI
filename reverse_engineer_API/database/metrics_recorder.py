@@ -18,16 +18,39 @@ class MetricsRecorder:
         """
         try:
             # Extract basic job data
-            job_id = job_data['id']
             metadata = job_data.get('metadata', {})
-            nodes = job_data.get('nodes', [])
+            nodes = job_data.get('nodes', {})  # Changed from [] to {} as nodes is a dictionary
+            
+            # Get job ID from metadata
+            job_id = metadata.get('job_id')
+            if not job_id:
+                # Try to get it from the job data directly
+                job_id = job_data.get('id')
+            if not job_id:
+                raise ValueError("Could not find job ID in job data")
+            
+            logging.info(f"Recording metrics for job {job_id}")
             
             # Calculate metrics
-            total_poles = len(nodes)
-            field_complete = len([n for n in nodes if n.get('fldcompl') == 'yes'])
-            back_office_complete = len([n for n in nodes if n.get('backoffice_complete') == 'yes'])
+            total_poles = len([n for n in nodes.values() 
+                             if any(n.get('attributes', {}).get(type_field, {}).get(source) == 'pole'
+                                   for type_field in ['node_type', 'pole_type']
+                                   for source in ['button_added', '-Imported', 'value', 'auto_calced'])])
+            
+            logging.info(f"Found {total_poles} total poles")
+            
+            field_complete = len([n for n in nodes.values() 
+                                if n.get('attributes', {}).get('field_completed', {}).get('value') == True])
+            
+            logging.info(f"Found {field_complete} field completed poles")
+            
+            back_office_complete = len([n for n in nodes.values() 
+                                      if n.get('attributes', {}).get('backoffice_complete', {}).get('value') == True])
+            
+            logging.info(f"Found {back_office_complete} back office completed poles")
             
             # Record job metrics
+            logging.info("Inserting job metrics into database...")
             self._insert_job_metrics(
                 job_id=job_id,
                 status=metadata.get('job_status', 'Unknown'),
@@ -41,8 +64,10 @@ class MetricsRecorder:
                 target_completion_date=metadata.get('target_completion_date'),
                 timestamp=timestamp
             )
+            logging.info("Successfully inserted job metrics")
             
             # Check and record status changes
+            logging.info("Checking for status changes...")
             self._check_status_changes(
                 job_id=job_id,
                 current_status=metadata.get('job_status', 'Unknown'),
@@ -50,7 +75,9 @@ class MetricsRecorder:
             )
             
             # Record pole metrics
+            logging.info("Recording pole metrics...")
             self._record_pole_metrics(job_id, nodes, timestamp)
+            logging.info("Successfully recorded all metrics for job")
             
             # Record user metrics if users are assigned
             if assigned_users := metadata.get('assigned_users'):
@@ -130,7 +157,7 @@ class MetricsRecorder:
                 timestamp, timestamp
             ))
 
-    def _record_pole_metrics(self, job_id: str, nodes: List[Dict],
+    def _record_pole_metrics(self, job_id: str, nodes: Dict,
                            timestamp: datetime) -> None:
         """Record metrics for individual poles"""
         query = """
@@ -145,21 +172,93 @@ class MetricsRecorder:
         """
         
         with self.db.get_cursor() as cursor:
-            for node in nodes:
+            for node_id, node_data in nodes.items():
+                # Skip non-pole nodes
+                attributes = node_data.get('attributes', {})
+                is_pole = any(attributes.get(type_field, {}).get(source) == 'pole'
+                             for type_field in ['node_type', 'pole_type']
+                             for source in ['button_added', '-Imported', 'value', 'auto_calced'])
+                if not is_pole:
+                    continue
+                    
+                # Get pole tag info
+                pole_tag = attributes.get('pole_tag', {}).get('-Imported', {})
+                utility = pole_tag.get('company', 'Unknown')
+                
+                # Get field completion status
+                field_completed = attributes.get('field_completed', {}).get('value', False)
+                
+                # Extract editor information from photos
+                field_completed_by = None
+                field_completed_at = None
+                annotated_by = None
+                annotation_completed_at = None
+                
+                # Check photos associated with the node for editor information
+                node_photos = node_data.get('photos', {})
+                for photo_id, photo_info in node_photos.items():
+                    photo_editors = photo_info.get('photofirst_data', {}).get('_editors', {})
+                    if photo_editors:
+                        # Get the most recent editor
+                        latest_edit = max(photo_editors.items(), key=lambda x: x[1])
+                        editor_id, edit_time = latest_edit
+                        
+                        # Convert timestamp to datetime
+                        edit_dt = datetime.fromtimestamp(edit_time/1000)
+                        
+                        # If this is a field photo and we haven't set field editor yet
+                        if photo_info.get('association') == 'main' and not field_completed_by:
+                            field_completed_by = editor_id
+                            field_completed_at = edit_dt
+                        # If this is an annotation photo and we haven't set annotator yet
+                        elif photo_info.get('association') != 'main' and not annotated_by:
+                            annotated_by = editor_id
+                            annotation_completed_at = edit_dt
+                
+                # Get MR status
+                mr_status = "Unknown"
+                if 'proposed_pole_spec' in attributes:
+                    mr_status = "PCO Required"
+                else:
+                    mr_state = attributes.get('mr_state', {}).get('auto_calced', "Unknown")
+                    warning_present = 'warning' in attributes
+                    if mr_state == "No MR" and not warning_present:
+                        mr_status = "No MR"
+                    elif mr_state == "MR Resolved" and not warning_present:
+                        mr_status = "Comm MR"
+                    elif mr_state == "MR Resolved" and warning_present:
+                        mr_status = "Electric MR"
+                
+                # Get pole specifications
+                pole_height = attributes.get('pole_height', {}).get('-Imported')
+                pole_class = attributes.get('pole_class', {}).get('-Imported')
+                
+                # Get POA height from photos if available
+                poa_height = None
+                photos = node_data.get('photos', {})
+                for photo_id, photo_info in photos.items():
+                    if photo_info.get('association') == 'main':
+                        # Extract POA height from wire data
+                        photofirst_data = photo_info.get('photofirst_data', {}).get('wire', {})
+                        for wire_info in photofirst_data.values():
+                            if wire_info.get('_measured_height'):
+                                poa_height = wire_info.get('_measured_height')
+                                break
+                
                 cursor.execute(query, (
                     job_id,
-                    node.get('id'),
-                    node.get('utility'),
-                    node.get('fldcompl') == 'yes',
-                    node.get('field_completed_by'),
-                    node.get('field_completed_at'),
-                    node.get('backoffice_complete') == 'yes',
-                    node.get('annotated_by'),
-                    node.get('annotation_completed_at'),
-                    node.get('pole_height'),
-                    node.get('pole_class'),
-                    node.get('mr_status'),
-                    node.get('poa_height'),
+                    node_id,
+                    utility,
+                    field_completed,
+                    field_completed_by,
+                    field_completed_at,
+                    False,  # back_office_completed
+                    annotated_by,
+                    annotation_completed_at,
+                    pole_height,
+                    pole_class,
+                    mr_status,
+                    poa_height,
                     timestamp
                 ))
 
@@ -176,15 +275,62 @@ class MetricsRecorder:
         """
         
         with self.db.get_cursor() as cursor:
-            for user in users:
-                # TODO: Enhance with actual pole completion counts per user
+            # Track field users
+            field_users = {}  # user_id -> pole_count
+            # Track back office users
+            back_office_users = {}  # user_id -> pole_count
+            
+            # Analyze nodes for user activity
+            for node_id, node_data in nodes.items():
+                # Skip non-pole nodes
+                attributes = node_data.get('attributes', {})
+                is_pole = any(attributes.get(type_field, {}).get(source) == 'pole'
+                             for type_field in ['node_type', 'pole_type']
+                             for source in ['button_added', '-Imported', 'value', 'auto_calced'])
+                if not is_pole:
+                    continue
+                
+                # Check photos for editor information
+                node_photos = node_data.get('photos', {})
+                for photo_id, photo_info in node_photos.items():
+                    photo_editors = photo_info.get('photofirst_data', {}).get('_editors', {})
+                    if photo_editors:
+                        # Get the most recent editor
+                        latest_edit = max(photo_editors.items(), key=lambda x: x[1])
+                        editor_id, edit_time = latest_edit
+                        
+                        # If this is a field photo
+                        if photo_info.get('association') == 'main':
+                            if editor_id not in field_users:
+                                field_users[editor_id] = 0
+                            field_users[editor_id] += 1
+                        # If this is an annotation photo
+                        else:
+                            if editor_id not in back_office_users:
+                                back_office_users[editor_id] = 0
+                            back_office_users[editor_id] += 1
+            
+            # Record field user metrics
+            for user_id, pole_count in field_users.items():
                 cursor.execute(query, (
-                    user,
+                    user_id,
                     job_id,
                     utility,
-                    'field',  # TODO: Get actual role
-                    'assignment',
-                    0,  # TODO: Calculate actual poles completed
+                    'field',
+                    'photo_collection',
+                    pole_count,
+                    timestamp
+                ))
+            
+            # Record back office user metrics
+            for user_id, pole_count in back_office_users.items():
+                cursor.execute(query, (
+                    user_id,
+                    job_id,
+                    utility,
+                    'back_office',
+                    'annotation',
+                    pole_count,
                     timestamp
                 ))
 

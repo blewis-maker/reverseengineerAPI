@@ -88,6 +88,55 @@ EMAIL_CONFIG = {
 
 # Function to get list of jobs from KatapultPro API
 def getJobList():
+    """Get list of jobs from KatapultPro API"""
+    if TEST_ONLY_SPECIFIC_JOB:
+        logging.info("Test mode: Only retrieving specific test jobs")
+        test_jobs = []
+        for job_id in TEST_JOB_IDS:
+            try:
+                # Get individual job data directly
+                conn = http.client.HTTPSConnection("katapultpro.com", timeout=30)
+                conn.request("GET", f"/api/v2/jobs/{job_id}?api_key={CONFIG['API_KEY']}")
+                res = conn.getresponse()
+                data = res.read().decode("utf-8")
+                job_data = json.loads(data)
+                
+                # Extract job name with detailed logging
+                job_name = None
+                metadata = job_data.get('metadata', {})
+                
+                # Try metadata name first
+                if metadata and metadata.get('name'):
+                    job_name = metadata.get('name')
+                    logging.info(f"Found name in metadata for job {job_id}: {job_name}")
+                
+                # If no metadata name, try direct name field
+                if not job_name and job_data.get('name'):
+                    job_name = job_data.get('name')
+                    logging.info(f"Found name in job data for job {job_id}: {job_name}")
+                
+                # If still no name, use job ID
+                if not job_name:
+                    job_name = f"Job {job_id}"
+                    logging.warning(f"No name found for job {job_id}, using ID as name")
+                
+                test_jobs.append({
+                    'id': job_id,
+                    'name': job_name
+                })
+                logging.info(f"Added test job: ID={job_id}, Name={job_name}")
+                time.sleep(1)  # Small delay between requests
+                
+            except Exception as e:
+                logging.error(f"Error retrieving test job {job_id}: {str(e)}")
+                continue
+            finally:
+                if 'conn' in locals():
+                    conn.close()
+        
+        return test_jobs
+    
+    # Original implementation for non-test mode
     URL_PATH = '/api/v2/jobs'
     headers = {}
     all_jobs = []
@@ -2302,6 +2351,12 @@ def main(email_list):
 def run_job():
     """Main entry point for the Cloud Run job"""
     try:
+        if TEST_ONLY_SPECIFIC_JOB:
+            logging.info("Running in TEST MODE - Only processing test jobs")
+            logging.info("SharePoint updates DISABLED")
+            logging.info("ArcGIS updates DISABLED")
+            logging.info(f"Test jobs: {TEST_JOB_IDS}")
+            
         current_timestamp = datetime.now()
         logging.info(f"Starting job run at {current_timestamp}")
         
@@ -2318,25 +2373,31 @@ def run_job():
         processed_jobs = []
         for job in jobs:
             try:
+                job_id = job['id']
+                job_name = job['name']
+                logging.info(f"Processing job: {job_name} (ID: {job_id})")
+                
                 # Skip test jobs if not in test mode
-                if not TEST_ONLY_SPECIFIC_JOB and job['id'] in TEST_JOB_IDS:
+                if not TEST_ONLY_SPECIFIC_JOB and job_id in TEST_JOB_IDS:
                     continue
                 
                 # Get detailed job data
-                job_data = getJobData(job['id'])
+                job_data = getJobData(job_id)
                 if not job_data or not validateJobData(job_data):
                     continue
                 
                 # Extract nodes, connections, and anchors
-                nodes = extractNodes(job_data, job['name'], job['id'], user_map)
+                nodes = extractNodes(job_data, job_name, job_id, user_map)
                 connections = extractConnections(job_data.get('connections', []), nodes, job_data)
-                anchors = extractAnchors(job_data, job['name'], job['id'])
+                anchors = extractAnchors(job_data, job_name, job_id)
                 
                 # Record metrics in database
                 try:
+                    # Add job ID to the job data
+                    job_data['id'] = job_id
                     metrics_recorder.record_job_metrics(job_data, current_timestamp)
                 except Exception as e:
-                    logging.error(f"Failed to record metrics for job {job['id']}: {str(e)}")
+                    logging.error(f"Failed to record metrics for job {job_name} (ID: {job_id}): {str(e)}")
                     # Continue processing even if metrics recording fails
                 
                 processed_jobs.append({
@@ -2347,7 +2408,7 @@ def run_job():
                 })
                 
             except Exception as e:
-                logging.error(f"Error processing job {job['id']}: {str(e)}")
+                logging.error(f"Error processing job {job_name} (ID: {job_id}): {str(e)}")
                 continue
         
         if processed_jobs:
@@ -2386,10 +2447,11 @@ def run_job():
                 logging.error(f"Failed to update summary metrics: {str(e)}")
         
         logging.info("Job run completed successfully")
+        return True
         
     except Exception as e:
         logging.error(f"Failed to run job: {str(e)}")
-        raise
+        return False
 
 @app.route('/', methods=['POST'])
 def handle_request():

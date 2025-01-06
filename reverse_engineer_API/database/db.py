@@ -17,6 +17,10 @@ class DatabaseConnection:
             'host': os.getenv('DB_HOST', 'localhost'),
             'port': os.getenv('DB_PORT', '5432')
         }
+        logger.info(f"Database connection parameters (excluding password):")
+        for key, value in self.conn_params.items():
+            if key != 'password':
+                logger.info(f"{key}: {value}")
         self._conn = None
 
     @contextmanager
@@ -24,7 +28,9 @@ class DatabaseConnection:
         """Context manager for database connections"""
         if self._conn is None:
             try:
+                logger.info("Attempting to connect to database...")
                 self._conn = psycopg2.connect(**self.conn_params)
+                logger.info("Successfully connected to database")
             except Exception as e:
                 logger.error(f"Error connecting to database: {str(e)}")
                 raise
@@ -32,7 +38,8 @@ class DatabaseConnection:
         try:
             yield self._conn
         except Exception as e:
-            self._conn.rollback()
+            if self._conn:
+                self._conn.rollback()
             logger.error(f"Database error: {str(e)}")
             raise
         finally:
@@ -44,16 +51,20 @@ class DatabaseConnection:
     def get_cursor(self, cursor_factory=RealDictCursor):
         """Context manager for database cursors"""
         with self.get_connection() as conn:
-            cursor = conn.cursor(cursor_factory=cursor_factory)
             try:
+                logger.info("Creating database cursor...")
+                cursor = conn.cursor(cursor_factory=cursor_factory)
+                logger.info("Successfully created cursor")
                 yield cursor
                 conn.commit()
+                logger.info("Successfully committed transaction")
             except Exception as e:
                 conn.rollback()
                 logger.error(f"Cursor error: {str(e)}")
                 raise
             finally:
                 cursor.close()
+                logger.info("Cursor closed")
 
     def execute_query(self, query, params=None):
         """Execute a query and return all results"""
