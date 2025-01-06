@@ -4,4 +4,7 @@
 # Run at 8:00 PM MST
 0 20 * * * root cd /app && python3 main.py >> /app/logs/cron.log 2>&1
 
+# Run weekly report on Saturday at 11:59 PM MST
+59 23 * * 6 root cd /app && python3 -c "from weekly_reporter import generate_weekly_report; generate_weekly_report()" >> /app/logs/weekly_report.log 2>&1
+
 # Empty line at end of file is required 
