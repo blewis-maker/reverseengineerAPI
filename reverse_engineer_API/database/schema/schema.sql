@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS status_changes (
 CREATE TABLE IF NOT EXISTS pole_metrics (
     id SERIAL PRIMARY KEY,
     job_id TEXT NOT NULL,
-    pole_id TEXT NOT NULL,
+    node_id TEXT NOT NULL,
     utility TEXT,
     field_completed BOOLEAN,
     field_completed_by TEXT,

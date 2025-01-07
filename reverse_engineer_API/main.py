@@ -742,19 +742,33 @@ def extractConnections(connections, nodes, job_data=None):
             # Get attachment height if available
             attachment_height = None
             sections = connection_data.get('sections', {})
+            
+            # Convert sections to dictionary if it's a list
+            if isinstance(sections, list):
+                sections_dict = {}
+                for section in sections:
+                    if isinstance(section, dict) and '_id' in section:
+                        sections_dict[section['_id']] = section
+                    else:
+                        sections_dict[str(len(sections_dict))] = section
+                sections = sections_dict
+            
+            # Process sections for attachment height
             for section_id, section_data in sections.items():
-                if 'attachment_height' in section_data:
-                    height = section_data['attachment_height']
-                    if height is not None:
-                        feet = int(height // 12)
-                        inches = int(height % 12)
-                        attachment_height = f"{feet}' {inches}\""
-                        height_key = f"{feet}'{inches}\""
-                        if height_key not in connection_height_counts:
-                            connection_height_counts[height_key] = 0
-                        connection_height_counts[height_key] += 1
-                        connections_with_height += 1
-                        break
+                if isinstance(section_data, dict):  # Ensure section_data is a dictionary
+                    if 'attachment_height' in section_data:
+                        height = section_data['attachment_height']
+                        if height is not None:
+                            feet = int(height // 12)
+                            inches = int(height % 12)
+                            attachment_height = f"{feet}' {inches}\""
+                            height_key = f"{feet}'{inches}\""
+                            if height_key not in connection_height_counts:
+                                connection_height_counts[height_key] = 0
+                            connection_height_counts[height_key] += 1
+                            connections_with_height += 1
+                            break
+            
             if attachment_height is None:
                 connections_without_height += 1
             
@@ -767,31 +781,32 @@ def extractConnections(connections, nodes, job_data=None):
             if is_aerial_cable:
                 total_aerial_cables += 1
             
-            # First, get all section photos
+            # Process sections for photos
             for section_id, section_data in sections.items():
-                section_photos = section_data.get('photos', {})
-                for photo_id, photo_info in section_photos.items():
-                    if photo_id in photo_data:
-                        photo_data_item = photo_data[photo_id]
-                        photofirst_data = photo_data_item.get('photofirst_data', {})
-                        wire_data = photofirst_data.get('wire', {})
-                        
-                        # Look through each wire in the photo
-                        for wire_info in wire_data.values():
-                            trace_id = wire_info.get('_trace')
-                            if trace_id and trace_id in trace_data:
-                                trace_info = trace_data[trace_id]
-                                
-                                # Check if this is the Clearnetworx fiber optic wire
-                                if (trace_info.get('company') == 'Clearnetworx' and
-                                        trace_info.get('proposed', False) and
-                                        trace_info.get('cable_type') == 'Fiber Optic Com'):
-                                    wire_spec = wire_info.get('wire_spec', '')
-                                    mid_height = wire_info.get('_measured_height')
-                                    break
-                        
-                        if wire_spec and mid_height is not None:
-                            break
+                if isinstance(section_data, dict):  # Ensure section_data is a dictionary
+                    section_photos = section_data.get('photos', {})
+                    for photo_id, photo_info in section_photos.items():
+                        if photo_id in photo_data:
+                            photo_data_item = photo_data[photo_id]
+                            photofirst_data = photo_data_item.get('photofirst_data', {})
+                            wire_data = photofirst_data.get('wire', {})
+                            
+                            # Look through each wire in the photo
+                            for wire_info in wire_data.values():
+                                trace_id = wire_info.get('_trace')
+                                if trace_id and trace_id in trace_data:
+                                    trace_info = trace_data[trace_id]
+                                    
+                                    # Check if this is the Clearnetworx fiber optic wire
+                                    if (trace_info.get('company') == 'Clearnetworx' and
+                                            trace_info.get('proposed', False) and
+                                            trace_info.get('cable_type') == 'Fiber Optic Com'):
+                                        wire_spec = wire_info.get('wire_spec', '')
+                                        mid_height = wire_info.get('_measured_height')
+                                        break
+                            
+                            if wire_spec and mid_height is not None:
+                                break
             
             # Format mid-height
             mid_ht_str = ''
@@ -819,12 +834,11 @@ def extractConnections(connections, nodes, job_data=None):
             line = LineString([(start_lon, start_lat), (end_lon, end_lat)])
             
             # Get wire specification if available
-            wire_spec = ''
-            if 'wire_spec' in sections:
-                wire_spec = sections['wire_spec']
-            elif 'wire_specification' in sections:
-                wire_spec = sections['wire_specification']
-
+            if isinstance(sections, dict):  # Check if sections is a dictionary
+                wire_spec = sections.get('wire_spec', '') or sections.get('wire_specification', '')
+            else:
+                wire_spec = ''  # Default to empty string for non-dictionary sections
+            
             feature = {
                 'type': 'Feature',
                 'geometry': mapping(line),

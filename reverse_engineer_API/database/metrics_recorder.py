@@ -1,7 +1,8 @@
 import logging
 from datetime import datetime
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Union
 from .db import db
+from psycopg2.extras import RealDictCursor
 
 logger = logging.getLogger(__name__)
 
@@ -17,80 +18,473 @@ class MetricsRecorder:
         This is the primary entry point for job data collection.
         """
         try:
-            # Extract basic job data
-            metadata = job_data.get('metadata', {})
-            nodes = job_data.get('nodes', {})  # Changed from [] to {} as nodes is a dictionary
+            # Validate input data
+            if not isinstance(job_data, dict):
+                raise ValueError(f"Expected job_data to be a dictionary, got {type(job_data)}")
             
-            # Get job ID from metadata
-            job_id = metadata.get('job_id')
-            if not job_id:
-                # Try to get it from the job data directly
+            # Extract basic job data with list handling
+            metadata = job_data.get('metadata', {})
+            if isinstance(metadata, list):
+                logging.warning(f"Expected metadata to be a dictionary, got list. Converting first item.")
+                metadata = metadata[0] if metadata else {}
+            elif not isinstance(metadata, dict):
+                metadata = {}
+                
+            nodes = job_data.get('nodes', {})
+            if isinstance(nodes, list):
+                logging.warning(f"Expected nodes to be a dictionary, got list. Converting to dict by ID.")
+                nodes = {str(i): node for i, node in enumerate(nodes) if isinstance(node, dict)}
+            elif not isinstance(nodes, dict):
+                nodes = {}
+                
+            photo_data = job_data.get('photos', {})
+            if isinstance(photo_data, list):
+                logging.warning(f"Expected photo_data to be a dictionary, got list. Converting to dict by ID.")
+                photo_data = {str(i): photo for i, photo in enumerate(photo_data) if isinstance(photo, dict)}
+            elif not isinstance(photo_data, dict):
+                photo_data = {}
+            
+            # Get job ID with better error handling
+            job_id = None
+            if isinstance(metadata, dict):
+                job_id = metadata.get('job_id')
+            if not job_id and isinstance(job_data, dict):
                 job_id = job_data.get('id')
             if not job_id:
                 raise ValueError("Could not find job ID in job data")
             
             logging.info(f"Recording metrics for job {job_id}")
             
-            # Calculate metrics
+            # Calculate metrics with type checking
             total_poles = len([n for n in nodes.values() 
-                             if any(n.get('attributes', {}).get(type_field, {}).get(source) == 'pole'
-                                   for type_field in ['node_type', 'pole_type']
-                                   for source in ['button_added', '-Imported', 'value', 'auto_calced'])])
-            
-            logging.info(f"Found {total_poles} total poles")
+                             if isinstance(n, (dict, list)) and  # Handle both dict and list
+                             self._is_pole_node(n)])
             
             field_complete = len([n for n in nodes.values() 
-                                if n.get('attributes', {}).get('field_completed', {}).get('value') == True])
-            
-            logging.info(f"Found {field_complete} field completed poles")
+                                if isinstance(n, (dict, list)) and  # Handle both dict and list
+                                self._get_field_completed(n)])
             
             back_office_complete = len([n for n in nodes.values() 
-                                      if n.get('attributes', {}).get('backoffice_complete', {}).get('value') == True])
+                                      if isinstance(n, (dict, list)) and  # Handle both dict and list
+                                      self._get_back_office_completed(n)])
             
-            logging.info(f"Found {back_office_complete} back office completed poles")
+            # Get assigned user with type checking
+            assigned_user = metadata.get('assigned_OSP') if isinstance(metadata, dict) else None
+            assigned_users = [assigned_user] if assigned_user else []
             
-            # Record job metrics
-            logging.info("Inserting job metrics into database...")
-            self._insert_job_metrics(
-                job_id=job_id,
-                status=metadata.get('job_status', 'Unknown'),
-                utility=metadata.get('utility', 'Unknown'),
-                total_poles=total_poles,
-                completed_poles=field_complete,
-                field_complete=field_complete,
-                back_office_complete=back_office_complete,
-                assigned_users=metadata.get('assigned_users', []),
-                priority=metadata.get('priority', 3),
-                target_completion_date=metadata.get('target_completion_date'),
-                timestamp=timestamp
-            )
-            logging.info("Successfully inserted job metrics")
-            
-            # Check and record status changes
-            logging.info("Checking for status changes...")
-            self._check_status_changes(
-                job_id=job_id,
-                current_status=metadata.get('job_status', 'Unknown'),
-                timestamp=timestamp
-            )
-            
-            # Record pole metrics
-            logging.info("Recording pole metrics...")
-            self._record_pole_metrics(job_id, nodes, timestamp)
-            logging.info("Successfully recorded all metrics for job")
-            
-            # Record user metrics if users are assigned
-            if assigned_users := metadata.get('assigned_users'):
-                self._record_user_metrics(
+            try:
+                # Create daily snapshot first
+                self._create_daily_snapshot(
                     job_id=job_id,
-                    users=assigned_users,
-                    utility=metadata.get('utility', 'Unknown'),
+                    status=str(metadata.get('job_status', 'Unknown')),
+                    utility=str(metadata.get('utility', 'Unknown')),
+                    total_poles=int(total_poles),
+                    field_complete=int(field_complete),
+                    back_office_complete=int(back_office_complete),
                     timestamp=timestamp
                 )
+            except Exception as e:
+                logging.error(f"Failed to create daily snapshot for job {job_id}: {str(e)}")
+            
+            try:
+                # Record detailed job metrics
+                self._insert_job_metrics(
+                    job_id=job_id,
+                    status=str(metadata.get('job_status', 'Unknown')),
+                    utility=str(metadata.get('utility', 'Unknown')),
+                    total_poles=int(total_poles),
+                    completed_poles=int(field_complete),
+                    field_complete=int(field_complete),
+                    back_office_complete=int(back_office_complete),
+                    assigned_users=assigned_users,
+                    priority=int(metadata.get('priority', 3)),
+                    target_completion_date=metadata.get('target_completion_date'),
+                    timestamp=timestamp
+                )
+            except Exception as e:
+                logging.error(f"Failed to insert job metrics for job {job_id}: {str(e)}")
+            
+            try:
+                # Check for status changes
+                self._check_status_changes(
+                    job_id=job_id,
+                    current_status=str(metadata.get('job_status', 'Unknown')),
+                    timestamp=timestamp,
+                    changed_by=assigned_user
+                )
+            except Exception as e:
+                logging.error(f"Failed to check status changes for job {job_id}: {str(e)}")
+                logging.error(f"Error details: {e.__class__.__name__}: {str(e)}")
+            
+            try:
+                # Record pole metrics with temporal tracking
+                if isinstance(nodes, dict):
+                    self._record_pole_metrics(job_id, nodes, photo_data, timestamp)
+            except Exception as e:
+                logging.error(f"Failed to record pole metrics for job {job_id}: {str(e)}")
+            
+            # Record user metrics if users are assigned
+            if assigned_users and isinstance(nodes, dict):
+                try:
+                    self._record_user_metrics(
+                        job_id=job_id,
+                        users=assigned_users,
+                        utility=str(metadata.get('utility', 'Unknown')),
+                        timestamp=timestamp,
+                        nodes=nodes,
+                        photo_data=photo_data
+                    )
+                except Exception as e:
+                    logging.error(f"Failed to record user metrics for job {job_id}: {str(e)}")
             
         except Exception as e:
-            logger.error(f"Failed to record metrics for job {job_data.get('id')}: {str(e)}")
+            logger.error(f"Failed to record metrics for job {job_data.get('id', 'unknown')}: {str(e)}")
             raise
+
+    def _create_daily_snapshot(self, job_id: str, status: str, utility: str,
+                             total_poles: int, field_complete: int,
+                             back_office_complete: int, timestamp: datetime) -> None:
+        """Create a daily snapshot of job metrics"""
+        query = """
+        INSERT INTO daily_snapshots (
+            job_id, status, utility, total_poles,
+            field_complete, back_office_complete,
+            snapshot_date, created_at
+        ) VALUES (
+            %s, %s, %s, %s, %s, %s, DATE(%s), %s
+        )
+        ON CONFLICT (job_id, snapshot_date)
+        DO UPDATE SET
+            status = EXCLUDED.status,
+            utility = EXCLUDED.utility,
+            total_poles = EXCLUDED.total_poles,
+            field_complete = EXCLUDED.field_complete,
+            back_office_complete = EXCLUDED.back_office_complete,
+            created_at = EXCLUDED.created_at
+        """
+        with self.db.get_cursor() as cursor:
+            cursor.execute(query, (
+                job_id, status, utility, total_poles,
+                field_complete, back_office_complete,
+                timestamp, timestamp
+            ))
+
+    def _check_status_changes(self, job_id: str, current_status: str,
+                            timestamp: datetime, changed_by: Optional[str] = None) -> None:
+        """Check and record any status changes"""
+        try:
+            with self.db.get_cursor() as cursor:
+                try:
+                    query = """
+                        SELECT status, timestamp 
+                        FROM job_metrics 
+                        WHERE job_id = %s 
+                        ORDER BY timestamp DESC 
+                        LIMIT 1
+                    """
+                    logging.info(f"Executing status query: {query} with job_id: {job_id}")
+                    cursor.execute(query, (job_id,))
+                    
+                    result = cursor.fetchone()
+                    logging.info(f"Status query result: {result}")
+                    
+                    if not result:
+                        logging.info("No previous status found, recording initial status")
+                        # Initial status - record without previous status
+                        self._record_status_change(
+                            job_id=job_id,
+                            previous_status=None,
+                            new_status=current_status,
+                            timestamp=timestamp,
+                            changed_by=changed_by
+                        )
+                        return
+                    
+                    # Get values from RealDictRow
+                    previous_status = result.get('status')
+                    previous_timestamp = result.get('timestamp')
+                    logging.info(f"Previous status: {previous_status}, timestamp: {previous_timestamp}")
+                    
+                    # Status has changed
+                    if previous_status != current_status:
+                        duration_hours = None
+                        if previous_timestamp and isinstance(previous_timestamp, datetime):
+                            try:
+                                duration_hours = (timestamp - previous_timestamp).total_seconds() / 3600
+                                logging.info(f"Calculated duration: {duration_hours} hours")
+                            except Exception as e:
+                                logging.error(f"Failed to calculate duration: {str(e)}")
+                        
+                        self._record_status_change(
+                            job_id=job_id,
+                            previous_status=previous_status,
+                            new_status=current_status,
+                            timestamp=timestamp,
+                            changed_by=changed_by,
+                            duration_hours=duration_hours
+                        )
+                except Exception as e:
+                    logging.error(f"Database query failed in _check_status_changes: {str(e)}")
+                    logging.error(f"Query: {query}")
+                    logging.error(f"Parameters: job_id={job_id}")
+                    raise
+                
+        except Exception as e:
+            logging.error(f"Error checking status changes for job {job_id}: {str(e)}")
+            raise
+
+    def _record_status_change(self, job_id: str, previous_status: Optional[str],
+                            new_status: str, timestamp: datetime,
+                            changed_by: Optional[str] = None,
+                            duration_hours: Optional[float] = None) -> None:
+        """Record a status change with duration tracking"""
+        try:
+            query = """
+            INSERT INTO status_changes (
+                job_id, previous_status, new_status, changed_at,
+                changed_by, duration_hours, week_number, year
+            ) VALUES (
+                %s, %s, %s, %s, %s, %s,
+                EXTRACT(WEEK FROM %s)::INTEGER,
+                EXTRACT(YEAR FROM %s)::INTEGER
+            )
+            ON CONFLICT (job_id, changed_at)
+            DO UPDATE SET
+                previous_status = EXCLUDED.previous_status,
+                new_status = EXCLUDED.new_status,
+                changed_by = EXCLUDED.changed_by,
+                duration_hours = EXCLUDED.duration_hours,
+                week_number = EXCLUDED.week_number,
+                year = EXCLUDED.year
+            """
+            with self.db.get_cursor() as cursor:
+                cursor.execute(query, (
+                    job_id, previous_status, new_status, timestamp,
+                    changed_by, duration_hours, timestamp, timestamp
+                ))
+                
+                # Also update the status_change_log for temporal history
+                log_query = """
+                INSERT INTO status_change_log (
+                    job_id, entity_type, entity_id, field_name,
+                    old_value, new_value, changed_at, changed_by
+                ) VALUES (
+                    %s, 'job', %s, 'status',
+                    %s, %s, %s, %s
+                )
+                """
+                cursor.execute(log_query, (
+                    job_id, job_id, previous_status,
+                    new_status, timestamp, changed_by
+                ))
+        except Exception as e:
+            logging.error(f"Failed to record status change for job {job_id}: {str(e)}")
+            raise
+
+    def _record_pole_metrics(self, job_id: str, nodes: Dict,
+                           photo_data: Dict, timestamp: datetime) -> None:
+        """Record metrics for individual poles with temporal tracking"""
+        logging.info(f"Recording pole metrics for job {job_id} with {len(nodes)} nodes")
+        
+        query = """
+        INSERT INTO pole_metrics (
+            job_id, node_id, utility, field_completed, field_completed_by,
+            field_completed_at, back_office_completed, annotated_by,
+            annotation_completed_at, pole_height, pole_class,
+            mr_status, poa_height, timestamp
+        ) VALUES (
+            %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+        )
+        ON CONFLICT (job_id, node_id, timestamp)
+        DO UPDATE SET
+            utility = EXCLUDED.utility,
+            field_completed = EXCLUDED.field_completed,
+            field_completed_by = EXCLUDED.field_completed_by,
+            field_completed_at = EXCLUDED.field_completed_at,
+            back_office_completed = EXCLUDED.back_office_completed,
+            annotated_by = EXCLUDED.annotated_by,
+            annotation_completed_at = EXCLUDED.annotation_completed_at,
+            pole_height = EXCLUDED.pole_height,
+            pole_class = EXCLUDED.pole_class,
+            mr_status = EXCLUDED.mr_status,
+            poa_height = EXCLUDED.poa_height
+        """
+        
+        # Debug log the query
+        logging.info(f"Using SQL query for pole metrics: {query}")
+        
+        with self.db.get_cursor() as cursor:
+            pole_count = 0
+            for node_id, node_data in nodes.items():
+                # Skip non-pole nodes
+                if not self._is_pole_node(node_data):
+                    continue
+                    
+                pole_data = self._extract_pole_data(node_data, photo_data)
+                pole_count += 1
+                
+                try:
+                    # Debug log the values
+                    values = (
+                        job_id,
+                        node_id,
+                        pole_data['utility'],
+                        pole_data['field_completed'],
+                        pole_data['field_completed_by'],
+                        pole_data['field_completed_at'],
+                        pole_data['back_office_completed'],
+                        pole_data['annotated_by'],
+                        pole_data['annotation_completed_at'],
+                        pole_data['pole_height'],
+                        pole_data['pole_class'],
+                        pole_data['mr_status'],
+                        pole_data['poa_height'],
+                        timestamp
+                    )
+                    logging.info(f"Executing with values: {values}")
+                    cursor.execute(query, values)
+                    logging.info(f"Successfully recorded metrics for pole {node_id}")
+                except Exception as e:
+                    logging.error(f"Failed to record metrics for pole {node_id}: {str(e)}")
+                    logging.error(f"Pole data: {pole_data}")
+                    raise
+            
+            logging.info(f"Recorded metrics for {pole_count} poles out of {len(nodes)} nodes")
+
+    def _is_pole_node(self, node_data: Union[Dict, List]) -> bool:
+        """Check if node is a pole with support for both dict and list data types"""
+        if isinstance(node_data, list):
+            # If it's a list, check each item
+            return any(self._is_pole_node(item) for item in node_data if isinstance(item, (dict, list)))
+            
+        if not isinstance(node_data, dict):
+            return False
+            
+        attributes = node_data.get('attributes', {})
+        if isinstance(attributes, list):
+            attributes = attributes[0] if attributes else {}
+            
+        return any(attributes.get(type_field, {}).get(source) == 'pole'
+                  for type_field in ['node_type', 'pole_type']
+                  for source in ['button_added', '-Imported', 'value', 'auto_calced'])
+
+    def _get_field_completed(self, node_data: Union[Dict, List]) -> bool:
+        """Get field completed status with support for both dict and list data types"""
+        if isinstance(node_data, list):
+            return any(self._get_field_completed(item) for item in node_data if isinstance(item, (dict, list)))
+            
+        if not isinstance(node_data, dict):
+            return False
+            
+        attributes = node_data.get('attributes', {})
+        if isinstance(attributes, list):
+            attributes = attributes[0] if attributes else {}
+            
+        return attributes.get('field_completed', {}).get('value', False)
+
+    def _get_back_office_completed(self, node_data: Union[Dict, List]) -> bool:
+        """Get back office completed status with support for both dict and list data types"""
+        if isinstance(node_data, list):
+            return any(self._get_back_office_completed(item) for item in node_data if isinstance(item, (dict, list)))
+            
+        if not isinstance(node_data, dict):
+            return False
+            
+        attributes = node_data.get('attributes', {})
+        if isinstance(attributes, list):
+            attributes = attributes[0] if attributes else {}
+            
+        return attributes.get('backoffice_complete', {}).get('value', False)
+
+    def _extract_pole_data(self, node_data: Dict, photo_data: Dict) -> Dict:
+        """Extract pole data from node"""
+        attributes = node_data.get('attributes', {})
+        pole_tag = attributes.get('pole_tag', {}).get('-Imported', {})
+        
+        # Extract MR status
+        mr_status = self._determine_mr_status(attributes)
+        
+        # Get editor information from photos
+        editor_info = self._get_editor_info(node_data.get('photos', {}), photo_data)
+        
+        # Get back office completion status
+        back_office_completed = attributes.get('backoffice_complete', {}).get('value', False)
+        
+        return {
+            'utility': pole_tag.get('company', 'Unknown'),
+            'field_completed': attributes.get('field_completed', {}).get('value', False),
+            'field_completed_by': editor_info.get('field_completed_by'),
+            'field_completed_at': editor_info.get('field_completed_at'),
+            'back_office_completed': back_office_completed,
+            'annotated_by': editor_info.get('annotated_by'),
+            'annotation_completed_at': editor_info.get('annotation_completed_at'),
+            'pole_height': attributes.get('pole_height', {}).get('-Imported'),
+            'pole_class': attributes.get('pole_class', {}).get('-Imported'),
+            'mr_status': mr_status,
+            'poa_height': editor_info.get('poa_height')
+        }
+
+    def _determine_mr_status(self, attributes: Dict) -> str:
+        """Determine MR status from attributes"""
+        if 'proposed_pole_spec' in attributes:
+            return "PCO Required"
+        
+        mr_state = attributes.get('mr_state', {}).get('auto_calced', "Unknown")
+        warning_present = 'warning' in attributes
+        
+        if mr_state == "No MR" and not warning_present:
+            return "No MR"
+        elif mr_state == "MR Resolved" and not warning_present:
+            return "Comm MR"
+        elif mr_state == "MR Resolved" and warning_present:
+            return "Electric MR"
+        
+        return "Unknown"
+
+    def _get_editor_info(self, node_photos: Dict, photo_data: Dict) -> Dict:
+        """Extract editor information from photos"""
+        editor_info = {
+            'field_completed_by': None,
+            'field_completed_at': None,
+            'annotated_by': None,
+            'annotation_completed_at': None,
+            'poa_height': None
+        }
+        
+        try:
+            for photo_id, photo_info in node_photos.items():
+                if not isinstance(photo_info, dict):  # Type check for photo_info
+                    continue
+                    
+                if photo_id not in photo_data:
+                    continue
+                    
+                photo_editors = photo_data[photo_id].get('photofirst_data', {}).get('_editors', {})
+                if not photo_editors:
+                    continue
+                    
+                # Get the most recent editor
+                latest_edit = max(photo_editors.items(), key=lambda x: x[1])
+                editor_id, edit_time = latest_edit
+                edit_dt = datetime.fromtimestamp(edit_time/1000)
+                
+                if photo_info.get('association') == 'main':
+                    editor_info['field_completed_by'] = editor_id
+                    editor_info['field_completed_at'] = edit_dt
+                    
+                    # Extract POA height
+                    wire_data = photo_data[photo_id].get('photofirst_data', {}).get('wire', {})
+                    for wire_info in wire_data.values():
+                        if wire_info.get('_measured_height'):
+                            editor_info['poa_height'] = wire_info.get('_measured_height')
+                            break
+                else:
+                    editor_info['annotated_by'] = editor_id
+                    editor_info['annotation_completed_at'] = edit_dt
+        except Exception as e:
+            logging.error(f"Error extracting editor info: {str(e)}")
+            
+        return editor_info
 
     def _insert_job_metrics(self, job_id: str, status: str, utility: str,
                           total_poles: int, completed_poles: int,
@@ -107,6 +501,17 @@ class MetricsRecorder:
         ) VALUES (
             %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
         )
+        ON CONFLICT (job_id, timestamp)
+        DO UPDATE SET
+            status = EXCLUDED.status,
+            utility = EXCLUDED.utility,
+            total_poles = EXCLUDED.total_poles,
+            completed_poles = EXCLUDED.completed_poles,
+            field_complete = EXCLUDED.field_complete,
+            back_office_complete = EXCLUDED.back_office_complete,
+            assigned_users = EXCLUDED.assigned_users,
+            priority = EXCLUDED.priority,
+            target_completion_date = EXCLUDED.target_completion_date
         """
         with self.db.get_cursor() as cursor:
             cursor.execute(query, (
@@ -115,156 +520,22 @@ class MetricsRecorder:
                 priority, target_completion_date, timestamp
             ))
 
-    def _check_status_changes(self, job_id: str, current_status: str,
-                            timestamp: datetime) -> None:
-        """Check and record any status changes"""
-        query = """
-        SELECT status
-        FROM job_metrics
-        WHERE job_id = %s
-        ORDER BY timestamp DESC
-        LIMIT 1
-        """
-        
-        with self.db.get_cursor() as cursor:
-            cursor.execute(query, (job_id,))
-            result = cursor.fetchone()
-            
-            if result and result['status'] != current_status:
-                self._record_status_change(
-                    job_id=job_id,
-                    previous_status=result['status'],
-                    new_status=current_status,
-                    timestamp=timestamp
-                )
-
-    def _record_status_change(self, job_id: str, previous_status: str,
-                            new_status: str, timestamp: datetime) -> None:
-        """Record a status change"""
-        query = """
-        INSERT INTO status_changes (
-            job_id, previous_status, new_status, changed_at,
-            week_number, year
-        ) VALUES (
-            %s, %s, %s, %s,
-            EXTRACT(WEEK FROM %s)::INTEGER,
-            EXTRACT(YEAR FROM %s)::INTEGER
-        )
-        """
-        with self.db.get_cursor() as cursor:
-            cursor.execute(query, (
-                job_id, previous_status, new_status, timestamp,
-                timestamp, timestamp
-            ))
-
-    def _record_pole_metrics(self, job_id: str, nodes: Dict,
-                           timestamp: datetime) -> None:
-        """Record metrics for individual poles"""
-        query = """
-        INSERT INTO pole_metrics (
-            job_id, pole_id, utility, field_completed, field_completed_by,
-            field_completed_at, back_office_completed, annotated_by,
-            annotation_completed_at, pole_height, pole_class,
-            mr_status, poa_height, timestamp
-        ) VALUES (
-            %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
-        )
-        """
-        
-        with self.db.get_cursor() as cursor:
-            for node_id, node_data in nodes.items():
-                # Skip non-pole nodes
-                attributes = node_data.get('attributes', {})
-                is_pole = any(attributes.get(type_field, {}).get(source) == 'pole'
-                             for type_field in ['node_type', 'pole_type']
-                             for source in ['button_added', '-Imported', 'value', 'auto_calced'])
-                if not is_pole:
-                    continue
-                    
-                # Get pole tag info
-                pole_tag = attributes.get('pole_tag', {}).get('-Imported', {})
-                utility = pole_tag.get('company', 'Unknown')
-                
-                # Get field completion status
-                field_completed = attributes.get('field_completed', {}).get('value', False)
-                
-                # Extract editor information from photos
-                field_completed_by = None
-                field_completed_at = None
-                annotated_by = None
-                annotation_completed_at = None
-                
-                # Check photos associated with the node for editor information
-                node_photos = node_data.get('photos', {})
-                for photo_id, photo_info in node_photos.items():
-                    photo_editors = photo_info.get('photofirst_data', {}).get('_editors', {})
-                    if photo_editors:
-                        # Get the most recent editor
-                        latest_edit = max(photo_editors.items(), key=lambda x: x[1])
-                        editor_id, edit_time = latest_edit
-                        
-                        # Convert timestamp to datetime
-                        edit_dt = datetime.fromtimestamp(edit_time/1000)
-                        
-                        # If this is a field photo and we haven't set field editor yet
-                        if photo_info.get('association') == 'main' and not field_completed_by:
-                            field_completed_by = editor_id
-                            field_completed_at = edit_dt
-                        # If this is an annotation photo and we haven't set annotator yet
-                        elif photo_info.get('association') != 'main' and not annotated_by:
-                            annotated_by = editor_id
-                            annotation_completed_at = edit_dt
-                
-                # Get MR status
-                mr_status = "Unknown"
-                if 'proposed_pole_spec' in attributes:
-                    mr_status = "PCO Required"
-                else:
-                    mr_state = attributes.get('mr_state', {}).get('auto_calced', "Unknown")
-                    warning_present = 'warning' in attributes
-                    if mr_state == "No MR" and not warning_present:
-                        mr_status = "No MR"
-                    elif mr_state == "MR Resolved" and not warning_present:
-                        mr_status = "Comm MR"
-                    elif mr_state == "MR Resolved" and warning_present:
-                        mr_status = "Electric MR"
-                
-                # Get pole specifications
-                pole_height = attributes.get('pole_height', {}).get('-Imported')
-                pole_class = attributes.get('pole_class', {}).get('-Imported')
-                
-                # Get POA height from photos if available
-                poa_height = None
-                photos = node_data.get('photos', {})
-                for photo_id, photo_info in photos.items():
-                    if photo_info.get('association') == 'main':
-                        # Extract POA height from wire data
-                        photofirst_data = photo_info.get('photofirst_data', {}).get('wire', {})
-                        for wire_info in photofirst_data.values():
-                            if wire_info.get('_measured_height'):
-                                poa_height = wire_info.get('_measured_height')
-                                break
-                
-                cursor.execute(query, (
-                    job_id,
-                    node_id,
-                    utility,
-                    field_completed,
-                    field_completed_by,
-                    field_completed_at,
-                    False,  # back_office_completed
-                    annotated_by,
-                    annotation_completed_at,
-                    pole_height,
-                    pole_class,
-                    mr_status,
-                    poa_height,
-                    timestamp
-                ))
-
     def _record_user_metrics(self, job_id: str, users: List[str],
-                           utility: str, timestamp: datetime) -> None:
-        """Record metrics for user productivity"""
+                           utility: str, timestamp: datetime,
+                           nodes: Dict, photo_data: Dict) -> None:
+        """
+        Record metrics for user productivity.
+        
+        Args:
+            job_id: The ID of the job being processed
+            users: List of assigned users
+            utility: The utility company
+            timestamp: Current processing timestamp
+            nodes: Dictionary of nodes from the job data
+            photo_data: Dictionary of photo data from the job data
+        """
+        logging.info(f"Recording user metrics for job {job_id} with {len(users)} assigned users")
+        
         query = """
         INSERT INTO user_metrics (
             user_id, job_id, utility, role, activity_type,
@@ -292,26 +563,30 @@ class MetricsRecorder:
                 
                 # Check photos for editor information
                 node_photos = node_data.get('photos', {})
-                for photo_id, photo_info in node_photos.items():
-                    photo_editors = photo_info.get('photofirst_data', {}).get('_editors', {})
-                    if photo_editors:
-                        # Get the most recent editor
-                        latest_edit = max(photo_editors.items(), key=lambda x: x[1])
-                        editor_id, edit_time = latest_edit
-                        
-                        # If this is a field photo
-                        if photo_info.get('association') == 'main':
-                            if editor_id not in field_users:
-                                field_users[editor_id] = 0
-                            field_users[editor_id] += 1
-                        # If this is an annotation photo
-                        else:
-                            if editor_id not in back_office_users:
-                                back_office_users[editor_id] = 0
-                            back_office_users[editor_id] += 1
+                for photo_id in node_photos:
+                    if photo_id in photo_data:
+                        photo_editors = photo_data[photo_id].get('photofirst_data', {}).get('_editors', {})
+                        if photo_editors:
+                            # Get the most recent editor
+                            latest_edit = max(photo_editors.items(), key=lambda x: x[1])
+                            editor_id, edit_time = latest_edit
+                            
+                            # If this is a field photo
+                            if photo_data[photo_id].get('association') == 'main':
+                                if editor_id not in field_users:
+                                    field_users[editor_id] = 0
+                                field_users[editor_id] += 1
+                            # If this is an annotation photo
+                            else:
+                                if editor_id not in back_office_users:
+                                    back_office_users[editor_id] = 0
+                                back_office_users[editor_id] += 1
+            
+            logging.info(f"Found {len(field_users)} field users and {len(back_office_users)} back office users")
             
             # Record field user metrics
             for user_id, pole_count in field_users.items():
+                logging.info(f"Recording field user metrics - User: {user_id}, Poles: {pole_count}")
                 cursor.execute(query, (
                     user_id,
                     job_id,
@@ -324,6 +599,7 @@ class MetricsRecorder:
             
             # Record back office user metrics
             for user_id, pole_count in back_office_users.items():
+                logging.info(f"Recording back office user metrics - User: {user_id}, Poles: {pole_count}")
                 cursor.execute(query, (
                     user_id,
                     job_id,

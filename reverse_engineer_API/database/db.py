@@ -3,68 +3,75 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 from contextlib import contextmanager
 import logging
+from typing import Optional
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class DatabaseConnection:
+    """Database connection manager"""
+    
     def __init__(self):
-        self.conn_params = {
-            'dbname': os.getenv('DB_NAME', 'metrics_db'),
-            'user': os.getenv('DB_USER', 'postgres'),
-            'password': os.getenv('DB_PASS'),
-            'host': os.getenv('DB_HOST', 'localhost'),
-            'port': os.getenv('DB_PORT', '5432')
-        }
-        logger.info(f"Database connection parameters (excluding password):")
-        for key, value in self.conn_params.items():
-            if key != 'password':
-                logger.info(f"{key}: {value}")
-        self._conn = None
-
+        self.connection = None
+    
+    def connect(self):
+        """Connect to the database"""
+        logging.info("Attempting to connect to database...")
+        try:
+            if not self.connection or self.connection.closed:
+                self.connection = psycopg2.connect(
+                    dbname="metrics_db",
+                    user="postgres",
+                    password="metrics_db_password",
+                    host="localhost",
+                    port="5432"
+                )
+                logging.info("Successfully connected to database")
+        except Exception as e:
+            logging.error(f"Database connection error: {str(e)}")
+            raise
+    
     @contextmanager
     def get_connection(self):
-        """Context manager for database connections"""
-        if self._conn is None:
-            try:
-                logger.info("Attempting to connect to database...")
-                self._conn = psycopg2.connect(**self.conn_params)
-                logger.info("Successfully connected to database")
-            except Exception as e:
-                logger.error(f"Error connecting to database: {str(e)}")
-                raise
-
+        """Get a database connection using context manager"""
+        if not self.connection or self.connection.closed:
+            self.connect()
         try:
-            yield self._conn
+            yield self.connection
+            self.connection.commit()
+            logging.info("Successfully committed transaction")
         except Exception as e:
-            if self._conn:
-                self._conn.rollback()
-            logger.error(f"Database error: {str(e)}")
+            self.connection.rollback()
+            logging.error(f"Connection error: {str(e)}")
             raise
-        finally:
-            if self._conn is not None:
-                self._conn.close()
-                self._conn = None
-
+    
     @contextmanager
     def get_cursor(self, cursor_factory=RealDictCursor):
-        """Context manager for database cursors"""
-        with self.get_connection() as conn:
-            try:
-                logger.info("Creating database cursor...")
-                cursor = conn.cursor(cursor_factory=cursor_factory)
-                logger.info("Successfully created cursor")
-                yield cursor
-                conn.commit()
-                logger.info("Successfully committed transaction")
-            except Exception as e:
-                conn.rollback()
-                logger.error(f"Cursor error: {str(e)}")
-                raise
-            finally:
-                cursor.close()
-                logger.info("Cursor closed")
+        """Get a database cursor using context manager"""
+        if not self.connection or self.connection.closed:
+            self.connect()
+            
+        logging.info("Creating database cursor...")
+        try:
+            cursor = self.connection.cursor(cursor_factory=cursor_factory)
+            logging.info("Successfully created cursor")
+            yield cursor
+            self.connection.commit()
+            logging.info("Successfully committed transaction")
+        except Exception as e:
+            self.connection.rollback()
+            logging.error(f"Cursor error: {str(e)}")
+            raise
+        finally:
+            cursor.close()
+            logging.info("Cursor closed")
+    
+    def close(self):
+        """Close the database connection"""
+        if self.connection:
+            self.connection.close()
+            self.connection = None
 
     def execute_query(self, query, params=None):
         """Execute a query and return all results"""
