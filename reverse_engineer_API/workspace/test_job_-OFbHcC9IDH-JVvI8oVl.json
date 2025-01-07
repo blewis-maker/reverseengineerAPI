@@ -1,0 +1,3910 @@
+{
+  "date_created": 1735825986671,
+  "geohash": {
+    "-OFbI13eifqFDTbB-3iG": {
+      "c": "#f00",
+      "g": "9we7dwtyp2",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21447076929359,
+        -107.8116097
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13g9bcoDK6hQTW5": {
+      "c": "#f00",
+      "g": "9we7dwucj4",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.214999082999505,
+        -107.8130838
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13bcNlH9GVZXN1l": {
+      "c": "#f00",
+      "g": "9we7dwue65",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21539248291036,
+        -107.8135525
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13hIH_nGycG4byN": {
+      "c": "#f00",
+      "g": "9we7dwuukr",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21558045115293,
+        -107.8131177
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13f2a3TzsqYersx": {
+      "c": "#f00",
+      "g": "9we7dwuvuh",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21582655399209,
+        -107.8131253
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13g9bcoDK6hQTW3": {
+      "c": "#f00",
+      "g": "9we7dwvcje",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21500269287143,
+        -107.8116897
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13cVfovJTbIHOh5": {
+      "c": "#f00",
+      "g": "9we7dwvuv1",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21563752615952,
+        -107.8117111
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13f2a3TzsqYerso": {
+      "c": "#f00",
+      "g": "9we7dwvz5h",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.216039774174696,
+        -107.8117922
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13g9bcoDK6hQTW1": {
+      "c": "#f00",
+      "g": "9we7dwyc0y",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21502241696267,
+        -107.8105202
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13f2a3TzsqYersp": {
+      "c": "#f00",
+      "g": "9we7dwydrx",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.215239559758125,
+        -107.8105676
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13cVfovJTbIHOh0": {
+      "c": "#f00",
+      "g": "9we7dwz34q",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.215018206877254,
+        -107.8097624
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13g9bcoDK6hQTW4": {
+      "c": "#f00",
+      "g": "9we7dwzc28",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21502963384262,
+        -107.8091545
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13f2a3TzsqYersv": {
+      "c": "#f00",
+      "g": "9we7dxhcu7",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21650814966122,
+        -107.8131121
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13f2a3TzsqYersu": {
+      "c": "#f00",
+      "g": "9we7dxhvh0",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21704592994368,
+        -107.8131287
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13f2a3TzsqYersw": {
+      "c": "#f00",
+      "g": "9we7dxj06p",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21626854971081,
+        -107.8128642
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13bcNlH9GVZXN1m": {
+      "c": "#f00",
+      "g": "9we7dxjjtk",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.217152732968415,
+        -107.8127221
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13f2a3TzsqYerst": {
+      "c": "#f00",
+      "g": "9we7dxkf72",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21794685793639,
+        -107.8131566
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13f2a3TzsqYerss": {
+      "c": "#f00",
+      "g": "9we7dxkysq",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21871150324825,
+        -107.8131116
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13f2a3TzsqYersr": {
+      "c": "#f00",
+      "g": "9we7dxmx9p",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21888568403618,
+        -107.8122238
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13f2a3TzsqYersq": {
+      "c": "#f00",
+      "g": "9we7dxqn4y",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21862607591176,
+        -107.81146
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13g9bcoDK6hQTVu": {
+      "c": "#f00",
+      "g": "9we7dxsce7",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21920778165954,
+        -107.8131613
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13cVfovJTbIHOh1": {
+      "c": "#f00",
+      "g": "9we7dyb3m9",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21503610671371,
+        -107.8082497
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13eifqFDTbB-3iH": {
+      "c": "#f00",
+      "g": "9we7dyc017",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21483245066405,
+        -107.8074003
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13g9bcoDK6hQTW2": {
+      "c": "#f00",
+      "g": "9we7dyc136",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21504210384836,
+        -107.8074107
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13g9bcoDK6hQTVy": {
+      "c": "#f00",
+      "g": "9we7dyf3mw",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.215062466774526,
+        -107.8055105
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13bcNlH9GVZXN1p": {
+      "c": "#f00",
+      "g": "9we7dyfbpv",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.2148427301651,
+        -107.8047248
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13cVfovJTbIHOh2": {
+      "c": "#f00",
+      "g": "9we7dyfckr",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21506588277216,
+        -107.8048685
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13bcNlH9GVZXN1q": {
+      "c": "#f00",
+      "g": "9we7dyg0qy",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.214889717246656,
+        -107.8044177
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13g9bcoDK6hQTW-": {
+      "c": "#f00",
+      "g": "9we7dyg1d3",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21507719598296,
+        -107.8046176
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13cVfovJTbIHOh-": {
+      "c": "#f00",
+      "g": "9we7dyg4d9",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.215249392800104,
+        -107.8046019
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13hIH_nGycG4byR": {
+      "c": "#f00",
+      "g": "9we7dygn23",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.215895339654296,
+        -107.8047055
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13f2a3TzsqYersm": {
+      "c": "#f00",
+      "g": "9we7dygn6w",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.215923530082605,
+        -107.8046093
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13f2a3TzsqYersj": {
+      "c": "#f00",
+      "g": "9we7dygy6x",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21592463392013,
+        -107.8035789
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13f2a3TzsqYersi": {
+      "c": "#f00",
+      "g": "9we7dygyx2",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21593418930385,
+        -107.8033731
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13g9bcoDK6hQTVz": {
+      "c": "#f00",
+      "g": "9we7dyu1d5",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21508773013019,
+        -107.8032515
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13eifqFDTbB-3iF": {
+      "c": "#f00",
+      "g": "9we7dyubp7",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.214832138752094,
+        -107.8019994
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13f2a3TzsqYersh": {
+      "c": "#f00",
+      "g": "9we7dyuw75",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.2159051397031,
+        -107.8025199
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13bcNlH9GVZXN1j": {
+      "c": "#f00",
+      "g": "9we7dyuwm4",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21589973497528,
+        -107.802439
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13g9bcoDK6hQTW0": {
+      "c": "#f00",
+      "g": "9we7dyv18m",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.215098347261446,
+        -107.8019512
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13bcNlH9GVZXN1o": {
+      "c": "#f00",
+      "g": "9we7dyv7wj",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21544564702998,
+        -107.8013635
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13g9bcoDK6hQTVx": {
+      "c": "#f00",
+      "g": "9we7dyv9ep",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21510992516232,
+        -107.8011462
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13bcNlH9GVZXN1n": {
+      "c": "#f00",
+      "g": "9we7dyvege",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.215474160981834,
+        -107.8011264
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13eifqFDTbB-3iI": {
+      "c": "#f00",
+      "g": "9we7dyy1b2",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21511654325109,
+        -107.8005808
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13g9bcoDK6hQTVv": {
+      "c": "#f00",
+      "g": "9we7dyycbg",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21513106570078,
+        -107.799528
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13hIH_nGycG4byP": {
+      "c": "#f00",
+      "g": "9we7dyyg02",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21533155606068,
+        -107.7995556
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13g9bcoDK6hQTVw": {
+      "c": "#f00",
+      "g": "9we7dyz9b7",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.215133460831666,
+        -107.7985171
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13cVfovJTbIHOh6": {
+      "c": "#f00",
+      "g": "9we7dz4zvz",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.217556707673204,
+        -107.8048143
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13hIH_nGycG4byT": {
+      "c": "#f00",
+      "g": "9we7dz518v",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.216472698356675,
+        -107.8046752
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13hIH_nGycG4byS": {
+      "c": "#f00",
+      "g": "9we7dz5hbu",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21702529428019,
+        -107.8046792
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13bcNlH9GVZXN1k": {
+      "c": "#f00",
+      "g": "9we7dz5y2q",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.217294239929366,
+        -107.8036744
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13f2a3TzsqYersl": {
+      "c": "#f00",
+      "g": "9we7dz6uv8",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21837936699527,
+        -107.8048228
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13cVfovJTbIHOh7": {
+      "c": "#f00",
+      "g": "9we7dzdcqw",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21918288379831,
+        -107.8047725
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13g9bcoDK6hQTVt": {
+      "c": "#f00",
+      "g": "9we7dzdcyg",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21925272583719,
+        -107.8047712
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13f2a3TzsqYersn": {
+      "c": "#f00",
+      "g": "9we7dzhh95",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.216975477078314,
+        -107.8032953
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13f2a3TzsqYersk": {
+      "c": "#f00",
+      "g": "9we7dzkpcj",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21891987017337,
+        -107.8032938
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13f2a3TzsqYersg": {
+      "c": "#f00",
+      "g": "9we7dzmn5b",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21859069713843,
+        -107.8018101
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13cVfovJTbIHOh4": {
+      "c": "#f00",
+      "g": "9we7dzmnnc",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21859929932675,
+        -107.8016762
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13bcNlH9GVZXN1h": {
+      "c": "#f00",
+      "g": "9we7en8x8k",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21475173625049,
+        -107.7971469
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13bcNlH9GVZXN1i": {
+      "c": "#f00",
+      "g": "9we7en8xvb",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.214771425352986,
+        -107.7969076
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13eifqFDTbB-3iM": {
+      "c": "#f00",
+      "g": "9we7enb1z8",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21511731802028,
+        -107.7975233
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13cVfovJTbIHOh3": {
+      "c": "#f00",
+      "g": "9we7enb2xs",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21492475508222,
+        -107.7971862
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13eifqFDTbB-3iL": {
+      "c": "#f00",
+      "g": "9we7enc1c5",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21513219315786,
+        -107.796431
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13hIH_nGycG4byQ": {
+      "c": "#f00",
+      "g": "9we7enc1fe",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21513134899589,
+        -107.7963648
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13cVfovJTbIHOh8": {
+      "c": "#f00",
+      "g": "9we7enc2z8",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21494468165017,
+        -107.7958038
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13eifqFDTbB-3iK": {
+      "c": "#f00",
+      "g": "9we7enc3fw",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21514812421024,
+        -107.7960194
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13eifqFDTbB-3iJ": {
+      "c": "#f00",
+      "g": "9we7enc3yv",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.21514432190492,
+        -107.7958418
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OFbI13hIH_nGycG4byO": {
+      "c": "#f00",
+      "g": "9we7enc7z0",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.215459056987356,
+        -107.7958289
+      ],
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    }
+  },
+  "job_creator": "deeply_digital_FEUS_OCalc_integrated_model",
+  "job_owner": "deeply_digital",
+  "map_styles": {
+    "default": {
+      "_counter": 55,
+      "_default_published": true,
+      "_name": "Default",
+      "_note": "style arrays prioritize earlier items",
+      "connections": [
+        {
+          "attribute": "connection_type",
+          "color": "#0f0",
+          "comparator": "equals",
+          "id": "i0",
+          "pattern": "solid",
+          "value": "aerial cable",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#05f",
+          "comparator": "equals",
+          "id": "i1",
+          "pattern": "solid",
+          "value": "overlash",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#ff5722",
+          "comparator": "equals",
+          "id": "i2",
+          "pattern": "solid",
+          "value": "slack span",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#fa0",
+          "comparator": "equals",
+          "id": "i3",
+          "pattern": "solid",
+          "value": "overhead guy",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#050",
+          "comparator": "equals",
+          "id": "i4",
+          "pattern": "solid",
+          "value": "pole to pole guy",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#f00",
+          "comparator": "equals",
+          "id": "i5",
+          "pattern": "dashed",
+          "value": "underground cable",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#faf",
+          "comparator": "equals",
+          "id": "i7",
+          "pattern": "solid",
+          "value": "down guy",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#00f",
+          "comparator": "equals",
+          "id": "i8",
+          "pattern": "solid",
+          "value": "pushbrace",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#a0f",
+          "comparator": "equals",
+          "id": "i9",
+          "pattern": "solid",
+          "value": "misc",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#f00",
+          "comparator": "equals",
+          "id": "i10",
+          "pattern": "solid",
+          "value": "distribution fiber",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#00f",
+          "comparator": "equals",
+          "id": "i11",
+          "pattern": "solid",
+          "value": "access fiber",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#ff0",
+          "comparator": "equals",
+          "id": "i12",
+          "pattern": "solid",
+          "value": "strand only",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#508",
+          "comparator": "equals",
+          "id": "i13",
+          "pattern": "solid",
+          "value": "drop fiber",
+          "width": 2
+        },
+        {
+          "attribute": "reference_type",
+          "color": "rgba(136,0,136,1)",
+          "comparator": "equals",
+          "id": "i14",
+          "pattern": "solid",
+          "value": "power reference",
+          "width": 7
+        },
+        {
+          "attribute": "reference_type",
+          "color": "rgba(255,0,255,1)",
+          "comparator": "equals",
+          "id": "i51",
+          "pattern": "solid",
+          "value": "com reference",
+          "width": 7
+        },
+        {
+          "attribute": "reference_type",
+          "color": "rgba(255,170,255,1)",
+          "comparator": "equals",
+          "id": "i52",
+          "pattern": "solid",
+          "value": "guy reference",
+          "width": 7
+        }
+      ],
+      "nodes": [
+        {
+          "attribute": "node_type",
+          "color": "#FA0101",
+          "comparator": "equals",
+          "icon": "katapult-map:multiply",
+          "id": "i54",
+          "size": 15,
+          "stackable": false,
+          "value": "crossover"
+        },
+        {
+          "attribute": "verify_location_in_field",
+          "color": "rgba(255,0,0,1)",
+          "comparator": "equals",
+          "icon": "katapult-map:gps",
+          "id": "i49",
+          "size": "27",
+          "value": false
+        },
+        {
+          "attribute": "pickup_required",
+          "color": "#ff0000",
+          "comparator": "equals",
+          "icon": "maps:directions-car",
+          "id": "i45",
+          "size": "30",
+          "value": "field visit required"
+        },
+        {
+          "attribute": "pickup_required",
+          "color": "#0000ff",
+          "comparator": "equals",
+          "icon": "maps:directions-car",
+          "id": "i46",
+          "size": "30",
+          "value": "fielding complete"
+        },
+        {
+          "attribute": "node_type",
+          "color": "rgba(2,255,255,1)",
+          "comparator": "equals",
+          "icon": "katapult-map:circle",
+          "id": "i16",
+          "size": "14",
+          "value": "spatial note"
+        },
+        {
+          "attribute": "note_type",
+          "color": "#338833",
+          "comparator": "equals",
+          "icon": "katapult-map:circle",
+          "id": "i17",
+          "size": 12,
+          "value": "Address Point"
+        },
+        {
+          "attribute": "warning",
+          "color": "#f80",
+          "comparator": "has",
+          "icon": "katapult-map:circle",
+          "id": "i18",
+          "size": 16,
+          "value": "!null"
+        },
+        {
+          "attribute": "mr_state",
+          "color": "rgba(255,0,0,1)",
+          "comparator": "equals",
+          "icon": "icons:error",
+          "id": "i42",
+          "size": "22",
+          "value": "MR Unresolved"
+        },
+        {
+          "attribute": "mr_state",
+          "color": "#fff176",
+          "comparator": "equals",
+          "icon": "katapult-map:bullseye",
+          "id": "i43",
+          "size": "16",
+          "value": "MR Resolved"
+        },
+        {
+          "attribute": "mr_state",
+          "color": "#4caf50",
+          "comparator": "equals",
+          "icon": "katapult-map:bullseye",
+          "id": "i44",
+          "size": "16",
+          "value": "No MR"
+        },
+        {
+          "attribute": "flag_for_review",
+          "color": "#ff0",
+          "comparator": "equals",
+          "icon": "katapult-map:circle",
+          "id": "i19",
+          "size": 14,
+          "value": true
+        },
+        {
+          "attribute": "done",
+          "color": "#0f0",
+          "comparator": "equals",
+          "icon": "katapult-map:circle",
+          "id": "i20",
+          "size": 14,
+          "value": true
+        },
+        {
+          "attribute": "field_completed",
+          "color": "rgba(33,150,243,1)",
+          "comparator": "equals",
+          "icon": "katapult-map:hexagon",
+          "id": "i50",
+          "size": "17",
+          "value": true
+        },
+        {
+          "attribute": "done",
+          "color": "#f00",
+          "comparator": "equals",
+          "icon": "katapult-map:circle",
+          "id": "i21",
+          "size": 14,
+          "value": false
+        },
+        {
+          "attribute": "node_type",
+          "color": "#000",
+          "comparator": "equals",
+          "icon": "katapult-map:circle",
+          "id": "i22",
+          "size": 6,
+          "value": "pole"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#f00",
+          "comparator": "equals",
+          "icon": "icons:report",
+          "id": "i23",
+          "size": 15,
+          "value": "obstacle"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#2ff",
+          "comparator": "equals",
+          "icon": "image:crop-landscape",
+          "id": "i24",
+          "size": 20,
+          "value": "handhole"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#6ff",
+          "comparator": "equals",
+          "icon": "icons:settings-input-svideo",
+          "id": "i25",
+          "size": 20,
+          "value": "manhole"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#000",
+          "comparator": "equals",
+          "icon": "katapult-map:multiply",
+          "id": "i26",
+          "size": 8,
+          "value": "break point"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#26c6da",
+          "comparator": "equals",
+          "icon": "katapult-map:bullseye",
+          "id": "i27",
+          "size": 17,
+          "value": "map note"
+        },
+        {
+          "attribute": "node_type",
+          "color": "magenta",
+          "comparator": "equals",
+          "icon": "katapult-map:circle-small",
+          "id": "i28",
+          "size": 9,
+          "value": "pushbrace"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#faf",
+          "comparator": "equals",
+          "icon": "katapult-map:triangle-down",
+          "id": "i29",
+          "size": 16,
+          "value": "existing anchor"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#8bc34a",
+          "comparator": "equals",
+          "icon": "katapult-map:triangle-down",
+          "id": "i30",
+          "size": 16,
+          "value": "new anchor"
+        },
+        {
+          "attribute": "node_type",
+          "color": "magenta",
+          "comparator": "equals",
+          "icon": "katapult-map:circle-small",
+          "id": "i31",
+          "size": 9,
+          "value": "doublewood pole"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#f00",
+          "comparator": "equals",
+          "icon": "katapult-map:multiply",
+          "id": "i32",
+          "size": 14,
+          "value": "crossover"
+        },
+        {
+          "attribute": "node_type",
+          "color": "magenta",
+          "comparator": "equals",
+          "icon": "katapult-map:circle-small",
+          "id": "i33",
+          "size": 9,
+          "value": "midspan takeoff"
+        },
+        {
+          "attribute": "node_type",
+          "color": "magenta",
+          "comparator": "equals",
+          "icon": "katapult-map:circle-small",
+          "id": "i34",
+          "size": 9,
+          "value": "bridge attachment"
+        },
+        {
+          "attribute": "node_type",
+          "color": "magenta",
+          "comparator": "equals",
+          "icon": "katapult-map:circle-small",
+          "id": "i35",
+          "size": 9,
+          "value": "building attachment"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#f0f",
+          "comparator": "equals",
+          "icon": "katapult-map:asterisk",
+          "id": "i36",
+          "size": 11,
+          "value": "reference"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#0f0",
+          "comparator": "equals",
+          "icon": "icons:add-circle",
+          "id": "i37",
+          "size": 20,
+          "value": "slack loop"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#0f0",
+          "comparator": "equals",
+          "icon": "icons:link",
+          "id": "i38",
+          "size": 20,
+          "value": "splice"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#e53935",
+          "comparator": "equals",
+          "icon": "katapult-map:hexagon",
+          "id": "i39",
+          "size": "17",
+          "value": "No Access"
+        }
+      ],
+      "sections": [
+        {
+          "attribute": "warning",
+          "color": "#f80",
+          "comparator": "has",
+          "icon": "katapult-map:triangle-up",
+          "id": "i40",
+          "size": "24",
+          "value": "!null"
+        },
+        {
+          "attribute": "pickup_required",
+          "color": "#ff0000",
+          "comparator": "equals",
+          "icon": "maps:directions-car",
+          "id": "i47",
+          "size": "34",
+          "value": "field visit required"
+        },
+        {
+          "attribute": "pickup_required",
+          "color": "#0000ff",
+          "comparator": "equals",
+          "icon": "maps:directions-car",
+          "id": "i48",
+          "size": "34",
+          "value": "fielding complete"
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "assigned_OSP": "Zac M.",
+    "comments": "Grab with As Built work. Needs aerial connections drawn in.",
+    "job_status": "Pending Field Collection"
+  },
+  "name": "VZN_FloridaMesa",
+  "nodes": {
+    "-OFbI13bcNlH9GVZXN1h": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "6"
+        },
+        "pole_height": {
+          "-Imported": "25"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P50749"
+          }
+        }
+      },
+      "key": "-OFbI13bcNlH9GVZXN1h",
+      "latitude": 37.21475173625049,
+      "longitude": -107.7971469
+    },
+    "-OFbI13bcNlH9GVZXN1i": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "6"
+        },
+        "pole_height": {
+          "-Imported": "25"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P50750"
+          }
+        }
+      },
+      "key": "-OFbI13bcNlH9GVZXN1i",
+      "latitude": 37.214771425352986,
+      "longitude": -107.7969076
+    },
+    "-OFbI13bcNlH9GVZXN1j": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "7"
+        },
+        "pole_height": {
+          "-Imported": "30"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P50706"
+          }
+        }
+      },
+      "key": "-OFbI13bcNlH9GVZXN1j",
+      "latitude": 37.21589973497528,
+      "longitude": -107.802439
+    },
+    "-OFbI13bcNlH9GVZXN1k": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "5"
+        },
+        "pole_height": {
+          "-Imported": "35"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P50707"
+          }
+        }
+      },
+      "key": "-OFbI13bcNlH9GVZXN1k",
+      "latitude": 37.217294239929366,
+      "longitude": -107.8036744
+    },
+    "-OFbI13bcNlH9GVZXN1l": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "7"
+        },
+        "pole_height": {
+          "-Imported": "25"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P50708"
+          }
+        }
+      },
+      "key": "-OFbI13bcNlH9GVZXN1l",
+      "latitude": 37.21539248291036,
+      "longitude": -107.8135525
+    },
+    "-OFbI13bcNlH9GVZXN1m": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "7"
+        },
+        "pole_height": {
+          "-Imported": "25"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P50709"
+          }
+        }
+      },
+      "key": "-OFbI13bcNlH9GVZXN1m",
+      "latitude": 37.217152732968415,
+      "longitude": -107.8127221
+    },
+    "-OFbI13bcNlH9GVZXN1n": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "6"
+        },
+        "pole_height": {
+          "-Imported": "30"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P50710"
+          }
+        }
+      },
+      "key": "-OFbI13bcNlH9GVZXN1n",
+      "latitude": 37.215474160981834,
+      "longitude": -107.8011264
+    },
+    "-OFbI13bcNlH9GVZXN1o": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "6"
+        },
+        "pole_height": {
+          "-Imported": "35"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P50711"
+          }
+        }
+      },
+      "key": "-OFbI13bcNlH9GVZXN1o",
+      "latitude": 37.21544564702998,
+      "longitude": -107.8013635
+    },
+    "-OFbI13bcNlH9GVZXN1p": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "6"
+        },
+        "pole_height": {
+          "-Imported": "30"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P50712"
+          }
+        }
+      },
+      "key": "-OFbI13bcNlH9GVZXN1p",
+      "latitude": 37.2148427301651,
+      "longitude": -107.8047248
+    },
+    "-OFbI13bcNlH9GVZXN1q": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "6"
+        },
+        "pole_height": {
+          "-Imported": "30"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P50713"
+          }
+        }
+      },
+      "key": "-OFbI13bcNlH9GVZXN1q",
+      "latitude": 37.214889717246656,
+      "longitude": -107.8044177
+    },
+    "-OFbI13cVfovJTbIHOh-": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "6"
+        },
+        "pole_height": {
+          "-Imported": "30"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P50714"
+          }
+        }
+      },
+      "key": "-OFbI13cVfovJTbIHOh-",
+      "latitude": 37.215249392800104,
+      "longitude": -107.8046019
+    },
+    "-OFbI13cVfovJTbIHOh0": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "5"
+        },
+        "pole_height": {
+          "-Imported": "40"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P48174"
+          }
+        }
+      },
+      "key": "-OFbI13cVfovJTbIHOh0",
+      "latitude": 37.215018206877254,
+      "longitude": -107.8097624
+    },
+    "-OFbI13cVfovJTbIHOh1": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "5"
+        },
+        "pole_height": {
+          "-Imported": "45"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P48175"
+          }
+        }
+      },
+      "key": "-OFbI13cVfovJTbIHOh1",
+      "latitude": 37.21503610671371,
+      "longitude": -107.8082497
+    },
+    "-OFbI13cVfovJTbIHOh2": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "4"
+        },
+        "pole_height": {
+          "-Imported": "40"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P48176"
+          }
+        }
+      },
+      "key": "-OFbI13cVfovJTbIHOh2",
+      "latitude": 37.21506588277216,
+      "longitude": -107.8048685
+    },
+    "-OFbI13cVfovJTbIHOh3": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "6"
+        },
+        "pole_height": {
+          "-Imported": "25"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P49897"
+          }
+        }
+      },
+      "key": "-OFbI13cVfovJTbIHOh3",
+      "latitude": 37.21492475508222,
+      "longitude": -107.7971862
+    },
+    "-OFbI13cVfovJTbIHOh4": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "5"
+        },
+        "pole_height": {
+          "-Imported": "35"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P48065"
+          }
+        }
+      },
+      "key": "-OFbI13cVfovJTbIHOh4",
+      "latitude": 37.21859929932675,
+      "longitude": -107.8016762
+    },
+    "-OFbI13cVfovJTbIHOh5": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "5"
+        },
+        "pole_height": {
+          "-Imported": "35"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P48535"
+          }
+        }
+      },
+      "key": "-OFbI13cVfovJTbIHOh5",
+      "latitude": 37.21563752615952,
+      "longitude": -107.8117111
+    },
+    "-OFbI13cVfovJTbIHOh6": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "5"
+        },
+        "pole_height": {
+          "-Imported": "40"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P42065"
+          }
+        }
+      },
+      "key": "-OFbI13cVfovJTbIHOh6",
+      "latitude": 37.217556707673204,
+      "longitude": -107.8048143
+    },
+    "-OFbI13cVfovJTbIHOh7": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "5"
+        },
+        "pole_height": {
+          "-Imported": "35"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P48966"
+          }
+        }
+      },
+      "key": "-OFbI13cVfovJTbIHOh7",
+      "latitude": 37.21918288379831,
+      "longitude": -107.8047725
+    },
+    "-OFbI13cVfovJTbIHOh8": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "6"
+        },
+        "pole_height": {
+          "-Imported": "45"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P13278"
+          }
+        }
+      },
+      "key": "-OFbI13cVfovJTbIHOh8",
+      "latitude": 37.21494468165017,
+      "longitude": -107.7958038
+    },
+    "-OFbI13eifqFDTbB-3iF": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "6"
+        },
+        "pole_height": {
+          "-Imported": "35"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P13286"
+          }
+        }
+      },
+      "key": "-OFbI13eifqFDTbB-3iF",
+      "latitude": 37.214832138752094,
+      "longitude": -107.8019994
+    },
+    "-OFbI13eifqFDTbB-3iG": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "7"
+        },
+        "pole_height": {
+          "-Imported": "35"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P13308"
+          }
+        }
+      },
+      "key": "-OFbI13eifqFDTbB-3iG",
+      "latitude": 37.21447076929359,
+      "longitude": -107.8116097
+    },
+    "-OFbI13eifqFDTbB-3iH": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "5"
+        },
+        "pole_height": {
+          "-Imported": "35"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P13312"
+          }
+        }
+      },
+      "key": "-OFbI13eifqFDTbB-3iH",
+      "latitude": 37.21483245066405,
+      "longitude": -107.8074003
+    },
+    "-OFbI13eifqFDTbB-3iI": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "4"
+        },
+        "pole_height": {
+          "-Imported": "40"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P13815"
+          }
+        }
+      },
+      "key": "-OFbI13eifqFDTbB-3iI",
+      "latitude": 37.21511654325109,
+      "longitude": -107.8005808
+    },
+    "-OFbI13eifqFDTbB-3iJ": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "4"
+        },
+        "pole_height": {
+          "-Imported": "45"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P13817"
+          }
+        }
+      },
+      "key": "-OFbI13eifqFDTbB-3iJ",
+      "latitude": 37.21514432190492,
+      "longitude": -107.7958418
+    },
+    "-OFbI13eifqFDTbB-3iK": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "4"
+        },
+        "pole_height": {
+          "-Imported": "45"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P13818"
+          }
+        }
+      },
+      "key": "-OFbI13eifqFDTbB-3iK",
+      "latitude": 37.21514812421024,
+      "longitude": -107.7960194
+    },
+    "-OFbI13eifqFDTbB-3iL": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "4"
+        },
+        "pole_height": {
+          "-Imported": "40"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P13819"
+          }
+        }
+      },
+      "key": "-OFbI13eifqFDTbB-3iL",
+      "latitude": 37.21513219315786,
+      "longitude": -107.796431
+    },
+    "-OFbI13eifqFDTbB-3iM": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "5"
+        },
+        "pole_height": {
+          "-Imported": "40"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P13906"
+          }
+        }
+      },
+      "key": "-OFbI13eifqFDTbB-3iM",
+      "latitude": 37.21511731802028,
+      "longitude": -107.7975233
+    },
+    "-OFbI13f2a3TzsqYersg": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "6"
+        },
+        "pole_height": {
+          "-Imported": "30"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P13909"
+          }
+        }
+      },
+      "key": "-OFbI13f2a3TzsqYersg",
+      "latitude": 37.21859069713843,
+      "longitude": -107.8018101
+    },
+    "-OFbI13f2a3TzsqYersh": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "5"
+        },
+        "pole_height": {
+          "-Imported": "35"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P13911"
+          }
+        }
+      },
+      "key": "-OFbI13f2a3TzsqYersh",
+      "latitude": 37.2159051397031,
+      "longitude": -107.8025199
+    },
+    "-OFbI13f2a3TzsqYersi": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "5"
+        },
+        "pole_height": {
+          "-Imported": "40"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P13912"
+          }
+        }
+      },
+      "key": "-OFbI13f2a3TzsqYersi",
+      "latitude": 37.21593418930385,
+      "longitude": -107.8033731
+    },
+    "-OFbI13f2a3TzsqYersj": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "7"
+        },
+        "pole_height": {
+          "-Imported": "35"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P13913"
+          }
+        }
+      },
+      "key": "-OFbI13f2a3TzsqYersj",
+      "latitude": 37.21592463392013,
+      "longitude": -107.8035789
+    },
+    "-OFbI13f2a3TzsqYersk": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": ""
+        },
+        "pole_height": {
+          "-Imported": ""
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P13915"
+          }
+        }
+      },
+      "key": "-OFbI13f2a3TzsqYersk",
+      "latitude": 37.21891987017337,
+      "longitude": -107.8032938
+    },
+    "-OFbI13f2a3TzsqYersl": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "6"
+        },
+        "pole_height": {
+          "-Imported": "35"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P13916"
+          }
+        }
+      },
+      "key": "-OFbI13f2a3TzsqYersl",
+      "latitude": 37.21837936699527,
+      "longitude": -107.8048228
+    },
+    "-OFbI13f2a3TzsqYersm": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": ""
+        },
+        "pole_height": {
+          "-Imported": ""
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P13917"
+          }
+        }
+      },
+      "key": "-OFbI13f2a3TzsqYersm",
+      "latitude": 37.215923530082605,
+      "longitude": -107.8046093
+    },
+    "-OFbI13f2a3TzsqYersn": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "6"
+        },
+        "pole_height": {
+          "-Imported": "35"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P13919"
+          }
+        }
+      },
+      "key": "-OFbI13f2a3TzsqYersn",
+      "latitude": 37.216975477078314,
+      "longitude": -107.8032953
+    },
+    "-OFbI13f2a3TzsqYerso": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "5"
+        },
+        "pole_height": {
+          "-Imported": "35"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P13921"
+          }
+        }
+      },
+      "key": "-OFbI13f2a3TzsqYerso",
+      "latitude": 37.216039774174696,
+      "longitude": -107.8117922
+    },
+    "-OFbI13f2a3TzsqYersp": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "5"
+        },
+        "pole_height": {
+          "-Imported": "35"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P13924"
+          }
+        }
+      },
+      "key": "-OFbI13f2a3TzsqYersp",
+      "latitude": 37.215239559758125,
+      "longitude": -107.8105676
+    },
+    "-OFbI13f2a3TzsqYersq": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": ""
+        },
+        "pole_height": {
+          "-Imported": ""
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P13926"
+          }
+        }
+      },
+      "key": "-OFbI13f2a3TzsqYersq",
+      "latitude": 37.21862607591176,
+      "longitude": -107.81146
+    },
+    "-OFbI13f2a3TzsqYersr": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "7"
+        },
+        "pole_height": {
+          "-Imported": "35"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P13927"
+          }
+        }
+      },
+      "key": "-OFbI13f2a3TzsqYersr",
+      "latitude": 37.21888568403618,
+      "longitude": -107.8122238
+    },
+    "-OFbI13f2a3TzsqYerss": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "7"
+        },
+        "pole_height": {
+          "-Imported": "35"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P13931"
+          }
+        }
+      },
+      "key": "-OFbI13f2a3TzsqYerss",
+      "latitude": 37.21871150324825,
+      "longitude": -107.8131116
+    },
+    "-OFbI13f2a3TzsqYerst": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "6"
+        },
+        "pole_height": {
+          "-Imported": "35"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P13932"
+          }
+        }
+      },
+      "key": "-OFbI13f2a3TzsqYerst",
+      "latitude": 37.21794685793639,
+      "longitude": -107.8131566
+    },
+    "-OFbI13f2a3TzsqYersu": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "6"
+        },
+        "pole_height": {
+          "-Imported": "35"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P13933"
+          }
+        }
+      },
+      "key": "-OFbI13f2a3TzsqYersu",
+      "latitude": 37.21704592994368,
+      "longitude": -107.8131287
+    },
+    "-OFbI13f2a3TzsqYersv": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "7"
+        },
+        "pole_height": {
+          "-Imported": "35"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P13934"
+          }
+        }
+      },
+      "key": "-OFbI13f2a3TzsqYersv",
+      "latitude": 37.21650814966122,
+      "longitude": -107.8131121
+    },
+    "-OFbI13f2a3TzsqYersw": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "7"
+        },
+        "pole_height": {
+          "-Imported": "25"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P13935"
+          }
+        }
+      },
+      "key": "-OFbI13f2a3TzsqYersw",
+      "latitude": 37.21626854971081,
+      "longitude": -107.8128642
+    },
+    "-OFbI13f2a3TzsqYersx": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "7"
+        },
+        "pole_height": {
+          "-Imported": "35"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P13936"
+          }
+        }
+      },
+      "key": "-OFbI13f2a3TzsqYersx",
+      "latitude": 37.21582655399209,
+      "longitude": -107.8131253
+    },
+    "-OFbI13g9bcoDK6hQTVt": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": ""
+        },
+        "pole_height": {
+          "-Imported": ""
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P13937"
+          }
+        }
+      },
+      "key": "-OFbI13g9bcoDK6hQTVt",
+      "latitude": 37.21925272583719,
+      "longitude": -107.8047712
+    },
+    "-OFbI13g9bcoDK6hQTVu": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "7"
+        },
+        "pole_height": {
+          "-Imported": "35"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P13938"
+          }
+        }
+      },
+      "key": "-OFbI13g9bcoDK6hQTVu",
+      "latitude": 37.21920778165954,
+      "longitude": -107.8131613
+    },
+    "-OFbI13g9bcoDK6hQTVv": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "5"
+        },
+        "pole_height": {
+          "-Imported": "40"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P13939"
+          }
+        }
+      },
+      "key": "-OFbI13g9bcoDK6hQTVv",
+      "latitude": 37.21513106570078,
+      "longitude": -107.799528
+    },
+    "-OFbI13g9bcoDK6hQTVw": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "4"
+        },
+        "pole_height": {
+          "-Imported": "40"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P13940"
+          }
+        }
+      },
+      "key": "-OFbI13g9bcoDK6hQTVw",
+      "latitude": 37.215133460831666,
+      "longitude": -107.7985171
+    },
+    "-OFbI13g9bcoDK6hQTVx": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "4"
+        },
+        "pole_height": {
+          "-Imported": "40"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P13941"
+          }
+        }
+      },
+      "key": "-OFbI13g9bcoDK6hQTVx",
+      "latitude": 37.21510992516232,
+      "longitude": -107.8011462
+    },
+    "-OFbI13g9bcoDK6hQTVy": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "4"
+        },
+        "pole_height": {
+          "-Imported": "40"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P13942"
+          }
+        }
+      },
+      "key": "-OFbI13g9bcoDK6hQTVy",
+      "latitude": 37.215062466774526,
+      "longitude": -107.8055105
+    },
+    "-OFbI13g9bcoDK6hQTVz": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "6"
+        },
+        "pole_height": {
+          "-Imported": "40"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P13943"
+          }
+        }
+      },
+      "key": "-OFbI13g9bcoDK6hQTVz",
+      "latitude": 37.21508773013019,
+      "longitude": -107.8032515
+    },
+    "-OFbI13g9bcoDK6hQTW-": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "4"
+        },
+        "pole_height": {
+          "-Imported": "45"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P13944"
+          }
+        }
+      },
+      "key": "-OFbI13g9bcoDK6hQTW-",
+      "latitude": 37.21507719598296,
+      "longitude": -107.8046176
+    },
+    "-OFbI13g9bcoDK6hQTW0": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "4"
+        },
+        "pole_height": {
+          "-Imported": "40"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P13945"
+          }
+        }
+      },
+      "key": "-OFbI13g9bcoDK6hQTW0",
+      "latitude": 37.215098347261446,
+      "longitude": -107.8019512
+    },
+    "-OFbI13g9bcoDK6hQTW1": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "4"
+        },
+        "pole_height": {
+          "-Imported": "40"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P13946"
+          }
+        }
+      },
+      "key": "-OFbI13g9bcoDK6hQTW1",
+      "latitude": 37.21502241696267,
+      "longitude": -107.8105202
+    },
+    "-OFbI13g9bcoDK6hQTW2": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "5"
+        },
+        "pole_height": {
+          "-Imported": "40"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P13947"
+          }
+        }
+      },
+      "key": "-OFbI13g9bcoDK6hQTW2",
+      "latitude": 37.21504210384836,
+      "longitude": -107.8074107
+    },
+    "-OFbI13g9bcoDK6hQTW3": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "4"
+        },
+        "pole_height": {
+          "-Imported": "40"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P13948"
+          }
+        }
+      },
+      "key": "-OFbI13g9bcoDK6hQTW3",
+      "latitude": 37.21500269287143,
+      "longitude": -107.8116897
+    },
+    "-OFbI13g9bcoDK6hQTW4": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "4"
+        },
+        "pole_height": {
+          "-Imported": "40"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P13949"
+          }
+        }
+      },
+      "key": "-OFbI13g9bcoDK6hQTW4",
+      "latitude": 37.21502963384262,
+      "longitude": -107.8091545
+    },
+    "-OFbI13g9bcoDK6hQTW5": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "4"
+        },
+        "pole_height": {
+          "-Imported": "45"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P13950"
+          }
+        }
+      },
+      "key": "-OFbI13g9bcoDK6hQTW5",
+      "latitude": 37.214999082999505,
+      "longitude": -107.8130838
+    },
+    "-OFbI13hIH_nGycG4byN": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "5"
+        },
+        "pole_height": {
+          "-Imported": "35"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P13951"
+          }
+        }
+      },
+      "key": "-OFbI13hIH_nGycG4byN",
+      "latitude": 37.21558045115293,
+      "longitude": -107.8131177
+    },
+    "-OFbI13hIH_nGycG4byO": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "3"
+        },
+        "pole_height": {
+          "-Imported": "45"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P55247"
+          }
+        }
+      },
+      "key": "-OFbI13hIH_nGycG4byO",
+      "latitude": 37.215459056987356,
+      "longitude": -107.7958289
+    },
+    "-OFbI13hIH_nGycG4byP": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "5"
+        },
+        "pole_height": {
+          "-Imported": "40"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P32038"
+          }
+        }
+      },
+      "key": "-OFbI13hIH_nGycG4byP",
+      "latitude": 37.21533155606068,
+      "longitude": -107.7995556
+    },
+    "-OFbI13hIH_nGycG4byQ": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "4"
+        },
+        "pole_height": {
+          "-Imported": "40"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P32260"
+          }
+        }
+      },
+      "key": "-OFbI13hIH_nGycG4byQ",
+      "latitude": 37.21513134899589,
+      "longitude": -107.7963648
+    },
+    "-OFbI13hIH_nGycG4byR": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "5"
+        },
+        "pole_height": {
+          "-Imported": "35"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P42062"
+          }
+        }
+      },
+      "key": "-OFbI13hIH_nGycG4byR",
+      "latitude": 37.215895339654296,
+      "longitude": -107.8047055
+    },
+    "-OFbI13hIH_nGycG4byS": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "5"
+        },
+        "pole_height": {
+          "-Imported": "35"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P42064"
+          }
+        }
+      },
+      "key": "-OFbI13hIH_nGycG4byS",
+      "latitude": 37.21702529428019,
+      "longitude": -107.8046792
+    },
+    "-OFbI13hIH_nGycG4byT": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "5"
+        },
+        "pole_height": {
+          "-Imported": "35"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P42063"
+          }
+        }
+      },
+      "key": "-OFbI13hIH_nGycG4byT",
+      "latitude": 37.216472698356675,
+      "longitude": -107.8046752
+    }
+  },
+  "project_folder": "deeply_digital",
+  "sharing": {
+    "deeply_digital": "write"
+  }
+}

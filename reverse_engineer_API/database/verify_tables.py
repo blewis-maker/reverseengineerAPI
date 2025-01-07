@@ -1,13 +1,24 @@
-from database.db import db, DatabaseConnection
+from database.db import DatabaseConnection
 import logging
 from datetime import datetime
 from tabulate import tabulate
 from psycopg2.extras import RealDictCursor
+import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def verify_tables():
     """Verify the contents of all database tables"""
     print("\nDetailed Database Verification Report")
     print("=" * 80)
+    
+    db = DatabaseConnection()
     
     with db.get_cursor() as cursor:
         # Verify job_metrics table
@@ -51,38 +62,33 @@ def check_duplicates():
     print("\nDuplicate Records Analysis")
     print("=" * 80)
     
+    db = DatabaseConnection()
     with db.get_cursor() as cursor:
-        # Check for duplicate job records
+        # Check for duplicate job records with same timestamp
         cursor.execute("""
-            SELECT job_id, COUNT(*) as count
+            SELECT job_id, timestamp, COUNT(*) as count
             FROM job_metrics
-            GROUP BY job_id
+            GROUP BY job_id, timestamp
             HAVING COUNT(*) > 1
             ORDER BY count DESC
             LIMIT 5
         """)
         
-        print("\nDuplicate Job Records:")
-        print_table(cursor.fetchall(), ['job_id', 'count'])
+        print("\nDuplicate Job Records (same timestamp):")
+        print_table(cursor.fetchall(), ['job_id', 'timestamp', 'count'])
         
-        # Check for duplicate pole records
+        # Check for duplicate pole records with same timestamp
         cursor.execute("""
-            SELECT job_id, node_id, COUNT(*) as count
+            SELECT job_id, node_id, timestamp, COUNT(*) as count
             FROM pole_metrics
-            GROUP BY job_id, node_id
+            GROUP BY job_id, node_id, timestamp
             HAVING COUNT(*) > 1
             ORDER BY count DESC
             LIMIT 5
         """)
         
-        print("\nDuplicate Pole Records:")
-        print_table(cursor.fetchall(), ['job_id', 'node_id', 'count'])
-        
-        print("\nSuggested Constraints:")
-        print("-" * 80)
-        print("ALTER TABLE job_metrics ADD CONSTRAINT unique_job_timestamp UNIQUE (job_id, timestamp);")
-        print("ALTER TABLE pole_metrics ADD CONSTRAINT unique_pole_node_timestamp UNIQUE (job_id, node_id, timestamp);")
-        print("ALTER TABLE status_changes ADD CONSTRAINT unique_status_change UNIQUE (job_id, changed_at);")
+        print("\nDuplicate Pole Records (same timestamp):")
+        print_table(cursor.fetchall(), ['job_id', 'node_id', 'timestamp', 'count'])
 
 def analyze_status_history():
     """Analyze status changes over time for jobs and poles."""
@@ -91,84 +97,78 @@ def analyze_status_history():
     print("\nStatus Change History Analysis")
     print("=" * 80)
     
-    with db.get_connection() as conn:
-        with conn.cursor(cursor_factory=RealDictCursor) as cursor:
-            # Analyze job status changes over time
-            cursor.execute("""
-                WITH status_changes AS (
-                    SELECT 
-                        job_id,
-                        status,
-                        timestamp,
-                        LAG(status) OVER (PARTITION BY job_id ORDER BY timestamp) as previous_status,
-                        LAG(timestamp) OVER (PARTITION BY job_id ORDER BY timestamp) as previous_timestamp
-                    FROM job_metrics
-                    ORDER BY job_id, timestamp
-                )
+    with db.get_cursor() as cursor:
+        # Analyze job status changes over time
+        cursor.execute("""
+            WITH status_changes AS (
                 SELECT 
                     job_id,
-                    previous_status,
-                    status as new_status,
-                    timestamp as changed_at,
-                    previous_timestamp,
-                    EXTRACT(EPOCH FROM (timestamp - previous_timestamp))/3600 as hours_in_previous_status
-                FROM status_changes
-                WHERE previous_status IS NOT NULL
-                    AND previous_status != status
+                    status,
+                    timestamp,
+                    LAG(status) OVER (PARTITION BY job_id ORDER BY timestamp) as previous_status,
+                    LAG(timestamp) OVER (PARTITION BY job_id ORDER BY timestamp) as previous_timestamp
+                FROM job_metrics
                 ORDER BY job_id, timestamp
-                LIMIT 5;
-            """)
-            status_history = cursor.fetchall()
+            )
+            SELECT 
+                job_id,
+                previous_status,
+                status as new_status,
+                timestamp as changed_at,
+                previous_timestamp,
+                EXTRACT(EPOCH FROM (timestamp - previous_timestamp))/3600 as hours_in_previous_status
+            FROM status_changes
+            WHERE previous_status IS NOT NULL
+                AND previous_status != status
+            ORDER BY job_id, timestamp
+            LIMIT 5;
+        """)
+        status_history = cursor.fetchall()
+        
+        print("\nJob Status Change Examples:")
+        if status_history:
+            print_table(status_history, ['job_id', 'previous_status', 'new_status', 'changed_at', 'previous_timestamp', 'hours_in_previous_status'])
+        else:
+            print("No status changes found yet - need more historical data")
             
-            print("\nJob Status Change Examples:")
-            if status_history:
-                print(tabulate(status_history, headers='keys', tablefmt='grid'))
-                print("\nThis shows how we can track status changes over time.")
-                print("Suggested Improvements:")
-                print("1. Create a status_history view that maintains this information")
-                print("2. Add triggers to automatically record status changes")
-                print("3. Add status duration tracking")
-            else:
-                print("No status changes found yet - need more historical data")
-            
-            # Analyze pole completion status changes
-            cursor.execute("""
-                WITH pole_changes AS (
-                    SELECT 
-                        job_id,
-                        node_id,
-                        field_completed,
-                        timestamp,
-                        LAG(field_completed) OVER (PARTITION BY job_id, node_id ORDER BY timestamp) as previous_status,
-                        LAG(timestamp) OVER (PARTITION BY job_id, node_id ORDER BY timestamp) as previous_timestamp
-                    FROM pole_metrics
-                    ORDER BY job_id, node_id, timestamp
-                )
+        # Analyze pole completion status changes
+        cursor.execute("""
+            WITH pole_changes AS (
                 SELECT 
                     job_id,
                     node_id,
-                    previous_status as was_completed,
-                    field_completed as now_completed,
-                    timestamp as changed_at,
-                    previous_timestamp
-                FROM pole_changes
-                WHERE previous_status IS NOT NULL
-                    AND previous_status != field_completed
+                    field_completed,
+                    timestamp,
+                    LAG(field_completed) OVER (PARTITION BY job_id, node_id ORDER BY timestamp) as previous_status,
+                    LAG(timestamp) OVER (PARTITION BY job_id, node_id ORDER BY timestamp) as previous_timestamp
+                FROM pole_metrics
                 ORDER BY job_id, node_id, timestamp
-                LIMIT 5;
-            """)
-            pole_history = cursor.fetchall()
-            
-            print("\nPole Completion Status Change Examples:")
-            if pole_history:
-                print(tabulate(pole_history, headers='keys', tablefmt='grid'))
-            else:
-                print("No pole status changes found yet - need more historical data")
-            
-            # Suggest schema improvements
-            print("\nSuggested Schema Improvements:")
-            print("-" * 80)
-            print("""
+            )
+            SELECT 
+                job_id,
+                node_id,
+                previous_status as was_completed,
+                field_completed as now_completed,
+                timestamp as changed_at,
+                previous_timestamp
+            FROM pole_changes
+            WHERE previous_status IS NOT NULL
+                AND previous_status != field_completed
+            ORDER BY job_id, node_id, timestamp
+            LIMIT 5;
+        """)
+        pole_history = cursor.fetchall()
+        
+        print("\nPole Completion Status Change Examples:")
+        if pole_history:
+            print_table(pole_history, ['job_id', 'node_id', 'was_completed', 'now_completed', 'changed_at', 'previous_timestamp'])
+        else:
+            print("No pole status changes found yet - need more historical data")
+        
+        # Suggest schema improvements
+        print("\nSuggested Schema Improvements:")
+        print("-" * 80)
+        print("""
 CREATE OR REPLACE VIEW job_status_history AS
     WITH status_changes AS (
         SELECT 
@@ -240,7 +240,7 @@ BEGIN
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
-            """)
+        """)
 
 def verify_table_schema(cursor, table_name):
     """Verify and display the schema of a table"""

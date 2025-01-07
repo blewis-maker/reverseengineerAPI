@@ -1,0 +1,5843 @@
+{
+  "connections": {
+    "-OCEldIGfBoEUyBxlX7L": {
+      "_created": {
+        "method": "mobile",
+        "timestamp": 1732210234577,
+        "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+      },
+      "attributes": {
+        "connection_type": {
+          "button_added": "reference"
+        },
+        "reference_type": {
+          "button_added": "power reference"
+        }
+      },
+      "button": "power_reference",
+      "node_id_1": "-OCEldIGfBoEUyBxlX7K",
+      "node_id_2": "-O9FdLdppqzZhkGBz_A0",
+      "sections": {
+        "-OFxZhqdjYzjny1mUAwf": {
+          "_created": {
+            "method": "mobile",
+            "timestamp": 1736199825186,
+            "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+          },
+          "latitude": 39.036661624334464,
+          "longitude": -108.5244676249724,
+          "multi_attributes": {
+            "field_completed": {
+              "value": true
+            },
+            "time_bucket": {
+              "-OFxZhqdjYzjny1mUAwe": {
+                "start": 1736198918270,
+                "stop": 1736199825186,
+                "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+              }
+            }
+          },
+          "photos": {
+            "a8ac3f64-f8aa-4aba-a9e1-ff72667a5d37": {
+              "association": true,
+              "association_type": "auto"
+            }
+          }
+        }
+      }
+    },
+    "-OCEq8Udm-q1lMnyvj_V": {
+      "_created": {
+        "method": "mobile",
+        "timestamp": 1732211415017,
+        "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+      },
+      "attributes": {
+        "connection_type": {
+          "button_added": "reference"
+        },
+        "reference_type": {
+          "button_added": "power reference"
+        }
+      },
+      "button": "power_reference",
+      "node_id_1": "-OCEq8Udm-q1lMnyvj_U",
+      "node_id_2": "-O9FdLdppqzZhkGBz_9u",
+      "sections": {
+        "-OCEsucR-mOssU3qcd6E": {
+          "_created": {
+            "method": "mobile",
+            "timestamp": 1732212140815,
+            "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+          },
+          "latitude": 39.03702287417382,
+          "longitude": -108.53184376183138,
+          "multi_attributes": {
+            "field_completed": {
+              "value": true
+            },
+            "time_bucket": {
+              "-OCEsucR-mOssU3qcd6D": {
+                "start": 1732210123596,
+                "stop": 1732212140815,
+                "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+              }
+            }
+          },
+          "photos": {
+            "7a8491b8-1c60-4b2f-b726-4629bc5a07c1": {
+              "association": true,
+              "association_type": "auto"
+            }
+          }
+        }
+      }
+    },
+    "-OCEqBeBOain8xaXv_gX": {
+      "_created": {
+        "method": "mobile",
+        "timestamp": 1732211427980,
+        "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+      },
+      "attributes": {
+        "connection_type": {
+          "button_added": "aerial cable"
+        }
+      },
+      "button": "join_osp_aerial",
+      "node_id_1": "-O9FdLdppqzZhkGBz_9v",
+      "node_id_2": "-O9FdLdppqzZhkGBz_9u",
+      "sections": {
+        "midpoint_section": {
+          "_created": {
+            "method": "mobile",
+            "timestamp": 1732212302167,
+            "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+          },
+          "latitude": 39.03671787826833,
+          "longitude": -108.53091085,
+          "multi_attributes": {
+            "field_completed": {
+              "value": true
+            },
+            "time_bucket": {
+              "-OCEtX0ZvU2rqKWh2bXL": {
+                "start": 1732212204088,
+                "stop": 1732212302167,
+                "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+              }
+            }
+          },
+          "photos": {
+            "30e15f0d-5c0a-4009-82f0-2e0421c0a71c": {
+              "association": true,
+              "association_type": "auto"
+            }
+          }
+        }
+      }
+    },
+    "-OCEqCUF2foJ1NyQGMsF": {
+      "_created": {
+        "method": "mobile",
+        "timestamp": 1732211431376,
+        "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+      },
+      "attributes": {
+        "connection_type": {
+          "button_added": "aerial cable"
+        }
+      },
+      "button": "join_osp_aerial",
+      "node_id_1": "-O9FdLdppqzZhkGBz_9w",
+      "node_id_2": "-O9FdLdppqzZhkGBz_9v",
+      "sections": {
+        "midpoint_section": {
+          "_created": {
+            "method": "mobile",
+            "timestamp": 1732212441834,
+            "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+          },
+          "latitude": 39.0362914648799,
+          "longitude": -108.52970440000001,
+          "multi_attributes": {
+            "field_completed": {
+              "value": true
+            },
+            "time_bucket": {
+              "-OCEu36rZnJsThmaprXF": {
+                "start": 1732212382731,
+                "stop": 1732212441833,
+                "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+              }
+            }
+          },
+          "photos": {
+            "2f7c1207-5704-446b-bfbc-590185a1071e": {
+              "association": true,
+              "association_type": "auto"
+            }
+          }
+        }
+      }
+    },
+    "-OCEqEFNyLTEPZvzaLIU": {
+      "_created": {
+        "method": "mobile",
+        "timestamp": 1732211438616,
+        "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+      },
+      "attributes": {
+        "connection_type": {
+          "button_added": "aerial cable"
+        }
+      },
+      "button": "join_osp_aerial",
+      "node_id_1": "-O9FdLdppqzZhkGBz_A6",
+      "node_id_2": "-O9FdLdppqzZhkGBz_9w",
+      "sections": {
+        "-OCEuhQaTuq4toekRjgs": {
+          "_created": {
+            "method": "mobile",
+            "timestamp": 1732212611033,
+            "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+          },
+          "latitude": 39.03575042067225,
+          "longitude": -108.52827421966153,
+          "multi_attributes": {
+            "field_completed": {
+              "value": true
+            },
+            "time_bucket": {
+              "-OCEuhQaTuq4toekRjgr": {
+                "start": 1732212546212,
+                "stop": 1732212611033,
+                "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+              }
+            }
+          },
+          "photos": {
+            "0c1a91c5-f3c2-4a54-a70c-3a03ebb4ac6d": {
+              "association": true,
+              "association_type": "auto"
+            }
+          }
+        }
+      }
+    },
+    "-OCEqF6XCbhJry5XgXzc": {
+      "_created": {
+        "method": "mobile",
+        "timestamp": 1732211442146,
+        "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+      },
+      "attributes": {
+        "connection_type": {
+          "button_added": "aerial cable"
+        }
+      },
+      "button": "join_osp_aerial",
+      "node_id_1": "-O9FdLdppqzZhkGBz_9x",
+      "node_id_2": "-O9FdLdppqzZhkGBz_A6",
+      "sections": {
+        "midpoint_section": {
+          "_created": {
+            "method": "mobile",
+            "timestamp": 1732212787740,
+            "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+          },
+          "latitude": 39.03536586727295,
+          "longitude": -108.52711014999998,
+          "multi_attributes": {
+            "field_completed": {
+              "value": true
+            },
+            "time_bucket": {
+              "-OCEvNZdrgCOTNCqFW0Q": {
+                "start": 1732212729672,
+                "stop": 1732212787740,
+                "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+              }
+            }
+          },
+          "photos": {
+            "26bdcc49-4991-43b6-ba41-199d14b93c7c": {
+              "association": true,
+              "association_type": "auto"
+            }
+          }
+        }
+      }
+    },
+    "-OCEqGgw6EeTAJvKnfX9": {
+      "_created": {
+        "method": "mobile",
+        "timestamp": 1732211448636,
+        "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+      },
+      "attributes": {
+        "connection_type": {
+          "button_added": "aerial cable"
+        }
+      },
+      "button": "join_osp_aerial",
+      "node_id_1": "-O9FdLdppqzZhkGBz_9y",
+      "node_id_2": "-O9FdLdppqzZhkGBz_9x",
+      "sections": {
+        "midpoint_section": {
+          "_created": {
+            "method": "mobile",
+            "timestamp": 1732212942356,
+            "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+          },
+          "latitude": 39.03494686085072,
+          "longitude": -108.52566745,
+          "multi_attributes": {
+            "field_completed": {
+              "value": true
+            },
+            "time_bucket": {
+              "-OCEvyJWVTEYx1v9nR_1": {
+                "start": 1732212865104,
+                "stop": 1732212942355,
+                "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+              }
+            }
+          },
+          "photos": {
+            "a5083cda-c811-4fef-92f0-bb44bf87e5fb": {
+              "association": true,
+              "association_type": "auto"
+            }
+          }
+        }
+      }
+    },
+    "-OCEqHFRywCh-6h8x8v0": {
+      "_created": {
+        "method": "mobile",
+        "timestamp": 1732211450908,
+        "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+      },
+      "attributes": {
+        "connection_type": {
+          "button_added": "aerial cable"
+        }
+      },
+      "button": "join_osp_aerial",
+      "node_id_1": "-O9FdLdppqzZhkGBz_9z",
+      "node_id_2": "-O9FdLdppqzZhkGBz_9y",
+      "sections": {
+        "-OCExVjKk0EEgk-wlM00": {
+          "_created": {
+            "method": "mobile",
+            "timestamp": 1732213345480,
+            "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+          },
+          "latitude": 39.03470779246932,
+          "longitude": -108.52466275335846,
+          "multi_attributes": {
+            "field_completed": {
+              "value": true
+            },
+            "time_bucket": {
+              "-OCExVjKk0EEgk-wlM0-": {
+                "start": 1732213286180,
+                "stop": 1732213345480,
+                "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+              }
+            }
+          },
+          "photos": {
+            "a5fd1ffc-338b-4320-a493-61c9c75ccfb5": {
+              "association": true,
+              "association_type": "auto"
+            }
+          }
+        }
+      }
+    },
+    "-OCEqHsl82UBN-ojOoAQ": {
+      "_created": {
+        "method": "mobile",
+        "timestamp": 1732211453489,
+        "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+      },
+      "attributes": {
+        "connection_type": {
+          "button_added": "aerial cable"
+        }
+      },
+      "button": "join_osp_aerial",
+      "node_id_1": "-O9FdLdppqzZhkGBz_A-",
+      "node_id_2": "-O9FdLdppqzZhkGBz_9z",
+      "sections": {
+        "midpoint_section": {
+          "_created": {
+            "method": "mobile",
+            "timestamp": 1736198918271,
+            "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+          },
+          "latitude": 39.035051004177326,
+          "longitude": -108.52447502116394,
+          "multi_attributes": {
+            "field_completed": {
+              "value": true
+            },
+            "time_bucket": {
+              "-OFxWFR5OsyqEbbcO-G1": {
+                "start": 1736198539529,
+                "stop": 1736198918270,
+                "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+              }
+            }
+          },
+          "photos": {
+            "60a9c3ff-1426-4a20-b08b-bf590576df2d": {
+              "association": true,
+              "association_type": "auto"
+            }
+          }
+        }
+      }
+    },
+    "-OCEqIat3rCZzyZbWQ1E": {
+      "_created": {
+        "method": "mobile",
+        "timestamp": 1732211456441,
+        "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+      },
+      "attributes": {
+        "connection_type": {
+          "button_added": "aerial cable"
+        }
+      },
+      "button": "join_osp_aerial",
+      "node_id_1": "-O9FdLdppqzZhkGBz_A0",
+      "node_id_2": "-O9FdLdppqzZhkGBz_A-",
+      "sections": {
+        "midpoint_section": {
+          "_created": {
+            "method": "mobile",
+            "timestamp": 1736198117174,
+            "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+          },
+          "latitude": 39.03575719716859,
+          "longitude": -108.52447546513207,
+          "multi_attributes": {
+            "field_completed": {
+              "value": true
+            },
+            "time_bucket": {
+              "-OFxTBrM8XhKpN1mxViw": {
+                "start": 1736198066828,
+                "stop": 1736198117173,
+                "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+              }
+            }
+          },
+          "photos": {
+            "616182db-16c8-41c4-93ba-f753ac957215": {
+              "association": true,
+              "association_type": "auto"
+            }
+          }
+        }
+      }
+    },
+    "-OCEw-P3R73gBiTBzkwl": {
+      "_created": {
+        "method": "mobile",
+        "timestamp": 1732212950660,
+        "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+      },
+      "attributes": {
+        "connection_type": {
+          "button_added": "aerial cable"
+        }
+      },
+      "button": "join_osp_aerial",
+      "node_id_1": "-O9FdLdo8TSgCWPRDVQe",
+      "node_id_2": "-O9FdLdppqzZhkGBz_9y",
+      "sections": {
+        "-OCExHFl0lFcVb7sjCUw": {
+          "_created": {
+            "method": "mobile",
+            "timestamp": 1732213286180,
+            "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+          },
+          "latitude": 39.03463544874754,
+          "longitude": -108.524728375423,
+          "multi_attributes": {
+            "field_completed": {
+              "value": true
+            },
+            "time_bucket": {
+              "-OCExHFl0lFcVb7sjCUv": {
+                "start": 1732213057029,
+                "stop": 1732213286180,
+                "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+              }
+            }
+          },
+          "photos": {
+            "bc1e909b-6450-4c74-9f7e-728903905a36": {
+              "association": true,
+              "association_type": "auto"
+            }
+          }
+        }
+      }
+    },
+    "-OCEwpSDCvjLilaOtJOv": {
+      "_created": {
+        "method": "mobile",
+        "timestamp": 1732213167950,
+        "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+      },
+      "attributes": {
+        "connection_type": {
+          "button_added": "down guy"
+        }
+      },
+      "button": "anchor",
+      "node_id_1": "-OCEwpSCJOLkIT04uLjW",
+      "node_id_2": "-O9FdLdppqzZhkGBz_9y"
+    },
+    "-OCEx-ii3Tyz6OwAGuXp": {
+      "_created": {
+        "method": "mobile",
+        "timestamp": 1732213214126,
+        "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+      },
+      "attributes": {
+        "connection_type": {
+          "button_added": "down guy"
+        }
+      },
+      "button": "anchor",
+      "node_id_1": "-OCEx-ihg_bZfWvFC--U",
+      "node_id_2": "-O9FdLdppqzZhkGBz_9y"
+    },
+    "-OFxYvZcmtYHwknEPge7": {
+      "_created": {
+        "method": "mobile",
+        "timestamp": 1736199616808,
+        "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+      },
+      "attributes": {
+        "connection_type": {
+          "button_added": "reference"
+        },
+        "reference_type": {
+          "button_added": "power reference"
+        }
+      },
+      "button": "power_reference",
+      "node_id_1": "-OFxYvZbRbjTERomd7o-",
+      "node_id_2": "-O9FdLdo8TSgCWPRDVQe",
+      "sections": {
+        "-OFx_RFsKEpeqbOeTsHv": {
+          "_created": {
+            "method": "mobile",
+            "timestamp": 1736200015298,
+            "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+          },
+          "latitude": 39.03395993396487,
+          "longitude": -108.52361100696565,
+          "multi_attributes": {
+            "field_completed": {
+              "value": true
+            },
+            "time_bucket": {
+              "-OFx_RFsKEpeqbOeTsHu": {
+                "start": 1736199825186,
+                "stop": 1736200015298,
+                "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+              }
+            }
+          },
+          "photos": {
+            "85903fc2-3512-489f-9f55-8a0b2d1fde73": {
+              "association": true,
+              "association_type": "auto"
+            }
+          }
+        }
+      }
+    }
+  },
+  "date_created": 1729003509927,
+  "geohash": {
+    "-OCEldIGfBoEUyBxlX7L:-OFxZhqdjYzjny1mUAwf": {
+      "c": "#0ff",
+      "g": "9wfy46qvh9",
+      "i": "katapult-map:triangle-up",
+      "l": [
+        39.036661624334464,
+        -108.5244676249724
+      ],
+      "m": 1,
+      "s": 18,
+      "t": "s",
+      "u": "ms",
+      "z": 1
+    },
+    "-OCEqHsl82UBN-ojOoAQ:midpoint_section": {
+      "c": "#00f",
+      "g": "9wfy46ngsk",
+      "i": "katapult-map:triangle-up",
+      "l": [
+        39.035051004177326,
+        -108.52447502116394
+      ],
+      "m": 1,
+      "s": 18,
+      "t": "s",
+      "u": "mms",
+      "z": 1
+    },
+    "-OCEqIat3rCZzyZbWQ1E:midpoint_section": {
+      "c": "#00f",
+      "g": "9wfy46nzu2",
+      "i": "katapult-map:triangle-up",
+      "l": [
+        39.03575719716859,
+        -108.52447546513207
+      ],
+      "m": 1,
+      "s": 18,
+      "t": "s",
+      "u": "mms",
+      "z": 1
+    },
+    "-OFxYvZbRbjTERomd7o-": {
+      "c": "#f0f",
+      "g": "9wfy43zss9",
+      "i": "katapult-map:asterisk",
+      "is": [
+        {
+          "c": "#f0f",
+          "i": "katapult-map:asterisk",
+          "s": 11,
+          "u": "i36",
+          "z": 4
+        }
+      ],
+      "l": [
+        39.03382995121624,
+        -108.52343420156716
+      ],
+      "n": {
+        "-OFxYvZcmtYHwknEPge7": 1
+      },
+      "s": 11,
+      "t": "n",
+      "u": "i36",
+      "z": 4
+    },
+    "-OFxYvZcmtYHwknEPge7:-OFx_RFsKEpeqbOeTsHv": {
+      "c": "#0ff",
+      "g": "9wfy43zt29",
+      "i": "katapult-map:triangle-up",
+      "l": [
+        39.03395993396487,
+        -108.52361100696565
+      ],
+      "m": 1,
+      "s": 18,
+      "t": "s",
+      "u": "ms",
+      "z": 1
+    },
+    "-OFxYvZcmtYHwknEPge7~1": {
+      "c": "rgba(136,0,136,1)",
+      "d": 246.3,
+      "g": "9wfy43zss9",
+      "is": [
+        {
+          "c": "rgba(136,0,136,1)",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i14",
+          "w": 7,
+          "z": 3
+        }
+      ],
+      "l": [
+        39.03382995121624,
+        -108.52343420156716
+      ],
+      "l2": [
+        39.03429347400004,
+        -108.5240647
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i14",
+      "w": 7,
+      "z": 3
+    },
+    "-OFxYvZcmtYHwknEPge7~2": {
+      "c": "rgba(136,0,136,1)",
+      "d": 246.3,
+      "g": "9wfy43zpnp",
+      "is": [
+        {
+          "c": "rgba(136,0,136,1)",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i14",
+          "w": 7,
+          "z": 3
+        }
+      ],
+      "l": [
+        39.03429347400004,
+        -108.5240647
+      ],
+      "l2": [
+        39.03382995121624,
+        -108.52343420156716
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i14",
+      "w": 7,
+      "z": 3
+    },
+    "-O9FdLdo8TSgCWPRDVQe": {
+      "c": "#f00",
+      "g": "9wfy43zpnp",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        39.03429347400004,
+        -108.5240647
+      ],
+      "n": {
+        "-OCEw-P3R73gBiTBzkwl": 1,
+        "-OFxYvZcmtYHwknEPge7": 2
+      },
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OCEw-P3R73gBiTBzkwl~1": {
+      "c": "#0f0",
+      "d": 284.6,
+      "g": "9wfy43zpnp",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        39.03429347400004,
+        -108.5240647
+      ],
+      "l2": [
+        39.03472424200004,
+        -108.5249007
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    },
+    "-OCEq8Udm-q1lMnyvj_V:-OCEsucR-mOssU3qcd6E": {
+      "c": "#0ff",
+      "g": "9wfy463x0s",
+      "i": "katapult-map:triangle-up",
+      "l": [
+        39.03702287417382,
+        -108.53184376183138
+      ],
+      "m": 1,
+      "s": 18,
+      "t": "s",
+      "u": "ms",
+      "z": 1
+    },
+    "-O9FdLdppqzZhkGBz_9u": {
+      "c": "rgba(33,150,243,1)",
+      "g": "9wfy463y2z",
+      "i": "katapult-map:hexagon",
+      "is": [
+        {
+          "c": "rgba(33,150,243,1)",
+          "i": "katapult-map:hexagon",
+          "m": 1,
+          "s": "17",
+          "u": "i50",
+          "z": 20
+        }
+      ],
+      "l": [
+        39.03691259000004,
+        -108.5314896
+      ],
+      "m": 1,
+      "n": {
+        "-OCEq8Udm-q1lMnyvj_V": 2,
+        "-OCEqBeBOain8xaXv_gX": 2
+      },
+      "s": "17",
+      "t": "n",
+      "u": "i50",
+      "z": 20
+    },
+    "-OCEq8Udm-q1lMnyvj_V~2": {
+      "c": "rgba(136,0,136,1)",
+      "d": 279,
+      "g": "9wfy463y2z",
+      "is": [
+        {
+          "c": "rgba(136,0,136,1)",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i14",
+          "w": 7,
+          "z": 3
+        }
+      ],
+      "l": [
+        39.03691259000004,
+        -108.5314896
+      ],
+      "l2": [
+        39.03719685104223,
+        -108.5324024727784
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i14",
+      "w": 7,
+      "z": 3
+    },
+    "-OCEqBeBOain8xaXv_gX~2": {
+      "c": "#0f0",
+      "d": 357.8,
+      "g": "9wfy463y2z",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        39.03691259000004,
+        -108.5314896
+      ],
+      "l2": [
+        39.03652316600005,
+        -108.5303321
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    },
+    "-OCEqBeBOain8xaXv_gX:midpoint_section": {
+      "c": "#00f",
+      "g": "9wfy466jq7",
+      "i": "katapult-map:triangle-up",
+      "l": [
+        39.03671787826833,
+        -108.53091085
+      ],
+      "m": 1,
+      "s": 18,
+      "t": "s",
+      "u": "mms",
+      "z": 1
+    },
+    "-O9FdLdppqzZhkGBz_9v": {
+      "c": "rgba(33,150,243,1)",
+      "g": "9wfy466s5z",
+      "i": "katapult-map:hexagon",
+      "is": [
+        {
+          "c": "rgba(33,150,243,1)",
+          "i": "katapult-map:hexagon",
+          "m": 1,
+          "s": "17",
+          "u": "i50",
+          "z": 20
+        }
+      ],
+      "l": [
+        39.03652316600005,
+        -108.5303321
+      ],
+      "m": 1,
+      "n": {
+        "-OCEqBeBOain8xaXv_gX": 1,
+        "-OCEqCUF2foJ1NyQGMsF": 2
+      },
+      "s": "17",
+      "t": "n",
+      "u": "i50",
+      "z": 20
+    },
+    "-OCEqBeBOain8xaXv_gX~1": {
+      "c": "#0f0",
+      "d": 357.8,
+      "g": "9wfy466s5z",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        39.03652316600005,
+        -108.5303321
+      ],
+      "l2": [
+        39.03691259000004,
+        -108.5314896
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    },
+    "-OCEqCUF2foJ1NyQGMsF~2": {
+      "c": "#0f0",
+      "d": 394.3,
+      "g": "9wfy466s5z",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        39.03652316600005,
+        -108.5303321
+      ],
+      "l2": [
+        39.036059763000026,
+        -108.5290767
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    },
+    "-OCEqCUF2foJ1NyQGMsF:midpoint_section": {
+      "c": "#00f",
+      "g": "9wfy4674fs",
+      "i": "katapult-map:triangle-up",
+      "l": [
+        39.0362914648799,
+        -108.52970440000001
+      ],
+      "m": 1,
+      "s": 18,
+      "t": "s",
+      "u": "mms",
+      "z": 1
+    },
+    "-O9FdLdppqzZhkGBz_9w": {
+      "c": "rgba(33,150,243,1)",
+      "g": "9wfy467990",
+      "i": "katapult-map:hexagon",
+      "is": [
+        {
+          "c": "rgba(33,150,243,1)",
+          "i": "katapult-map:hexagon",
+          "m": 1,
+          "s": "17",
+          "u": "i50",
+          "z": 20
+        }
+      ],
+      "l": [
+        39.036059763000026,
+        -108.5290767
+      ],
+      "m": 1,
+      "n": {
+        "-OCEqCUF2foJ1NyQGMsF": 1,
+        "-OCEqEFNyLTEPZvzaLIU": 2
+      },
+      "s": "17",
+      "t": "n",
+      "u": "i50",
+      "z": 20
+    },
+    "-OCEqCUF2foJ1NyQGMsF~1": {
+      "c": "#0f0",
+      "d": 394.3,
+      "g": "9wfy467990",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        39.036059763000026,
+        -108.5290767
+      ],
+      "l2": [
+        39.03652316600005,
+        -108.5303321
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    },
+    "-OCEqEFNyLTEPZvzaLIU~2": {
+      "c": "#0f0",
+      "d": 408.7,
+      "g": "9wfy467990",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        39.036059763000026,
+        -108.5290767
+      ],
+      "l2": [
+        39.03556225500006,
+        -108.5277861
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    },
+    "-OCEq8Udm-q1lMnyvj_U": {
+      "c": "#f0f",
+      "g": "9wfy46905s",
+      "i": "katapult-map:asterisk",
+      "is": [
+        {
+          "c": "#f0f",
+          "i": "katapult-map:asterisk",
+          "s": 11,
+          "u": "i36",
+          "z": 4
+        }
+      ],
+      "l": [
+        39.03719685104223,
+        -108.5324024727784
+      ],
+      "n": {
+        "-OCEq8Udm-q1lMnyvj_V": 1
+      },
+      "s": 11,
+      "t": "n",
+      "u": "i36",
+      "z": 4
+    },
+    "-OCEq8Udm-q1lMnyvj_V~1": {
+      "c": "rgba(136,0,136,1)",
+      "d": 279,
+      "g": "9wfy46905s",
+      "is": [
+        {
+          "c": "rgba(136,0,136,1)",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i14",
+          "w": 7,
+          "z": 3
+        }
+      ],
+      "l": [
+        39.03719685104223,
+        -108.5324024727784
+      ],
+      "l2": [
+        39.03691259000004,
+        -108.5314896
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i14",
+      "w": 7,
+      "z": 3
+    },
+    "-OCEqEFNyLTEPZvzaLIU:-OCEuhQaTuq4toekRjgs": {
+      "c": "#0ff",
+      "g": "9wfy46hpez",
+      "i": "katapult-map:triangle-up",
+      "l": [
+        39.03575042067225,
+        -108.52827421966153
+      ],
+      "m": 1,
+      "s": 18,
+      "t": "s",
+      "u": "ms",
+      "z": 1
+    },
+    "-O9FdLdppqzZhkGBz_A6": {
+      "c": "rgba(33,150,243,1)",
+      "g": "9wfy46hqxk",
+      "i": "katapult-map:hexagon",
+      "is": [
+        {
+          "c": "rgba(33,150,243,1)",
+          "i": "katapult-map:hexagon",
+          "m": 1,
+          "s": "17",
+          "u": "i50",
+          "z": 20
+        }
+      ],
+      "l": [
+        39.03556225500006,
+        -108.5277861
+      ],
+      "m": 1,
+      "n": {
+        "-OCEqEFNyLTEPZvzaLIU": 1,
+        "-OCEqF6XCbhJry5XgXzc": 2
+      },
+      "s": "17",
+      "t": "n",
+      "u": "i50",
+      "z": 20
+    },
+    "-OCEqEFNyLTEPZvzaLIU~1": {
+      "c": "#0f0",
+      "d": 408.7,
+      "g": "9wfy46hqxk",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        39.03556225500006,
+        -108.5277861
+      ],
+      "l2": [
+        39.036059763000026,
+        -108.5290767
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    },
+    "-OCEqF6XCbhJry5XgXzc~2": {
+      "c": "#0f0",
+      "d": 409.5,
+      "g": "9wfy46hqxk",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        39.03556225500006,
+        -108.5277861
+      ],
+      "l2": [
+        39.03516947900005,
+        -108.5264342
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    },
+    "-OCEqF6XCbhJry5XgXzc:midpoint_section": {
+      "c": "#00f",
+      "g": "9wfy46hvrp",
+      "i": "katapult-map:triangle-up",
+      "l": [
+        39.03536586727295,
+        -108.52711014999998
+      ],
+      "m": 1,
+      "s": 18,
+      "t": "s",
+      "u": "mms",
+      "z": 1
+    },
+    "-O9FdLdppqzZhkGBz_9x": {
+      "c": "rgba(33,150,243,1)",
+      "g": "9wfy46jkqf",
+      "i": "katapult-map:hexagon",
+      "is": [
+        {
+          "c": "rgba(33,150,243,1)",
+          "i": "katapult-map:hexagon",
+          "m": 1,
+          "s": "17",
+          "u": "i50",
+          "z": 20
+        }
+      ],
+      "l": [
+        39.03516947900005,
+        -108.5264342
+      ],
+      "m": 1,
+      "n": {
+        "-OCEqF6XCbhJry5XgXzc": 1,
+        "-OCEqGgw6EeTAJvKnfX9": 2
+      },
+      "s": "17",
+      "t": "n",
+      "u": "i50",
+      "z": 20
+    },
+    "-OCEqF6XCbhJry5XgXzc~1": {
+      "c": "#0f0",
+      "d": 409.5,
+      "g": "9wfy46jkqf",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        39.03516947900005,
+        -108.5264342
+      ],
+      "l2": [
+        39.03556225500006,
+        -108.5277861
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    },
+    "-OCEqGgw6EeTAJvKnfX9~2": {
+      "c": "#0f0",
+      "d": 464.4,
+      "g": "9wfy46jkqf",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        39.03516947900005,
+        -108.5264342
+      ],
+      "l2": [
+        39.03472424200004,
+        -108.5249007
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    },
+    "-OCEqGgw6EeTAJvKnfX9:midpoint_section": {
+      "c": "#00f",
+      "g": "9wfy46n509",
+      "i": "katapult-map:triangle-up",
+      "l": [
+        39.03494686085072,
+        -108.52566745
+      ],
+      "m": 1,
+      "s": 18,
+      "t": "s",
+      "u": "mms",
+      "z": 1
+    },
+    "-OCEwpSCJOLkIT04uLjW": {
+      "c": "#faf",
+      "g": "9wfy46n9bx",
+      "i": "katapult-map:triangle-down",
+      "is": [
+        {
+          "c": "#faf",
+          "i": "katapult-map:triangle-down",
+          "s": 16,
+          "u": "i29",
+          "z": 11
+        }
+      ],
+      "l": [
+        39.03476515296787,
+        -108.52497997246842
+      ],
+      "n": {
+        "-OCEwpSDCvjLilaOtJOv": 1
+      },
+      "s": 16,
+      "t": "n",
+      "u": "i29",
+      "z": 11
+    },
+    "-OCEwpSDCvjLilaOtJOv~1": {
+      "c": "#faf",
+      "d": 27,
+      "g": "9wfy46n9bx",
+      "is": [
+        {
+          "c": "#faf",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i7",
+          "w": 7,
+          "z": 10
+        }
+      ],
+      "l": [
+        39.03476515296787,
+        -108.52497997246842
+      ],
+      "l2": [
+        39.03472424200004,
+        -108.5249007
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i7",
+      "w": 7,
+      "z": 10
+    },
+    "-O9FdLdppqzZhkGBz_9y": {
+      "c": "rgba(33,150,243,1)",
+      "g": "9wfy46n9f8",
+      "i": "katapult-map:hexagon",
+      "is": [
+        {
+          "c": "rgba(33,150,243,1)",
+          "i": "katapult-map:hexagon",
+          "m": 1,
+          "s": "17",
+          "u": "i50",
+          "z": 20
+        }
+      ],
+      "l": [
+        39.03472424200004,
+        -108.5249007
+      ],
+      "m": 1,
+      "n": {
+        "-OCEqGgw6EeTAJvKnfX9": 1,
+        "-OCEqHFRywCh-6h8x8v0": 2,
+        "-OCEw-P3R73gBiTBzkwl": 2,
+        "-OCEwpSDCvjLilaOtJOv": 2,
+        "-OCEx-ii3Tyz6OwAGuXp": 2
+      },
+      "s": "17",
+      "t": "n",
+      "u": "i50",
+      "z": 20
+    },
+    "-OCEqGgw6EeTAJvKnfX9~1": {
+      "c": "#0f0",
+      "d": 464.4,
+      "g": "9wfy46n9f8",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        39.03472424200004,
+        -108.5249007
+      ],
+      "l2": [
+        39.03516947900005,
+        -108.5264342
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    },
+    "-OCEqHFRywCh-6h8x8v0~2": {
+      "c": "#0f0",
+      "d": 122.2,
+      "g": "9wfy46n9f8",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        39.03472424200004,
+        -108.5249007
+      ],
+      "l2": [
+        39.03469457669337,
+        -108.52447158895491
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    },
+    "-OCEw-P3R73gBiTBzkwl~2": {
+      "c": "#0f0",
+      "d": 284.6,
+      "g": "9wfy46n9f8",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        39.03472424200004,
+        -108.5249007
+      ],
+      "l2": [
+        39.03429347400004,
+        -108.5240647
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    },
+    "-OCEwpSDCvjLilaOtJOv~2": {
+      "c": "#faf",
+      "d": 27,
+      "g": "9wfy46n9f8",
+      "is": [
+        {
+          "c": "#faf",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i7",
+          "w": 7,
+          "z": 10
+        }
+      ],
+      "l": [
+        39.03472424200004,
+        -108.5249007
+      ],
+      "l2": [
+        39.03476515296787,
+        -108.52497997246842
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i7",
+      "w": 7,
+      "z": 10
+    },
+    "-OCEx-ii3Tyz6OwAGuXp~2": {
+      "c": "#faf",
+      "d": 18,
+      "g": "9wfy46n9f8",
+      "is": [
+        {
+          "c": "#faf",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i7",
+          "w": 7,
+          "z": 10
+        }
+      ],
+      "l": [
+        39.03472424200004,
+        -108.5249007
+      ],
+      "l2": [
+        39.03476815540429,
+        -108.52487189459615
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i7",
+      "w": 7,
+      "z": 10
+    },
+    "-OCEw-P3R73gBiTBzkwl:-OCExHFl0lFcVb7sjCUw": {
+      "c": "#0ff",
+      "g": "9wfy46n9nx",
+      "i": "katapult-map:triangle-up",
+      "l": [
+        39.03463544874754,
+        -108.524728375423
+      ],
+      "m": 1,
+      "s": 18,
+      "t": "s",
+      "u": "ms",
+      "z": 1
+    },
+    "-OCEqHFRywCh-6h8x8v0:-OCExVjKk0EEgk-wlM00": {
+      "c": "#0ff",
+      "g": "9wfy46nc8h",
+      "i": "katapult-map:triangle-up",
+      "l": [
+        39.03470779246932,
+        -108.52466275335846
+      ],
+      "m": 1,
+      "s": 18,
+      "t": "s",
+      "u": "ms",
+      "z": 1
+    },
+    "-O9FdLdppqzZhkGBz_9z": {
+      "c": "#f00",
+      "g": "9wfy46ncsd",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        39.03469457669337,
+        -108.52447158895491
+      ],
+      "n": {
+        "-OCEqHFRywCh-6h8x8v0": 1,
+        "-OCEqHsl82UBN-ojOoAQ": 2
+      },
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-OCEqHFRywCh-6h8x8v0~1": {
+      "c": "#0f0",
+      "d": 122.2,
+      "g": "9wfy46ncsd",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        39.03469457669337,
+        -108.52447158895491
+      ],
+      "l2": [
+        39.03472424200004,
+        -108.5249007
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    },
+    "-OCEqHsl82UBN-ojOoAQ~2": {
+      "c": "#0f0",
+      "d": 260.4,
+      "g": "9wfy46ncsd",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        39.03469457669337,
+        -108.52447158895491
+      ],
+      "l2": [
+        39.03540742986354,
+        -108.52447845337295
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    },
+    "-OCEx-ihg_bZfWvFC--U": {
+      "c": "#faf",
+      "g": "9wfy46nd50",
+      "i": "katapult-map:triangle-down",
+      "is": [
+        {
+          "c": "#faf",
+          "i": "katapult-map:triangle-down",
+          "s": 16,
+          "u": "i29",
+          "z": 11
+        }
+      ],
+      "l": [
+        39.03476815540429,
+        -108.52487189459615
+      ],
+      "n": {
+        "-OCEx-ii3Tyz6OwAGuXp": 1
+      },
+      "s": 16,
+      "t": "n",
+      "u": "i29",
+      "z": 11
+    },
+    "-OCEx-ii3Tyz6OwAGuXp~1": {
+      "c": "#faf",
+      "d": 18,
+      "g": "9wfy46nd50",
+      "is": [
+        {
+          "c": "#faf",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i7",
+          "w": 7,
+          "z": 10
+        }
+      ],
+      "l": [
+        39.03476815540429,
+        -108.52487189459615
+      ],
+      "l2": [
+        39.03472424200004,
+        -108.5249007
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i7",
+      "w": 7,
+      "z": 10
+    },
+    "-O9FdLdppqzZhkGBz_A-": {
+      "c": "rgba(33,150,243,1)",
+      "g": "9wfy46nvsr",
+      "i": "katapult-map:hexagon",
+      "is": [
+        {
+          "c": "rgba(33,150,243,1)",
+          "i": "katapult-map:hexagon",
+          "m": 1,
+          "s": "17",
+          "u": "i50",
+          "z": 20
+        }
+      ],
+      "l": [
+        39.03540742986354,
+        -108.52447845337295
+      ],
+      "m": 1,
+      "n": {
+        "-OCEqHsl82UBN-ojOoAQ": 1,
+        "-OCEqIat3rCZzyZbWQ1E": 2
+      },
+      "s": "17",
+      "t": "n",
+      "u": "i50",
+      "z": 20
+    },
+    "-OCEqHsl82UBN-ojOoAQ~1": {
+      "c": "#0f0",
+      "d": 260.4,
+      "g": "9wfy46nvsr",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        39.03540742986354,
+        -108.52447845337295
+      ],
+      "l2": [
+        39.03469457669337,
+        -108.52447158895491
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    },
+    "-OCEqIat3rCZzyZbWQ1E~2": {
+      "c": "#0f0",
+      "d": 255.5,
+      "g": "9wfy46nvsr",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        39.03540742986354,
+        -108.52447845337295
+      ],
+      "l2": [
+        39.03610696274244,
+        -108.52447247689122
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    },
+    "-O9FdLdppqzZhkGBz_A0": {
+      "c": "rgba(33,150,243,1)",
+      "g": "9wfy46qcu9",
+      "i": "katapult-map:hexagon",
+      "is": [
+        {
+          "c": "rgba(33,150,243,1)",
+          "i": "katapult-map:hexagon",
+          "m": 1,
+          "s": "17",
+          "u": "i50",
+          "z": 20
+        }
+      ],
+      "l": [
+        39.03610696274244,
+        -108.52447247689122
+      ],
+      "m": 1,
+      "n": {
+        "-OCEldIGfBoEUyBxlX7L": 2,
+        "-OCEqIat3rCZzyZbWQ1E": 1
+      },
+      "s": "17",
+      "t": "n",
+      "u": "i50",
+      "z": 20
+    },
+    "-OCEldIGfBoEUyBxlX7L~2": {
+      "c": "rgba(136,0,136,1)",
+      "d": 264.3,
+      "g": "9wfy46qcu9",
+      "is": [
+        {
+          "c": "rgba(136,0,136,1)",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i14",
+          "w": 7,
+          "z": 3
+        }
+      ],
+      "l": [
+        39.03610696274244,
+        -108.52447247689122
+      ],
+      "l2": [
+        39.036830641251726,
+        -108.52446614643078
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i14",
+      "w": 7,
+      "z": 3
+    },
+    "-OCEqIat3rCZzyZbWQ1E~1": {
+      "c": "#0f0",
+      "d": 255.5,
+      "g": "9wfy46qcu9",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        39.03610696274244,
+        -108.52447247689122
+      ],
+      "l2": [
+        39.03540742986354,
+        -108.52447845337295
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    },
+    "-OCEldIGfBoEUyBxlX7K": {
+      "c": "#f0f",
+      "g": "9wfy46qyh8",
+      "i": "katapult-map:asterisk",
+      "is": [
+        {
+          "c": "#f0f",
+          "i": "katapult-map:asterisk",
+          "s": 11,
+          "u": "i36",
+          "z": 4
+        }
+      ],
+      "l": [
+        39.036830641251726,
+        -108.52446614643078
+      ],
+      "n": {
+        "-OCEldIGfBoEUyBxlX7L": 1
+      },
+      "s": 11,
+      "t": "n",
+      "u": "i36",
+      "z": 4
+    },
+    "-OCEldIGfBoEUyBxlX7L~1": {
+      "c": "rgba(136,0,136,1)",
+      "d": 264.3,
+      "g": "9wfy46qyh8",
+      "is": [
+        {
+          "c": "rgba(136,0,136,1)",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i14",
+          "w": 7,
+          "z": 3
+        }
+      ],
+      "l": [
+        39.036830641251726,
+        -108.52446614643078
+      ],
+      "l2": [
+        39.03610696274244,
+        -108.52447247689122
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i14",
+      "w": 7,
+      "z": 3
+    }
+  },
+  "jobTagPhotos": {
+    "06a94281-44f6-4a15-9384-da7a6d471641": "-O9FcxWFd9zEGuFSkfmu",
+    "e8b955fb-9555-4756-b2f1-0a37699f80c9": "-O9FcxWFd9zEGuFSkfmu"
+  },
+  "job_creator": "deeply_digital_FEUS_OCalc_integrated_model",
+  "job_owner": "deeply_digital",
+  "map_styles": {
+    "default": {
+      "_counter": 55,
+      "_default_published": true,
+      "_name": "Default",
+      "_note": "style arrays prioritize earlier items",
+      "connections": [
+        {
+          "attribute": "connection_type",
+          "color": "#0f0",
+          "comparator": "equals",
+          "id": "i0",
+          "pattern": "solid",
+          "value": "aerial cable",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#05f",
+          "comparator": "equals",
+          "id": "i1",
+          "pattern": "solid",
+          "value": "overlash",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#ff5722",
+          "comparator": "equals",
+          "id": "i2",
+          "pattern": "solid",
+          "value": "slack span",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#fa0",
+          "comparator": "equals",
+          "id": "i3",
+          "pattern": "solid",
+          "value": "overhead guy",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#050",
+          "comparator": "equals",
+          "id": "i4",
+          "pattern": "solid",
+          "value": "pole to pole guy",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#f00",
+          "comparator": "equals",
+          "id": "i5",
+          "pattern": "dashed",
+          "value": "underground cable",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#faf",
+          "comparator": "equals",
+          "id": "i7",
+          "pattern": "solid",
+          "value": "down guy",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#00f",
+          "comparator": "equals",
+          "id": "i8",
+          "pattern": "solid",
+          "value": "pushbrace",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#a0f",
+          "comparator": "equals",
+          "id": "i9",
+          "pattern": "solid",
+          "value": "misc",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#f00",
+          "comparator": "equals",
+          "id": "i10",
+          "pattern": "solid",
+          "value": "distribution fiber",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#00f",
+          "comparator": "equals",
+          "id": "i11",
+          "pattern": "solid",
+          "value": "access fiber",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#ff0",
+          "comparator": "equals",
+          "id": "i12",
+          "pattern": "solid",
+          "value": "strand only",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#508",
+          "comparator": "equals",
+          "id": "i13",
+          "pattern": "solid",
+          "value": "drop fiber",
+          "width": 2
+        },
+        {
+          "attribute": "reference_type",
+          "color": "rgba(136,0,136,1)",
+          "comparator": "equals",
+          "id": "i14",
+          "pattern": "solid",
+          "value": "power reference",
+          "width": 7
+        },
+        {
+          "attribute": "reference_type",
+          "color": "rgba(255,0,255,1)",
+          "comparator": "equals",
+          "id": "i51",
+          "pattern": "solid",
+          "value": "com reference",
+          "width": 7
+        },
+        {
+          "attribute": "reference_type",
+          "color": "rgba(255,170,255,1)",
+          "comparator": "equals",
+          "id": "i52",
+          "pattern": "solid",
+          "value": "guy reference",
+          "width": 7
+        }
+      ],
+      "nodes": [
+        {
+          "attribute": "node_type",
+          "color": "#FA0101",
+          "comparator": "equals",
+          "icon": "katapult-map:multiply",
+          "id": "i54",
+          "size": 15,
+          "stackable": false,
+          "value": "crossover"
+        },
+        {
+          "attribute": "verify_location_in_field",
+          "color": "rgba(255,0,0,1)",
+          "comparator": "equals",
+          "icon": "katapult-map:gps",
+          "id": "i49",
+          "size": "27",
+          "value": false
+        },
+        {
+          "attribute": "pickup_required",
+          "color": "#ff0000",
+          "comparator": "equals",
+          "icon": "maps:directions-car",
+          "id": "i45",
+          "size": "30",
+          "value": "field visit required"
+        },
+        {
+          "attribute": "pickup_required",
+          "color": "#0000ff",
+          "comparator": "equals",
+          "icon": "maps:directions-car",
+          "id": "i46",
+          "size": "30",
+          "value": "fielding complete"
+        },
+        {
+          "attribute": "node_type",
+          "color": "rgba(2,255,255,1)",
+          "comparator": "equals",
+          "icon": "katapult-map:circle",
+          "id": "i16",
+          "size": "14",
+          "value": "spatial note"
+        },
+        {
+          "attribute": "note_type",
+          "color": "#338833",
+          "comparator": "equals",
+          "icon": "katapult-map:circle",
+          "id": "i17",
+          "size": 12,
+          "value": "Address Point"
+        },
+        {
+          "attribute": "warning",
+          "color": "#f80",
+          "comparator": "has",
+          "icon": "katapult-map:circle",
+          "id": "i18",
+          "size": 16,
+          "value": "!null"
+        },
+        {
+          "attribute": "mr_state",
+          "color": "rgba(255,0,0,1)",
+          "comparator": "equals",
+          "icon": "icons:error",
+          "id": "i42",
+          "size": "22",
+          "value": "MR Unresolved"
+        },
+        {
+          "attribute": "mr_state",
+          "color": "#fff176",
+          "comparator": "equals",
+          "icon": "katapult-map:bullseye",
+          "id": "i43",
+          "size": "16",
+          "value": "MR Resolved"
+        },
+        {
+          "attribute": "mr_state",
+          "color": "#4caf50",
+          "comparator": "equals",
+          "icon": "katapult-map:bullseye",
+          "id": "i44",
+          "size": "16",
+          "value": "No MR"
+        },
+        {
+          "attribute": "flag_for_review",
+          "color": "#ff0",
+          "comparator": "equals",
+          "icon": "katapult-map:circle",
+          "id": "i19",
+          "size": 14,
+          "value": true
+        },
+        {
+          "attribute": "done",
+          "color": "#0f0",
+          "comparator": "equals",
+          "icon": "katapult-map:circle",
+          "id": "i20",
+          "size": 14,
+          "value": true
+        },
+        {
+          "attribute": "field_completed",
+          "color": "rgba(33,150,243,1)",
+          "comparator": "equals",
+          "icon": "katapult-map:hexagon",
+          "id": "i50",
+          "size": "17",
+          "value": true
+        },
+        {
+          "attribute": "done",
+          "color": "#f00",
+          "comparator": "equals",
+          "icon": "katapult-map:circle",
+          "id": "i21",
+          "size": 14,
+          "value": false
+        },
+        {
+          "attribute": "node_type",
+          "color": "#000",
+          "comparator": "equals",
+          "icon": "katapult-map:circle",
+          "id": "i22",
+          "size": 6,
+          "value": "pole"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#f00",
+          "comparator": "equals",
+          "icon": "icons:report",
+          "id": "i23",
+          "size": 15,
+          "value": "obstacle"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#2ff",
+          "comparator": "equals",
+          "icon": "image:crop-landscape",
+          "id": "i24",
+          "size": 20,
+          "value": "handhole"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#6ff",
+          "comparator": "equals",
+          "icon": "icons:settings-input-svideo",
+          "id": "i25",
+          "size": 20,
+          "value": "manhole"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#000",
+          "comparator": "equals",
+          "icon": "katapult-map:multiply",
+          "id": "i26",
+          "size": 8,
+          "value": "break point"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#26c6da",
+          "comparator": "equals",
+          "icon": "katapult-map:bullseye",
+          "id": "i27",
+          "size": 17,
+          "value": "map note"
+        },
+        {
+          "attribute": "node_type",
+          "color": "magenta",
+          "comparator": "equals",
+          "icon": "katapult-map:circle-small",
+          "id": "i28",
+          "size": 9,
+          "value": "pushbrace"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#faf",
+          "comparator": "equals",
+          "icon": "katapult-map:triangle-down",
+          "id": "i29",
+          "size": 16,
+          "value": "existing anchor"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#8bc34a",
+          "comparator": "equals",
+          "icon": "katapult-map:triangle-down",
+          "id": "i30",
+          "size": 16,
+          "value": "new anchor"
+        },
+        {
+          "attribute": "node_type",
+          "color": "magenta",
+          "comparator": "equals",
+          "icon": "katapult-map:circle-small",
+          "id": "i31",
+          "size": 9,
+          "value": "doublewood pole"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#f00",
+          "comparator": "equals",
+          "icon": "katapult-map:multiply",
+          "id": "i32",
+          "size": 14,
+          "value": "crossover"
+        },
+        {
+          "attribute": "node_type",
+          "color": "magenta",
+          "comparator": "equals",
+          "icon": "katapult-map:circle-small",
+          "id": "i33",
+          "size": 9,
+          "value": "midspan takeoff"
+        },
+        {
+          "attribute": "node_type",
+          "color": "magenta",
+          "comparator": "equals",
+          "icon": "katapult-map:circle-small",
+          "id": "i34",
+          "size": 9,
+          "value": "bridge attachment"
+        },
+        {
+          "attribute": "node_type",
+          "color": "magenta",
+          "comparator": "equals",
+          "icon": "katapult-map:circle-small",
+          "id": "i35",
+          "size": 9,
+          "value": "building attachment"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#f0f",
+          "comparator": "equals",
+          "icon": "katapult-map:asterisk",
+          "id": "i36",
+          "size": 11,
+          "value": "reference"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#0f0",
+          "comparator": "equals",
+          "icon": "icons:add-circle",
+          "id": "i37",
+          "size": 20,
+          "value": "slack loop"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#0f0",
+          "comparator": "equals",
+          "icon": "icons:link",
+          "id": "i38",
+          "size": 20,
+          "value": "splice"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#e53935",
+          "comparator": "equals",
+          "icon": "katapult-map:hexagon",
+          "id": "i39",
+          "size": "17",
+          "value": "No Access"
+        }
+      ],
+      "sections": [
+        {
+          "attribute": "warning",
+          "color": "#f80",
+          "comparator": "has",
+          "icon": "katapult-map:triangle-up",
+          "id": "i40",
+          "size": "24",
+          "value": "!null"
+        },
+        {
+          "attribute": "pickup_required",
+          "color": "#ff0000",
+          "comparator": "equals",
+          "icon": "maps:directions-car",
+          "id": "i47",
+          "size": "34",
+          "value": "field visit required"
+        },
+        {
+          "attribute": "pickup_required",
+          "color": "#0000ff",
+          "comparator": "equals",
+          "icon": "maps:directions-car",
+          "id": "i48",
+          "size": "34",
+          "value": "fielding complete"
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "job_status": "Pending Field Collection"
+  },
+  "name": "GJ_D8_1_GVP",
+  "nodes": {
+    "-O9FdLdo8TSgCWPRDVQe": {
+      "attributes": {
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_spec": {
+          "-Imported": ""
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "Grand Valley",
+            "owner": true,
+            "tagtext": "538"
+          }
+        }
+      },
+      "key": "-O9FdLdo8TSgCWPRDVQe",
+      "latitude": 39.03429347400004,
+      "longitude": -108.5240647
+    },
+    "-O9FdLdppqzZhkGBz_9u": {
+      "attributes": {
+        "done": {
+          "-Imported": false
+        },
+        "field_completed": {
+          "value": true
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_spec": {
+          "-Imported": ""
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "Grand Valley",
+            "owner": true,
+            "tagtext": "5847"
+          }
+        },
+        "time_bucket": {
+          "-OCEt945bN0kja61XCDj": {
+            "start": 1732212140815,
+            "stop": 1732212204088,
+            "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+          }
+        }
+      },
+      "key": "-O9FdLdppqzZhkGBz_9u",
+      "latitude": 39.03691259000004,
+      "longitude": -108.5314896,
+      "photos": {
+        "090edf71-5c41-4f14-89ef-ead438326d43": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "0eb15e5c-043c-4891-ac84-5a2135cc2099": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "40b05a93-d89a-405f-abd8-017d0865c8e8": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "768fa719-cdb1-42c2-95dc-d380bb692d19": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "81e7497b-9028-4787-8e23-aad82fe311d3": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "a157ee43-c2bc-4434-ad56-d3b7506477a2": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "c2b65527-e918-4c3a-b99f-89fd4521676d": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "d552625a-40ea-4607-b0c4-fbdb391aab3d": {
+          "association": true,
+          "association_type": "auto"
+        }
+      }
+    },
+    "-O9FdLdppqzZhkGBz_9v": {
+      "attributes": {
+        "done": {
+          "-Imported": false
+        },
+        "field_completed": {
+          "value": true
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_spec": {
+          "-Imported": ""
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "Grand Valley",
+            "owner": true,
+            "tagtext": "5848"
+          }
+        },
+        "time_bucket": {
+          "-OCEtpgNZDBYe5z5OUk1": {
+            "start": 1732212302167,
+            "stop": 1732212382731,
+            "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+          }
+        }
+      },
+      "key": "-O9FdLdppqzZhkGBz_9v",
+      "latitude": 39.03652316600005,
+      "longitude": -108.5303321,
+      "photos": {
+        "0413a2ba-a342-4130-afb9-523a81ce8cf2": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "2a295322-0367-4db7-9c01-43bf6bfef668": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "32a37905-38da-4943-a502-effdb6430ec9": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "7cd2cbc6-62e8-4f8b-9d96-419f839b8c7f": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "8c00fe6a-1245-4518-90c5-19de33e37d47": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "ba6ed89a-159e-4881-9b92-240ef942f843": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "bb4f5e79-157a-435e-9cb2-678cf7a194d2": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "de3e8d0e-95a1-4ac5-9dd6-67058bf28ff7": {
+          "association": true,
+          "association_type": "auto"
+        }
+      }
+    },
+    "-O9FdLdppqzZhkGBz_9w": {
+      "attributes": {
+        "done": {
+          "-Imported": false
+        },
+        "field_completed": {
+          "value": true
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_spec": {
+          "-Imported": ""
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "Grand Valley",
+            "owner": true,
+            "tagtext": "5849"
+          }
+        },
+        "time_bucket": {
+          "-OCEuSamM4o74W7HRqRD": {
+            "start": 1732212441833,
+            "stop": 1732212546212,
+            "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+          }
+        }
+      },
+      "key": "-O9FdLdppqzZhkGBz_9w",
+      "latitude": 39.036059763000026,
+      "longitude": -108.5290767,
+      "photos": {
+        "07d61d51-2225-4034-9825-e80e8ae340a1": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "129aabbc-6cef-43e5-bda1-a378324a009a": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "53723ca9-5dc6-40a8-8e0e-b286a2f8fc8e": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "5e9ec987-cb7b-4208-b390-f9d38427c989": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "686f7e85-7ccc-457e-87ee-b70e89c5ff68": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "9644b792-6817-4624-a121-345848a504d6": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "f747616e-cc9e-45dd-9ec3-c88e0b51d976": {
+          "association": true,
+          "association_type": "auto"
+        }
+      }
+    },
+    "-O9FdLdppqzZhkGBz_9x": {
+      "attributes": {
+        "done": {
+          "-Imported": false
+        },
+        "field_completed": {
+          "value": true
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_spec": {
+          "-Imported": ""
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "Grand Valley",
+            "owner": true,
+            "tagtext": "5850"
+          }
+        },
+        "time_bucket": {
+          "-OCEvfSTKNW3ZmUea-3k": {
+            "start": 1732212787740,
+            "stop": 1732212865104,
+            "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+          }
+        }
+      },
+      "key": "-O9FdLdppqzZhkGBz_9x",
+      "latitude": 39.03516947900005,
+      "longitude": -108.5264342,
+      "photos": {
+        "046c612f-8653-4a6c-8cdb-151919d12af3": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "2fbf5370-4cbd-4579-a8c2-684ae20b5125": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "5fb304f8-7e2b-456a-9297-e161c4073281": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "6357b15c-0bd0-42c5-b9e3-b5b9055f6c65": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "9238426d-fd04-4986-98b1-5bf7daf324f9": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "c14a4e9d-23ba-4b74-bab6-835d518e2e64": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "db6c0c8d-5bb1-43d8-8618-427e85c22ff7": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "e95001ee-c7fc-49fd-bc39-1454e85304c5": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "e9a2d397-31a2-48a1-b06a-b218b9f73128": {
+          "association": true,
+          "association_type": "auto"
+        }
+      }
+    },
+    "-O9FdLdppqzZhkGBz_9y": {
+      "attributes": {
+        "done": {
+          "-Imported": false
+        },
+        "field_completed": {
+          "value": true
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_spec": {
+          "-Imported": ""
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "Grand Valley",
+            "owner": true,
+            "tagtext": "5851"
+          }
+        },
+        "time_bucket": {
+          "-OCEwPJIM48ofi3e06wj": {
+            "start": 1732212942355,
+            "stop": 1732213057029,
+            "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+          }
+        }
+      },
+      "key": "-O9FdLdppqzZhkGBz_9y",
+      "latitude": 39.03472424200004,
+      "longitude": -108.5249007,
+      "photos": {
+        "042c11cc-4dfc-4b3b-95d2-fb0188826659": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "2582cd4a-150d-4d1c-b84c-a6a8e62c1456": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "3033a0c7-1562-4fc5-88fb-0d4135823449": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "5bda792f-1060-4c2b-8448-e0b4a152a3d2": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "602501d0-b525-465b-bf0b-42f1209da46d": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "6a3bc735-b686-43f4-9d88-5112f8627340": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "98cea9f4-3d05-4e9f-ad4e-b8ab3c7d3464": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "b1f0147c-1cb6-4dfb-be2c-a030b6724821": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "c1edc0d7-2403-42c8-9fdd-1963998a8e4e": {
+          "association": true,
+          "association_type": "auto"
+        }
+      }
+    },
+    "-O9FdLdppqzZhkGBz_9z": {
+      "attributes": {
+        "done": {
+          "-Imported": false
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_spec": {
+          "-Imported": ""
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "Grand Valley",
+            "owner": true,
+            "tagtext": "5854"
+          }
+        }
+      },
+      "key": "-O9FdLdppqzZhkGBz_9z",
+      "latitude": 39.03469457669337,
+      "longitude": -108.52447158895491
+    },
+    "-O9FdLdppqzZhkGBz_A-": {
+      "attributes": {
+        "done": {
+          "-Imported": false
+        },
+        "field_completed": {
+          "value": true
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_spec": {
+          "-Imported": ""
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "Grand Valley",
+            "owner": true,
+            "tagtext": "5855"
+          }
+        },
+        "time_bucket": {
+          "-OFxUnyY9MqRhVcTC5ba": {
+            "start": 1736198117173,
+            "stop": 1736198539529,
+            "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+          }
+        }
+      },
+      "key": "-O9FdLdppqzZhkGBz_A-",
+      "latitude": 39.03540742986354,
+      "longitude": -108.52447845337295,
+      "photos": {
+        "053fe374-7e42-48e3-87f3-8cd826c5e4eb": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "1844d0db-970b-45f1-a761-9abe8d1387c1": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "201a5c06-d5d9-4a8d-9d8a-4e492b29bd65": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "5ab7b554-ffb5-4d6c-a620-09516f360f66": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "b7e65015-4504-4dc9-b8d1-0c6dcde3ee7a": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "e733ae0f-3531-4698-8160-111250e63a72": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "fc5009f8-f634-41c6-a173-c4d4e4b9790b": {
+          "association": true,
+          "association_type": "auto"
+        }
+      }
+    },
+    "-O9FdLdppqzZhkGBz_A0": {
+      "attributes": {
+        "done": {
+          "-Imported": false
+        },
+        "field_completed": {
+          "value": true
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_spec": {
+          "-Imported": ""
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "Grand Valley",
+            "owner": true,
+            "tagtext": "5856"
+          }
+        },
+        "time_bucket": {
+          "-OFxT-YKk35HBR2WievE": {
+            "start": 1736195220662,
+            "stop": 1736198066828,
+            "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+          }
+        }
+      },
+      "key": "-O9FdLdppqzZhkGBz_A0",
+      "latitude": 39.03610696274244,
+      "longitude": -108.52447247689122,
+      "photos": {
+        "2f4d91e8-6c6e-4619-bc88-0452bba2c2b0": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "324a5017-746d-47df-b8de-96f54b2833f4": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "362d4512-8578-4f6f-9e1a-0437852f0751": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "43c92f89-9962-49fb-8afd-9a1f2ec079cd": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "a08c5379-a45e-45b9-847c-f77fe67ac38d": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "acb4e663-6dbb-4238-9332-c077fb3ecf03": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "c872d7aa-eb7d-4cc4-8ff5-f9cf4dcc9ee0": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "e71868b7-8fd5-487e-a2dc-c439102aca4e": {
+          "association": true,
+          "association_type": "auto"
+        }
+      }
+    },
+    "-O9FdLdppqzZhkGBz_A6": {
+      "attributes": {
+        "done": {
+          "-Imported": false
+        },
+        "field_completed": {
+          "value": true
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_spec": {
+          "-Imported": ""
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "Grand Valley",
+            "owner": true,
+            "tagtext": "12773"
+          }
+        },
+        "time_bucket": {
+          "-OCEv9OL3uUBADWjL-y6": {
+            "start": 1732212611033,
+            "stop": 1732212729672,
+            "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+          }
+        }
+      },
+      "key": "-O9FdLdppqzZhkGBz_A6",
+      "latitude": 39.03556225500006,
+      "longitude": -108.5277861,
+      "photos": {
+        "065a9d40-1b64-45a4-818b-00f8ff0d5863": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "21f3d267-dbb8-47fb-adaa-3f89e2c69c4a": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "306ee5ad-d717-4e58-889d-228b05421141": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "5059156a-3052-4ec9-981a-1c783bff4f7b": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "69096969-c065-41ad-8959-92d430778173": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "812895c1-24eb-4d57-b74e-240acee2c5db": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "962b46fb-7fb0-4f3f-bdcb-f44b2821a102": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "dabcee11-e86f-4571-82e8-6e9a2cc9a120": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "e45b2033-3736-4a9d-98f0-a8929c301971": {
+          "association": true,
+          "association_type": "auto"
+        }
+      }
+    },
+    "-OCEldIGfBoEUyBxlX7K": {
+      "_created": {
+        "method": "mobile",
+        "timestamp": 1732210234577,
+        "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+      },
+      "attributes": {
+        "internal_note": {
+          "button_added": ""
+        },
+        "node_type": {
+          "button_added": "reference"
+        }
+      },
+      "button": "power_reference",
+      "latitude": 39.036830641251726,
+      "longitude": -108.52446614643078
+    },
+    "-OCEq8Udm-q1lMnyvj_U": {
+      "_created": {
+        "method": "mobile",
+        "timestamp": 1732211415017,
+        "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+      },
+      "attributes": {
+        "internal_note": {
+          "button_added": ""
+        },
+        "node_type": {
+          "button_added": "reference"
+        }
+      },
+      "button": "power_reference",
+      "latitude": 39.03719685104223,
+      "longitude": -108.5324024727784
+    },
+    "-OCEwpSCJOLkIT04uLjW": {
+      "_created": {
+        "method": "mobile",
+        "timestamp": 1732213167949,
+        "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+      },
+      "attributes": {
+        "anc_elevation": {
+          "button_added": "0"
+        },
+        "anchor_eyes": {
+          "button_added": "1"
+        },
+        "anchor_spec": {
+          "button_added": ""
+        },
+        "existing_aux_eye": {
+          "button_added": "0"
+        },
+        "node_type": {
+          "button_added": "existing anchor"
+        },
+        "rod_size": {
+          "button_added": "1"
+        },
+        "sizes_of_attached_dn_guys": {
+          "button_added": "25M"
+        },
+        "soil_type": {
+          "button_added": ""
+        }
+      },
+      "button": "anchor",
+      "latitude": 39.03476515296787,
+      "longitude": -108.52497997246842
+    },
+    "-OCEx-ihg_bZfWvFC--U": {
+      "_created": {
+        "method": "mobile",
+        "timestamp": 1732213214125,
+        "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+      },
+      "attributes": {
+        "anc_elevation": {
+          "button_added": "0"
+        },
+        "anchor_eyes": {
+          "button_added": "1"
+        },
+        "anchor_spec": {
+          "button_added": ""
+        },
+        "existing_aux_eye": {
+          "button_added": "0"
+        },
+        "node_type": {
+          "button_added": "existing anchor"
+        },
+        "rod_size": {
+          "button_added": "1"
+        },
+        "sizes_of_attached_dn_guys": {
+          "button_added": "25M"
+        },
+        "soil_type": {
+          "button_added": ""
+        }
+      },
+      "button": "anchor",
+      "latitude": 39.03476815540429,
+      "longitude": -108.52487189459615
+    },
+    "-OFxYvZbRbjTERomd7o-": {
+      "_created": {
+        "method": "mobile",
+        "timestamp": 1736199616807,
+        "uid": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+      },
+      "attributes": {
+        "internal_note": {
+          "button_added": ""
+        },
+        "node_type": {
+          "button_added": "reference"
+        }
+      },
+      "button": "power_reference",
+      "latitude": 39.03382995121624,
+      "longitude": -108.52343420156716
+    }
+  },
+  "photo_folders": {
+    "-OCGRTxGRfH2FlqvROwp": {
+      "cameras": {
+        "-OCGRTesIBullNDtlHFi": {
+          "date_created": 1732238241673,
+          "last_upload": 1732238284906,
+          "numAssociated": 58,
+          "numPhotos": 59,
+          "numTagged": 1,
+          "numUploaded": 59
+        }
+      },
+      "date_created": 1732238241673,
+      "done": false,
+      "job_id": "-O9FcxWFd9zEGuFSkfmu",
+      "last_upload": 1732238284906,
+      "numAssociated": 58,
+      "numPhotos": 59,
+      "numTagged": 1,
+      "numUploaded": 59,
+      "status": "Uploading"
+    },
+    "-OFyW6Fzjqy2RV2R1WOC": {
+      "cameras": {
+        "-OFyW5ecusKv9GLzYe_Q": {
+          "date_created": 1736215655530,
+          "last_upload": 1736215669359,
+          "numAssociated": 19,
+          "numPhotos": 20,
+          "numTagged": 1,
+          "numUploaded": 20
+        }
+      },
+      "date_created": 1736215655530,
+      "done": false,
+      "job_id": "-O9FcxWFd9zEGuFSkfmu",
+      "last_upload": 1736215669359,
+      "numAssociated": 19,
+      "numPhotos": 20,
+      "numTagged": 1,
+      "numUploaded": 20,
+      "status": "Uploading"
+    }
+  },
+  "photo_summary": {
+    "e8b955fb-9555-4756-b2f1-0a37699f80c9": {
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "data": true,
+      "job": true,
+      "job_id": "-O9FcxWFd9zEGuFSkfmu",
+      "name": "IMG_1385.JPG",
+      "sync": true
+    },
+    "7a8491b8-1c60-4b2f-b726-4629bc5a07c1": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1386.JPG"
+    },
+    "81e7497b-9028-4787-8e23-aad82fe311d3": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1387.JPG"
+    },
+    "090edf71-5c41-4f14-89ef-ead438326d43": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1388.JPG"
+    },
+    "c2b65527-e918-4c3a-b99f-89fd4521676d": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1389.JPG"
+    },
+    "a157ee43-c2bc-4434-ad56-d3b7506477a2": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1390.JPG"
+    },
+    "d552625a-40ea-4607-b0c4-fbdb391aab3d": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1391.JPG"
+    },
+    "0eb15e5c-043c-4891-ac84-5a2135cc2099": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1392.JPG"
+    },
+    "768fa719-cdb1-42c2-95dc-d380bb692d19": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1393.JPG"
+    },
+    "40b05a93-d89a-405f-abd8-017d0865c8e8": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1394.JPG"
+    },
+    "30e15f0d-5c0a-4009-82f0-2e0421c0a71c": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1395.JPG"
+    },
+    "0413a2ba-a342-4130-afb9-523a81ce8cf2": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1397.JPG"
+    },
+    "de3e8d0e-95a1-4ac5-9dd6-67058bf28ff7": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1396.JPG"
+    },
+    "7cd2cbc6-62e8-4f8b-9d96-419f839b8c7f": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1398.JPG"
+    },
+    "2a295322-0367-4db7-9c01-43bf6bfef668": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1399.JPG"
+    },
+    "32a37905-38da-4943-a502-effdb6430ec9": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1400.JPG"
+    },
+    "8c00fe6a-1245-4518-90c5-19de33e37d47": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1401.JPG"
+    },
+    "ba6ed89a-159e-4881-9b92-240ef942f843": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1402.JPG"
+    },
+    "bb4f5e79-157a-435e-9cb2-678cf7a194d2": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1403.JPG"
+    },
+    "2f7c1207-5704-446b-bfbc-590185a1071e": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1404.JPG"
+    },
+    "5e9ec987-cb7b-4208-b390-f9d38427c989": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1405.JPG"
+    },
+    "07d61d51-2225-4034-9825-e80e8ae340a1": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1406.JPG"
+    },
+    "686f7e85-7ccc-457e-87ee-b70e89c5ff68": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1407.JPG"
+    },
+    "53723ca9-5dc6-40a8-8e0e-b286a2f8fc8e": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1408.JPG"
+    },
+    "9644b792-6817-4624-a121-345848a504d6": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1409.JPG"
+    },
+    "f747616e-cc9e-45dd-9ec3-c88e0b51d976": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1410.JPG"
+    },
+    "129aabbc-6cef-43e5-bda1-a378324a009a": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1411.JPG"
+    },
+    "0c1a91c5-f3c2-4a54-a70c-3a03ebb4ac6d": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1412.JPG"
+    },
+    "69096969-c065-41ad-8959-92d430778173": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1413.JPG"
+    },
+    "812895c1-24eb-4d57-b74e-240acee2c5db": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1415.JPG"
+    },
+    "dabcee11-e86f-4571-82e8-6e9a2cc9a120": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1414.JPG"
+    },
+    "5059156a-3052-4ec9-981a-1c783bff4f7b": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1416.JPG"
+    },
+    "065a9d40-1b64-45a4-818b-00f8ff0d5863": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1417.JPG"
+    },
+    "962b46fb-7fb0-4f3f-bdcb-f44b2821a102": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1418.JPG"
+    },
+    "e45b2033-3736-4a9d-98f0-a8929c301971": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1419.JPG"
+    },
+    "21f3d267-dbb8-47fb-adaa-3f89e2c69c4a": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1420.JPG"
+    },
+    "306ee5ad-d717-4e58-889d-228b05421141": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1421.JPG"
+    },
+    "26bdcc49-4991-43b6-ba41-199d14b93c7c": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1422.JPG"
+    },
+    "5fb304f8-7e2b-456a-9297-e161c4073281": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1423.JPG"
+    },
+    "2fbf5370-4cbd-4579-a8c2-684ae20b5125": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1424.JPG"
+    },
+    "6357b15c-0bd0-42c5-b9e3-b5b9055f6c65": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1425.JPG"
+    },
+    "046c612f-8653-4a6c-8cdb-151919d12af3": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1426.JPG"
+    },
+    "9238426d-fd04-4986-98b1-5bf7daf324f9": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1427.JPG"
+    },
+    "e9a2d397-31a2-48a1-b06a-b218b9f73128": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1428.JPG"
+    },
+    "c14a4e9d-23ba-4b74-bab6-835d518e2e64": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1429.JPG"
+    },
+    "db6c0c8d-5bb1-43d8-8618-427e85c22ff7": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1430.JPG"
+    },
+    "e95001ee-c7fc-49fd-bc39-1454e85304c5": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1431.JPG"
+    },
+    "a5083cda-c811-4fef-92f0-bb44bf87e5fb": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1432.JPG"
+    },
+    "5bda792f-1060-4c2b-8448-e0b4a152a3d2": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1434.JPG"
+    },
+    "6a3bc735-b686-43f4-9d88-5112f8627340": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1433.JPG"
+    },
+    "b1f0147c-1cb6-4dfb-be2c-a030b6724821": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1435.JPG"
+    },
+    "2582cd4a-150d-4d1c-b84c-a6a8e62c1456": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1436.JPG"
+    },
+    "c1edc0d7-2403-42c8-9fdd-1963998a8e4e": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1437.JPG"
+    },
+    "98cea9f4-3d05-4e9f-ad4e-b8ab3c7d3464": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1438.JPG"
+    },
+    "3033a0c7-1562-4fc5-88fb-0d4135823449": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1439.JPG"
+    },
+    "602501d0-b525-465b-bf0b-42f1209da46d": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1440.JPG"
+    },
+    "042c11cc-4dfc-4b3b-95d2-fb0188826659": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1441.JPG"
+    },
+    "bc1e909b-6450-4c74-9f7e-728903905a36": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1442.JPG"
+    },
+    "a5fd1ffc-338b-4320-a493-61c9c75ccfb5": {
+      "associated": true,
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "name": "IMG_1443.JPG"
+    },
+    "06a94281-44f6-4a15-9384-da7a6d471641": {
+      "camera_id": "-OFyW5ecusKv9GLzYe_Q",
+      "data": true,
+      "job": true,
+      "job_id": "-O9FcxWFd9zEGuFSkfmu",
+      "name": "IMG_1139.JPG",
+      "sync": true
+    },
+    "c872d7aa-eb7d-4cc4-8ff5-f9cf4dcc9ee0": {
+      "associated": true,
+      "camera_id": "-OFyW5ecusKv9GLzYe_Q",
+      "name": "IMG_1140.JPG"
+    },
+    "43c92f89-9962-49fb-8afd-9a1f2ec079cd": {
+      "associated": true,
+      "camera_id": "-OFyW5ecusKv9GLzYe_Q",
+      "name": "IMG_1141.JPG"
+    },
+    "a08c5379-a45e-45b9-847c-f77fe67ac38d": {
+      "associated": true,
+      "camera_id": "-OFyW5ecusKv9GLzYe_Q",
+      "name": "IMG_1142.JPG"
+    },
+    "acb4e663-6dbb-4238-9332-c077fb3ecf03": {
+      "associated": true,
+      "camera_id": "-OFyW5ecusKv9GLzYe_Q",
+      "name": "IMG_1143.JPG"
+    },
+    "362d4512-8578-4f6f-9e1a-0437852f0751": {
+      "associated": true,
+      "camera_id": "-OFyW5ecusKv9GLzYe_Q",
+      "name": "IMG_1144.JPG"
+    },
+    "2f4d91e8-6c6e-4619-bc88-0452bba2c2b0": {
+      "associated": true,
+      "camera_id": "-OFyW5ecusKv9GLzYe_Q",
+      "name": "IMG_1145.JPG"
+    },
+    "e71868b7-8fd5-487e-a2dc-c439102aca4e": {
+      "associated": true,
+      "camera_id": "-OFyW5ecusKv9GLzYe_Q",
+      "name": "IMG_1146.JPG"
+    },
+    "324a5017-746d-47df-b8de-96f54b2833f4": {
+      "associated": true,
+      "camera_id": "-OFyW5ecusKv9GLzYe_Q",
+      "name": "IMG_1147.JPG"
+    },
+    "616182db-16c8-41c4-93ba-f753ac957215": {
+      "associated": true,
+      "camera_id": "-OFyW5ecusKv9GLzYe_Q",
+      "name": "IMG_1148.JPG"
+    },
+    "1844d0db-970b-45f1-a761-9abe8d1387c1": {
+      "associated": true,
+      "camera_id": "-OFyW5ecusKv9GLzYe_Q",
+      "name": "IMG_1150.JPG"
+    },
+    "5ab7b554-ffb5-4d6c-a620-09516f360f66": {
+      "associated": true,
+      "camera_id": "-OFyW5ecusKv9GLzYe_Q",
+      "name": "IMG_1149.JPG"
+    },
+    "fc5009f8-f634-41c6-a173-c4d4e4b9790b": {
+      "associated": true,
+      "camera_id": "-OFyW5ecusKv9GLzYe_Q",
+      "name": "IMG_1151.JPG"
+    },
+    "201a5c06-d5d9-4a8d-9d8a-4e492b29bd65": {
+      "associated": true,
+      "camera_id": "-OFyW5ecusKv9GLzYe_Q",
+      "name": "IMG_1152.JPG"
+    },
+    "b7e65015-4504-4dc9-b8d1-0c6dcde3ee7a": {
+      "associated": true,
+      "camera_id": "-OFyW5ecusKv9GLzYe_Q",
+      "name": "IMG_1153.JPG"
+    },
+    "e733ae0f-3531-4698-8160-111250e63a72": {
+      "associated": true,
+      "camera_id": "-OFyW5ecusKv9GLzYe_Q",
+      "name": "IMG_1154.JPG"
+    },
+    "053fe374-7e42-48e3-87f3-8cd826c5e4eb": {
+      "associated": true,
+      "camera_id": "-OFyW5ecusKv9GLzYe_Q",
+      "name": "IMG_1155.JPG"
+    },
+    "60a9c3ff-1426-4a20-b08b-bf590576df2d": {
+      "associated": true,
+      "camera_id": "-OFyW5ecusKv9GLzYe_Q",
+      "name": "IMG_1156.JPG"
+    },
+    "a8ac3f64-f8aa-4aba-a9e1-ff72667a5d37": {
+      "associated": true,
+      "camera_id": "-OFyW5ecusKv9GLzYe_Q",
+      "name": "IMG_1157.JPG"
+    },
+    "85903fc2-3512-489f-9f55-8a0b2d1fde73": {
+      "associated": true,
+      "camera_id": "-OFyW5ecusKv9GLzYe_Q",
+      "name": "IMG_1158.JPG"
+    }
+  },
+  "photos": {
+    "e8b955fb-9555-4756-b2f1-0a37699f80c9": {
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732210190,
+      "f_number": 5.6,
+      "filename": "IMG_1385.JPG",
+      "focal_length": 18,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1385.JPG|1732210190",
+      "orientation": 1,
+      "original_size": 7569364,
+      "photofirst_data": {
+        "job": {
+          "upload_added": {
+            "jobname": "-O9FcxWFd9zEGuFSkfmu"
+          }
+        },
+        "sync": {
+          "upload_added": {
+            "time": "2024:11:21:10:29:51",
+            "timezone": -7,
+            "user": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+          }
+        }
+      },
+      "shutter_speed": 0.00625,
+      "status": "upload_complete",
+      "synced_time": 1732210191020,
+      "upload_date": 1732238241845,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "7a8491b8-1c60-4b2f-b726-4629bc5a07c1": {
+      "associated_locations": {
+        "-OCEq8Udm-q1lMnyvj_V:-OCEsucR-mOssU3qcd6E": "section"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212126,
+      "f_number": 8,
+      "filename": "IMG_1386.JPG",
+      "focal_length": 18,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 6000,
+      "image_width": 4000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1386.JPG|1732212126",
+      "orientation": 8,
+      "original_size": 7630864,
+      "shutter_speed": 0.003125,
+      "status": "upload_complete",
+      "synced_time": 1732212127021,
+      "upload_date": 1732238241847,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "81e7497b-9028-4787-8e23-aad82fe311d3": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_9u": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212145,
+      "f_number": 8,
+      "filename": "IMG_1387.JPG",
+      "focal_length": 62,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1387.JPG|1732212145",
+      "orientation": 1,
+      "original_size": 5650746,
+      "shutter_speed": 0.005,
+      "status": "upload_complete",
+      "synced_time": 1732212146021,
+      "upload_date": 1732238241855,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "090edf71-5c41-4f14-89ef-ead438326d43": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_9u": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212146,
+      "f_number": 9,
+      "filename": "IMG_1388.JPG",
+      "focal_length": 62,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1388.JPG|1732212146",
+      "orientation": 1,
+      "original_size": 5861671,
+      "shutter_speed": 0.005,
+      "status": "upload_complete",
+      "synced_time": 1732212147021,
+      "upload_date": 1732238241857,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "c2b65527-e918-4c3a-b99f-89fd4521676d": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_9u": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212147,
+      "f_number": 8,
+      "filename": "IMG_1389.JPG",
+      "focal_length": 22,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 6000,
+      "image_width": 4000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1389.JPG|1732212147",
+      "orientation": 8,
+      "original_size": 9378743,
+      "shutter_speed": 0.003125,
+      "status": "upload_complete",
+      "synced_time": 1732212148021,
+      "upload_date": 1732238241859,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "a157ee43-c2bc-4434-ad56-d3b7506477a2": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_9u": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212148,
+      "f_number": 8,
+      "filename": "IMG_1390.JPG",
+      "focal_length": 18,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1390.JPG|1732212148",
+      "orientation": 1,
+      "original_size": 7508308,
+      "shutter_speed": 0.003125,
+      "status": "upload_complete",
+      "synced_time": 1732212149021,
+      "upload_date": 1732238241863,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "d552625a-40ea-4607-b0c4-fbdb391aab3d": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_9u": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212150,
+      "f_number": 9,
+      "filename": "IMG_1391.JPG",
+      "focal_length": 18,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1391.JPG|1732212150",
+      "orientation": 1,
+      "original_size": 7311733,
+      "shutter_speed": 0.0025,
+      "status": "upload_complete",
+      "synced_time": 1732212151021,
+      "upload_date": 1732238241867,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "0eb15e5c-043c-4891-ac84-5a2135cc2099": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_9u": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212169,
+      "f_number": 8,
+      "filename": "IMG_1392.JPG",
+      "focal_length": 18,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1392.JPG|1732212169",
+      "orientation": 1,
+      "original_size": 6596381,
+      "shutter_speed": 0.003125,
+      "status": "upload_complete",
+      "synced_time": 1732212170021,
+      "upload_date": 1732238241870,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "768fa719-cdb1-42c2-95dc-d380bb692d19": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_9u": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212173,
+      "f_number": 7.1,
+      "filename": "IMG_1393.JPG",
+      "focal_length": 18,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1393.JPG|1732212173",
+      "orientation": 1,
+      "original_size": 8273320,
+      "shutter_speed": 0.004,
+      "status": "upload_complete",
+      "synced_time": 1732212174021,
+      "upload_date": 1732238247336,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "40b05a93-d89a-405f-abd8-017d0865c8e8": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_9u": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212176,
+      "f_number": 8,
+      "filename": "IMG_1394.JPG",
+      "focal_length": 32,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1394.JPG|1732212176",
+      "orientation": 1,
+      "original_size": 5609314,
+      "shutter_speed": 0.005,
+      "status": "upload_complete",
+      "synced_time": 1732212177021,
+      "upload_date": 1732238247495,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "30e15f0d-5c0a-4009-82f0-2e0421c0a71c": {
+      "associated_locations": {
+        "-OCEqBeBOain8xaXv_gX:midpoint_section": "section"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212250,
+      "f_number": 8,
+      "filename": "IMG_1395.JPG",
+      "focal_length": 18,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 6000,
+      "image_width": 4000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1395.JPG|1732212250",
+      "orientation": 8,
+      "original_size": 7992982,
+      "shutter_speed": 0.003125,
+      "status": "upload_complete",
+      "synced_time": 1732212251021,
+      "upload_date": 1732238249801,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "0413a2ba-a342-4130-afb9-523a81ce8cf2": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_9v": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212311,
+      "f_number": 8,
+      "filename": "IMG_1397.JPG",
+      "focal_length": 74,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1397.JPG|1732212311",
+      "orientation": 1,
+      "original_size": 5784752,
+      "shutter_speed": 0.004,
+      "status": "upload_complete",
+      "synced_time": 1732212312021,
+      "upload_date": 1732238250489,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "de3e8d0e-95a1-4ac5-9dd6-67058bf28ff7": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_9v": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212311,
+      "f_number": 8,
+      "filename": "IMG_1396.JPG",
+      "focal_length": 74,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1396.JPG|1732212311",
+      "orientation": 1,
+      "original_size": 5652987,
+      "shutter_speed": 0.005,
+      "status": "upload_complete",
+      "synced_time": 1732212312021,
+      "upload_date": 1732238250434,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "7cd2cbc6-62e8-4f8b-9d96-419f839b8c7f": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_9v": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212313,
+      "f_number": 8,
+      "filename": "IMG_1398.JPG",
+      "focal_length": 22,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 6000,
+      "image_width": 4000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1398.JPG|1732212313",
+      "orientation": 8,
+      "original_size": 8171824,
+      "shutter_speed": 0.003125,
+      "status": "upload_complete",
+      "synced_time": 1732212314021,
+      "upload_date": 1732238250892,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "2a295322-0367-4db7-9c01-43bf6bfef668": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_9v": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212315,
+      "f_number": 8,
+      "filename": "IMG_1399.JPG",
+      "focal_length": 18,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1399.JPG|1732212315",
+      "orientation": 1,
+      "original_size": 8091214,
+      "shutter_speed": 0.003125,
+      "status": "upload_complete",
+      "synced_time": 1732212316021,
+      "upload_date": 1732238250901,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "32a37905-38da-4943-a502-effdb6430ec9": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_9v": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212317,
+      "f_number": 9,
+      "filename": "IMG_1400.JPG",
+      "focal_length": 18,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1400.JPG|1732212317",
+      "orientation": 1,
+      "original_size": 7331602,
+      "shutter_speed": 0.0025,
+      "status": "upload_complete",
+      "synced_time": 1732212318021,
+      "upload_date": 1732238251016,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "8c00fe6a-1245-4518-90c5-19de33e37d47": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_9v": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212331,
+      "f_number": 6.3,
+      "filename": "IMG_1401.JPG",
+      "focal_length": 18,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1401.JPG|1732212331",
+      "orientation": 1,
+      "original_size": 7639780,
+      "shutter_speed": 0.005,
+      "status": "upload_complete",
+      "synced_time": 1732212332021,
+      "upload_date": 1732238251753,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "ba6ed89a-159e-4881-9b92-240ef942f843": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_9v": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212335,
+      "f_number": 7.1,
+      "filename": "IMG_1402.JPG",
+      "focal_length": 18,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1402.JPG|1732212335",
+      "orientation": 1,
+      "original_size": 5735273,
+      "shutter_speed": 0.003125,
+      "status": "upload_complete",
+      "synced_time": 1732212336021,
+      "upload_date": 1732238252298,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "bb4f5e79-157a-435e-9cb2-678cf7a194d2": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_9v": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212338,
+      "f_number": 8,
+      "filename": "IMG_1403.JPG",
+      "focal_length": 48,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1403.JPG|1732212338",
+      "orientation": 1,
+      "original_size": 5744901,
+      "shutter_speed": 0.00625,
+      "status": "upload_complete",
+      "synced_time": 1732212339021,
+      "upload_date": 1732238254781,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "2f7c1207-5704-446b-bfbc-590185a1071e": {
+      "associated_locations": {
+        "-OCEqCUF2foJ1NyQGMsF:midpoint_section": "section"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212388,
+      "f_number": 8,
+      "filename": "IMG_1404.JPG",
+      "focal_length": 21,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 6000,
+      "image_width": 4000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1404.JPG|1732212388",
+      "orientation": 8,
+      "original_size": 7962644,
+      "shutter_speed": 0.003125,
+      "status": "upload_complete",
+      "synced_time": 1732212389021,
+      "upload_date": 1732238254783,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "5e9ec987-cb7b-4208-b390-f9d38427c989": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_9w": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212455,
+      "f_number": 8,
+      "filename": "IMG_1405.JPG",
+      "focal_length": 68,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1405.JPG|1732212455",
+      "orientation": 1,
+      "original_size": 5836404,
+      "shutter_speed": 0.004,
+      "status": "upload_complete",
+      "synced_time": 1732212456021,
+      "upload_date": 1732238255306,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "07d61d51-2225-4034-9825-e80e8ae340a1": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_9w": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212456,
+      "f_number": 8,
+      "filename": "IMG_1406.JPG",
+      "focal_length": 68,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1406.JPG|1732212456",
+      "orientation": 1,
+      "original_size": 5748864,
+      "shutter_speed": 0.004,
+      "status": "upload_complete",
+      "synced_time": 1732212457021,
+      "upload_date": 1732238257046,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "686f7e85-7ccc-457e-87ee-b70e89c5ff68": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_9w": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212459,
+      "f_number": 8,
+      "filename": "IMG_1407.JPG",
+      "focal_length": 18,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 6000,
+      "image_width": 4000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1407.JPG|1732212459",
+      "orientation": 8,
+      "original_size": 8468797,
+      "shutter_speed": 0.003125,
+      "status": "upload_complete",
+      "synced_time": 1732212460021,
+      "upload_date": 1732238257220,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "53723ca9-5dc6-40a8-8e0e-b286a2f8fc8e": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_9w": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212461,
+      "f_number": 8,
+      "filename": "IMG_1408.JPG",
+      "focal_length": 18,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1408.JPG|1732212461",
+      "orientation": 1,
+      "original_size": 7488433,
+      "shutter_speed": 0.0025,
+      "status": "upload_complete",
+      "synced_time": 1732212462021,
+      "upload_date": 1732238257222,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "9644b792-6817-4624-a121-345848a504d6": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_9w": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212462,
+      "f_number": 9,
+      "filename": "IMG_1409.JPG",
+      "focal_length": 18,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1409.JPG|1732212462",
+      "orientation": 1,
+      "original_size": 7903398,
+      "shutter_speed": 0.0025,
+      "status": "upload_complete",
+      "synced_time": 1732212463021,
+      "upload_date": 1732238257403,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "f747616e-cc9e-45dd-9ec3-c88e0b51d976": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_9w": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212478,
+      "f_number": 8,
+      "filename": "IMG_1410.JPG",
+      "focal_length": 41,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1410.JPG|1732212478",
+      "orientation": 1,
+      "original_size": 5390618,
+      "shutter_speed": 0.005,
+      "status": "upload_complete",
+      "synced_time": 1732212479021,
+      "upload_date": 1732238258045,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "129aabbc-6cef-43e5-bda1-a378324a009a": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_9w": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212491,
+      "f_number": 5.6,
+      "filename": "IMG_1411.JPG",
+      "focal_length": 18,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1411.JPG|1732212491",
+      "orientation": 1,
+      "original_size": 7355903,
+      "shutter_speed": 0.00625,
+      "status": "upload_complete",
+      "synced_time": 1732212492021,
+      "upload_date": 1732238258470,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "0c1a91c5-f3c2-4a54-a70c-3a03ebb4ac6d": {
+      "associated_locations": {
+        "-OCEqEFNyLTEPZvzaLIU:-OCEuhQaTuq4toekRjgs": "section"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212579,
+      "f_number": 8,
+      "filename": "IMG_1412.JPG",
+      "focal_length": 18,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 6000,
+      "image_width": 4000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1412.JPG|1732212579",
+      "orientation": 8,
+      "original_size": 6971153,
+      "shutter_speed": 0.003125,
+      "status": "upload_complete",
+      "synced_time": 1732212580021,
+      "upload_date": 1732238259656,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "69096969-c065-41ad-8959-92d430778173": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_A6": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212617,
+      "f_number": 8,
+      "filename": "IMG_1413.JPG",
+      "focal_length": 66,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1413.JPG|1732212617",
+      "orientation": 1,
+      "original_size": 6119927,
+      "shutter_speed": 0.005,
+      "status": "upload_complete",
+      "synced_time": 1732212618021,
+      "upload_date": 1732238260126,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "812895c1-24eb-4d57-b74e-240acee2c5db": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_A6": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212618,
+      "f_number": 8,
+      "filename": "IMG_1415.JPG",
+      "focal_length": 66,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1415.JPG|1732212618",
+      "orientation": 1,
+      "original_size": 6110829,
+      "shutter_speed": 0.004,
+      "status": "upload_complete",
+      "synced_time": 1732212619021,
+      "upload_date": 1732238262144,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "dabcee11-e86f-4571-82e8-6e9a2cc9a120": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_A6": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212618,
+      "f_number": 8,
+      "filename": "IMG_1414.JPG",
+      "focal_length": 66,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1414.JPG|1732212618",
+      "orientation": 1,
+      "original_size": 6042811,
+      "shutter_speed": 0.004,
+      "status": "upload_complete",
+      "synced_time": 1732212619021,
+      "upload_date": 1732238261263,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "5059156a-3052-4ec9-981a-1c783bff4f7b": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_A6": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212620,
+      "f_number": 8,
+      "filename": "IMG_1416.JPG",
+      "focal_length": 18,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 6000,
+      "image_width": 4000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1416.JPG|1732212620",
+      "orientation": 8,
+      "original_size": 8343974,
+      "shutter_speed": 0.003125,
+      "status": "upload_complete",
+      "synced_time": 1732212621021,
+      "upload_date": 1732238262832,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "065a9d40-1b64-45a4-818b-00f8ff0d5863": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_A6": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212621,
+      "f_number": 8,
+      "filename": "IMG_1417.JPG",
+      "focal_length": 18,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1417.JPG|1732212621",
+      "orientation": 1,
+      "original_size": 8906327,
+      "shutter_speed": 0.003125,
+      "status": "upload_complete",
+      "synced_time": 1732212622021,
+      "upload_date": 1732238263434,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "962b46fb-7fb0-4f3f-bdcb-f44b2821a102": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_A6": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212622,
+      "f_number": 9,
+      "filename": "IMG_1418.JPG",
+      "focal_length": 18,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1418.JPG|1732212622",
+      "orientation": 1,
+      "original_size": 7772919,
+      "shutter_speed": 0.0025,
+      "status": "upload_complete",
+      "synced_time": 1732212623021,
+      "upload_date": 1732238263603,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "e45b2033-3736-4a9d-98f0-a8929c301971": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_A6": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212635,
+      "f_number": 10,
+      "filename": "IMG_1419.JPG",
+      "focal_length": 34,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1419.JPG|1732212635",
+      "orientation": 1,
+      "original_size": 10157226,
+      "shutter_speed": 0.004,
+      "status": "upload_complete",
+      "synced_time": 1732212636021,
+      "upload_date": 1732238263605,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "21f3d267-dbb8-47fb-adaa-3f89e2c69c4a": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_A6": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212638,
+      "f_number": 8,
+      "filename": "IMG_1420.JPG",
+      "focal_length": 18,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1420.JPG|1732212638",
+      "orientation": 1,
+      "original_size": 5667051,
+      "shutter_speed": 0.004,
+      "status": "upload_complete",
+      "synced_time": 1732212639021,
+      "upload_date": 1732238264472,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "306ee5ad-d717-4e58-889d-228b05421141": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_A6": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212641,
+      "f_number": 11,
+      "filename": "IMG_1421.JPG",
+      "focal_length": 40,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1421.JPG|1732212641",
+      "orientation": 1,
+      "original_size": 5544219,
+      "shutter_speed": 0.003125,
+      "status": "upload_complete",
+      "synced_time": 1732212642021,
+      "upload_date": 1732238264474,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "26bdcc49-4991-43b6-ba41-199d14b93c7c": {
+      "associated_locations": {
+        "-OCEqF6XCbhJry5XgXzc:midpoint_section": "section"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212738,
+      "f_number": 9,
+      "filename": "IMG_1422.JPG",
+      "focal_length": 24,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 6000,
+      "image_width": 4000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1422.JPG|1732212738",
+      "orientation": 8,
+      "original_size": 8560978,
+      "shutter_speed": 0.003125,
+      "status": "upload_complete",
+      "synced_time": 1732212739021,
+      "upload_date": 1732238267580,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "5fb304f8-7e2b-456a-9297-e161c4073281": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_9x": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212792,
+      "f_number": 8,
+      "filename": "IMG_1423.JPG",
+      "focal_length": 70,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1423.JPG|1732212792",
+      "orientation": 1,
+      "original_size": 5797049,
+      "shutter_speed": 0.005,
+      "status": "upload_complete",
+      "synced_time": 1732212793021,
+      "upload_date": 1732238267965,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "2fbf5370-4cbd-4579-a8c2-684ae20b5125": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_9x": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212793,
+      "f_number": 8,
+      "filename": "IMG_1424.JPG",
+      "focal_length": 70,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1424.JPG|1732212793",
+      "orientation": 1,
+      "original_size": 6523126,
+      "shutter_speed": 0.004,
+      "status": "upload_complete",
+      "synced_time": 1732212794021,
+      "upload_date": 1732238268028,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "6357b15c-0bd0-42c5-b9e3-b5b9055f6c65": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_9x": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212793,
+      "f_number": 8,
+      "filename": "IMG_1425.JPG",
+      "focal_length": 70,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1425.JPG|1732212793",
+      "orientation": 1,
+      "original_size": 6199286,
+      "shutter_speed": 0.004,
+      "status": "upload_complete",
+      "synced_time": 1732212794021,
+      "upload_date": 1732238269245,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "046c612f-8653-4a6c-8cdb-151919d12af3": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_9x": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212795,
+      "f_number": 8,
+      "filename": "IMG_1426.JPG",
+      "focal_length": 18,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 6000,
+      "image_width": 4000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1426.JPG|1732212795",
+      "orientation": 8,
+      "original_size": 8726489,
+      "shutter_speed": 0.003125,
+      "status": "upload_complete",
+      "synced_time": 1732212796021,
+      "upload_date": 1732238269555,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "9238426d-fd04-4986-98b1-5bf7daf324f9": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_9x": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212796,
+      "f_number": 8,
+      "filename": "IMG_1427.JPG",
+      "focal_length": 18,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1427.JPG|1732212796",
+      "orientation": 1,
+      "original_size": 10007973,
+      "shutter_speed": 0.003125,
+      "status": "upload_complete",
+      "synced_time": 1732212797021,
+      "upload_date": 1732238270283,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "e9a2d397-31a2-48a1-b06a-b218b9f73128": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_9x": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212798,
+      "f_number": 9,
+      "filename": "IMG_1428.JPG",
+      "focal_length": 18,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1428.JPG|1732212798",
+      "orientation": 1,
+      "original_size": 7442566,
+      "shutter_speed": 0.0025,
+      "status": "upload_complete",
+      "synced_time": 1732212799021,
+      "upload_date": 1732238270287,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "c14a4e9d-23ba-4b74-bab6-835d518e2e64": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_9x": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212816,
+      "f_number": 5.6,
+      "filename": "IMG_1429.JPG",
+      "focal_length": 18,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1429.JPG|1732212816",
+      "orientation": 1,
+      "original_size": 8313907,
+      "shutter_speed": 0.00625,
+      "status": "upload_complete",
+      "synced_time": 1732212817021,
+      "upload_date": 1732238270770,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "db6c0c8d-5bb1-43d8-8618-427e85c22ff7": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_9x": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212819,
+      "f_number": 6.3,
+      "filename": "IMG_1430.JPG",
+      "focal_length": 18,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1430.JPG|1732212819",
+      "orientation": 1,
+      "original_size": 5529555,
+      "shutter_speed": 0.005,
+      "status": "upload_complete",
+      "synced_time": 1732212820021,
+      "upload_date": 1732238272091,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "e95001ee-c7fc-49fd-bc39-1454e85304c5": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_9x": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212824,
+      "f_number": 8,
+      "filename": "IMG_1431.JPG",
+      "focal_length": 37,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1431.JPG|1732212824",
+      "orientation": 1,
+      "original_size": 5062704,
+      "shutter_speed": 0.005,
+      "status": "upload_complete",
+      "synced_time": 1732212825021,
+      "upload_date": 1732238272426,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "a5083cda-c811-4fef-92f0-bb44bf87e5fb": {
+      "associated_locations": {
+        "-OCEqGgw6EeTAJvKnfX9:midpoint_section": "section"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212893,
+      "f_number": 9,
+      "filename": "IMG_1432.JPG",
+      "focal_length": 26,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 6000,
+      "image_width": 4000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1432.JPG|1732212893",
+      "orientation": 8,
+      "original_size": 7526015,
+      "shutter_speed": 0.003125,
+      "status": "upload_complete",
+      "synced_time": 1732212894021,
+      "upload_date": 1732238272714,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "5bda792f-1060-4c2b-8448-e0b4a152a3d2": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_9y": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212967,
+      "f_number": 8,
+      "filename": "IMG_1434.JPG",
+      "focal_length": 59,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1434.JPG|1732212967",
+      "orientation": 1,
+      "original_size": 6171060,
+      "shutter_speed": 0.005,
+      "status": "upload_complete",
+      "synced_time": 1732212968021,
+      "upload_date": 1732238275364,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "6a3bc735-b686-43f4-9d88-5112f8627340": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_9y": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212967,
+      "f_number": 8,
+      "filename": "IMG_1433.JPG",
+      "focal_length": 59,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1433.JPG|1732212967",
+      "orientation": 1,
+      "original_size": 6228667,
+      "shutter_speed": 0.005,
+      "status": "upload_complete",
+      "synced_time": 1732212968021,
+      "upload_date": 1732238273300,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "b1f0147c-1cb6-4dfb-be2c-a030b6724821": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_9y": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212971,
+      "f_number": 8,
+      "filename": "IMG_1435.JPG",
+      "focal_length": 18,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 6000,
+      "image_width": 4000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1435.JPG|1732212971",
+      "orientation": 8,
+      "original_size": 8739631,
+      "shutter_speed": 0.003125,
+      "status": "upload_complete",
+      "synced_time": 1732212972021,
+      "upload_date": 1732238275806,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "2582cd4a-150d-4d1c-b84c-a6a8e62c1456": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_9y": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212972,
+      "f_number": 8,
+      "filename": "IMG_1436.JPG",
+      "focal_length": 18,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1436.JPG|1732212972",
+      "orientation": 1,
+      "original_size": 7381236,
+      "shutter_speed": 0.003125,
+      "status": "upload_complete",
+      "synced_time": 1732212973021,
+      "upload_date": 1732238275966,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "c1edc0d7-2403-42c8-9fdd-1963998a8e4e": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_9y": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212974,
+      "f_number": 8,
+      "filename": "IMG_1437.JPG",
+      "focal_length": 18,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1437.JPG|1732212974",
+      "orientation": 1,
+      "original_size": 7020701,
+      "shutter_speed": 0.0025,
+      "status": "upload_complete",
+      "synced_time": 1732212975021,
+      "upload_date": 1732238276429,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "98cea9f4-3d05-4e9f-ad4e-b8ab3c7d3464": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_9y": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732212980,
+      "f_number": 8,
+      "filename": "IMG_1438.JPG",
+      "focal_length": 18,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1438.JPG|1732212980",
+      "orientation": 1,
+      "original_size": 8360051,
+      "shutter_speed": 0.0025,
+      "status": "upload_complete",
+      "synced_time": 1732212981021,
+      "upload_date": 1732238276431,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "3033a0c7-1562-4fc5-88fb-0d4135823449": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_9y": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732213000,
+      "f_number": 7.1,
+      "filename": "IMG_1439.JPG",
+      "focal_length": 18,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1439.JPG|1732213000",
+      "orientation": 1,
+      "original_size": 5714288,
+      "shutter_speed": 0.004,
+      "status": "upload_complete",
+      "synced_time": 1732213001021,
+      "upload_date": 1732238276463,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "602501d0-b525-465b-bf0b-42f1209da46d": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_9y": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732213006,
+      "f_number": 8,
+      "filename": "IMG_1440.JPG",
+      "focal_length": 44,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1440.JPG|1732213006",
+      "orientation": 1,
+      "original_size": 5343343,
+      "shutter_speed": 0.005,
+      "status": "upload_complete",
+      "synced_time": 1732213007021,
+      "upload_date": 1732238277169,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "042c11cc-4dfc-4b3b-95d2-fb0188826659": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_9y": "node"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732213025,
+      "f_number": 5,
+      "filename": "IMG_1441.JPG",
+      "focal_length": 18,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1441.JPG|1732213025",
+      "orientation": 1,
+      "original_size": 7273862,
+      "shutter_speed": 0.008,
+      "status": "upload_complete",
+      "synced_time": 1732213026021,
+      "upload_date": 1732238277171,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "bc1e909b-6450-4c74-9f7e-728903905a36": {
+      "associated_locations": {
+        "-OCEw-P3R73gBiTBzkwl:-OCExHFl0lFcVb7sjCUw": "section"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732213274,
+      "f_number": 9,
+      "filename": "IMG_1442.JPG",
+      "focal_length": 18,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 6000,
+      "image_width": 4000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1442.JPG|1732213274",
+      "orientation": 8,
+      "original_size": 7097891,
+      "shutter_speed": 0.0025,
+      "status": "upload_complete",
+      "synced_time": 1732213275021,
+      "upload_date": 1732238279181,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "a5fd1ffc-338b-4320-a493-61c9c75ccfb5": {
+      "associated_locations": {
+        "-OCEqHFRywCh-6h8x8v0:-OCExVjKk0EEgk-wlM00": "section"
+      },
+      "camera_id": "-OCGRTesIBullNDtlHFi",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS M50m2",
+      "camera_serial_number": "292054005681",
+      "date_taken": 1732213295,
+      "f_number": 10,
+      "filename": "IMG_1443.JPG",
+      "focal_length": 18,
+      "folder_id": "-OCGRTxGRfH2FlqvROwp",
+      "image_height": 6000,
+      "image_width": 4000,
+      "iso": 100,
+      "lens": "EF-M18-150mm f/3.5-6.3 IS STM",
+      "name_date": "IMG_1443.JPG|1732213295",
+      "orientation": 8,
+      "original_size": 7459779,
+      "shutter_speed": 0.0025,
+      "status": "upload_complete",
+      "synced_time": 1732213296021,
+      "upload_date": 1732238280995,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,0,1,1,1,1,1"
+    },
+    "06a94281-44f6-4a15-9384-da7a6d471641": {
+      "camera_id": "-OFyW5ecusKv9GLzYe_Q",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS R100",
+      "camera_serial_number": "102031002772",
+      "date_taken": 1736197861,
+      "f_number": 4.5,
+      "filename": "IMG_1139.JPG",
+      "focal_length": 24,
+      "folder_id": "-OFyW6Fzjqy2RV2R1WOC",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "RF24-105mm F4-7.1 IS STM",
+      "name_date": "IMG_1139.JPG|1736197861",
+      "orientation": 1,
+      "original_size": 6095023,
+      "photofirst_data": {
+        "job": {
+          "upload_added": {
+            "jobname": "-O9FcxWFd9zEGuFSkfmu"
+          }
+        },
+        "sync": {
+          "upload_added": {
+            "time": "2025:01:06:14:11:01",
+            "timezone": -7,
+            "user": "gEDsokOqmCgaCyJIQz54T9pXNVf1"
+          }
+        }
+      },
+      "shutter_speed": 0.0125,
+      "status": "upload_complete",
+      "synced_time": 1736197861686,
+      "upload_date": 1736215655916,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,1,1,1,1,1,1"
+    },
+    "c872d7aa-eb7d-4cc4-8ff5-f9cf4dcc9ee0": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_A0": "node"
+      },
+      "camera_id": "-OFyW5ecusKv9GLzYe_Q",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS R100",
+      "camera_serial_number": "102031002772",
+      "date_taken": 1736198012,
+      "f_number": 13,
+      "filename": "IMG_1140.JPG",
+      "focal_length": 97,
+      "folder_id": "-OFyW6Fzjqy2RV2R1WOC",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "RF24-105mm F4-7.1 IS STM",
+      "name_date": "IMG_1140.JPG|1736198012",
+      "orientation": 1,
+      "original_size": 5864606,
+      "shutter_speed": 0.002,
+      "status": "upload_complete",
+      "synced_time": 1736198012686,
+      "upload_date": 1736215655919,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,1,1,1,1,1,1"
+    },
+    "43c92f89-9962-49fb-8afd-9a1f2ec079cd": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_A0": "node"
+      },
+      "camera_id": "-OFyW5ecusKv9GLzYe_Q",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS R100",
+      "camera_serial_number": "102031002772",
+      "date_taken": 1736198013,
+      "f_number": 13,
+      "filename": "IMG_1141.JPG",
+      "focal_length": 97,
+      "folder_id": "-OFyW6Fzjqy2RV2R1WOC",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "RF24-105mm F4-7.1 IS STM",
+      "name_date": "IMG_1141.JPG|1736198013",
+      "orientation": 1,
+      "original_size": 5713265,
+      "shutter_speed": 0.002,
+      "status": "upload_complete",
+      "synced_time": 1736198013686,
+      "upload_date": 1736215655922,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,1,1,1,1,1,1"
+    },
+    "a08c5379-a45e-45b9-847c-f77fe67ac38d": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_A0": "node"
+      },
+      "camera_id": "-OFyW5ecusKv9GLzYe_Q",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS R100",
+      "camera_serial_number": "102031002772",
+      "date_taken": 1736198024,
+      "f_number": 11,
+      "filename": "IMG_1142.JPG",
+      "focal_length": 26,
+      "folder_id": "-OFyW6Fzjqy2RV2R1WOC",
+      "image_height": 6000,
+      "image_width": 4000,
+      "iso": 100,
+      "lens": "RF24-105mm F4-7.1 IS STM",
+      "name_date": "IMG_1142.JPG|1736198024",
+      "orientation": 8,
+      "original_size": 6032435,
+      "shutter_speed": 0.0025,
+      "status": "upload_complete",
+      "synced_time": 1736198024686,
+      "upload_date": 1736215655925,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,1,1,1,1,1,1"
+    },
+    "acb4e663-6dbb-4238-9332-c077fb3ecf03": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_A0": "node"
+      },
+      "camera_id": "-OFyW5ecusKv9GLzYe_Q",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS R100",
+      "camera_serial_number": "102031002772",
+      "date_taken": 1736198032,
+      "f_number": 9,
+      "filename": "IMG_1143.JPG",
+      "focal_length": 24,
+      "folder_id": "-OFyW6Fzjqy2RV2R1WOC",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "RF24-105mm F4-7.1 IS STM",
+      "name_date": "IMG_1143.JPG|1736198032",
+      "orientation": 1,
+      "original_size": 8630214,
+      "shutter_speed": 0.003125,
+      "status": "upload_complete",
+      "synced_time": 1736198032686,
+      "upload_date": 1736215655927,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,1,1,1,1,1,1"
+    },
+    "362d4512-8578-4f6f-9e1a-0437852f0751": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_A0": "node"
+      },
+      "camera_id": "-OFyW5ecusKv9GLzYe_Q",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS R100",
+      "camera_serial_number": "102031002772",
+      "date_taken": 1736198037,
+      "f_number": 9,
+      "filename": "IMG_1144.JPG",
+      "focal_length": 24,
+      "folder_id": "-OFyW6Fzjqy2RV2R1WOC",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "RF24-105mm F4-7.1 IS STM",
+      "name_date": "IMG_1144.JPG|1736198037",
+      "orientation": 1,
+      "original_size": 5575597,
+      "shutter_speed": 0.003125,
+      "status": "upload_complete",
+      "synced_time": 1736198037686,
+      "upload_date": 1736215655935,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,1,1,1,1,1,1"
+    },
+    "2f4d91e8-6c6e-4619-bc88-0452bba2c2b0": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_A0": "node"
+      },
+      "camera_id": "-OFyW5ecusKv9GLzYe_Q",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS R100",
+      "camera_serial_number": "102031002772",
+      "date_taken": 1736198045,
+      "f_number": 5,
+      "filename": "IMG_1145.JPG",
+      "focal_length": 24,
+      "folder_id": "-OFyW6Fzjqy2RV2R1WOC",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "RF24-105mm F4-7.1 IS STM",
+      "name_date": "IMG_1145.JPG|1736198045",
+      "orientation": 1,
+      "original_size": 6220202,
+      "shutter_speed": 0.01,
+      "status": "upload_complete",
+      "synced_time": 1736198045686,
+      "upload_date": 1736215655958,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,1,1,1,1,1,1"
+    },
+    "e71868b7-8fd5-487e-a2dc-c439102aca4e": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_A0": "node"
+      },
+      "camera_id": "-OFyW5ecusKv9GLzYe_Q",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS R100",
+      "camera_serial_number": "102031002772",
+      "date_taken": 1736198049,
+      "f_number": 10,
+      "filename": "IMG_1146.JPG",
+      "focal_length": 24,
+      "folder_id": "-OFyW6Fzjqy2RV2R1WOC",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "RF24-105mm F4-7.1 IS STM",
+      "name_date": "IMG_1146.JPG|1736198049",
+      "orientation": 1,
+      "original_size": 5863933,
+      "shutter_speed": 0.0025,
+      "status": "upload_complete",
+      "synced_time": 1736198049686,
+      "upload_date": 1736215655959,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,1,1,1,1,1,1"
+    },
+    "324a5017-746d-47df-b8de-96f54b2833f4": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_A0": "node"
+      },
+      "camera_id": "-OFyW5ecusKv9GLzYe_Q",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS R100",
+      "camera_serial_number": "102031002772",
+      "date_taken": 1736198050,
+      "f_number": 5,
+      "filename": "IMG_1147.JPG",
+      "focal_length": 24,
+      "folder_id": "-OFyW6Fzjqy2RV2R1WOC",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "RF24-105mm F4-7.1 IS STM",
+      "name_date": "IMG_1147.JPG|1736198050",
+      "orientation": 1,
+      "original_size": 7128508,
+      "shutter_speed": 0.01,
+      "status": "upload_complete",
+      "synced_time": 1736198050686,
+      "upload_date": 1736215659946,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,1,1,1,1,1,1"
+    },
+    "616182db-16c8-41c4-93ba-f753ac957215": {
+      "associated_locations": {
+        "-OCEqIat3rCZzyZbWQ1E:midpoint_section": "section"
+      },
+      "camera_id": "-OFyW5ecusKv9GLzYe_Q",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS R100",
+      "camera_serial_number": "102031002772",
+      "date_taken": 1736198092,
+      "f_number": 11,
+      "filename": "IMG_1148.JPG",
+      "focal_length": 24,
+      "folder_id": "-OFyW6Fzjqy2RV2R1WOC",
+      "image_height": 6000,
+      "image_width": 4000,
+      "iso": 100,
+      "lens": "RF24-105mm F4-7.1 IS STM",
+      "name_date": "IMG_1148.JPG|1736198092",
+      "orientation": 8,
+      "original_size": 5799993,
+      "shutter_speed": 0.002,
+      "status": "upload_complete",
+      "synced_time": 1736198092686,
+      "upload_date": 1736215660685,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,1,1,1,1,1,1"
+    },
+    "1844d0db-970b-45f1-a761-9abe8d1387c1": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_A-": "node"
+      },
+      "camera_id": "-OFyW5ecusKv9GLzYe_Q",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS R100",
+      "camera_serial_number": "102031002772",
+      "date_taken": 1736198450,
+      "f_number": 11,
+      "filename": "IMG_1150.JPG",
+      "focal_length": 99,
+      "folder_id": "-OFyW6Fzjqy2RV2R1WOC",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "RF24-105mm F4-7.1 IS STM",
+      "name_date": "IMG_1150.JPG|1736198450",
+      "orientation": 1,
+      "original_size": 5989847,
+      "shutter_speed": 0.0025,
+      "status": "upload_complete",
+      "synced_time": 1736198450686,
+      "upload_date": 1736215660761,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,1,1,1,1,1,1"
+    },
+    "5ab7b554-ffb5-4d6c-a620-09516f360f66": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_A-": "node"
+      },
+      "camera_id": "-OFyW5ecusKv9GLzYe_Q",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS R100",
+      "camera_serial_number": "102031002772",
+      "date_taken": 1736198450,
+      "f_number": 11,
+      "filename": "IMG_1149.JPG",
+      "focal_length": 99,
+      "folder_id": "-OFyW6Fzjqy2RV2R1WOC",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "RF24-105mm F4-7.1 IS STM",
+      "name_date": "IMG_1149.JPG|1736198450",
+      "orientation": 1,
+      "original_size": 6028171,
+      "shutter_speed": 0.002,
+      "status": "upload_complete",
+      "synced_time": 1736198450686,
+      "upload_date": 1736215661003,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,1,1,1,1,1,1"
+    },
+    "fc5009f8-f634-41c6-a173-c4d4e4b9790b": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_A-": "node"
+      },
+      "camera_id": "-OFyW5ecusKv9GLzYe_Q",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS R100",
+      "camera_serial_number": "102031002772",
+      "date_taken": 1736198483,
+      "f_number": 10,
+      "filename": "IMG_1151.JPG",
+      "focal_length": 24,
+      "folder_id": "-OFyW6Fzjqy2RV2R1WOC",
+      "image_height": 6000,
+      "image_width": 4000,
+      "iso": 100,
+      "lens": "RF24-105mm F4-7.1 IS STM",
+      "name_date": "IMG_1151.JPG|1736198483",
+      "orientation": 8,
+      "original_size": 10240868,
+      "shutter_speed": 0.0025,
+      "status": "upload_complete",
+      "synced_time": 1736198483686,
+      "upload_date": 1736215661239,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,1,1,1,1,1,1"
+    },
+    "201a5c06-d5d9-4a8d-9d8a-4e492b29bd65": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_A-": "node"
+      },
+      "camera_id": "-OFyW5ecusKv9GLzYe_Q",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS R100",
+      "camera_serial_number": "102031002772",
+      "date_taken": 1736198496,
+      "f_number": 10,
+      "filename": "IMG_1152.JPG",
+      "focal_length": 24,
+      "folder_id": "-OFyW6Fzjqy2RV2R1WOC",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "RF24-105mm F4-7.1 IS STM",
+      "name_date": "IMG_1152.JPG|1736198496",
+      "orientation": 1,
+      "original_size": 6288246,
+      "shutter_speed": 0.0025,
+      "status": "upload_complete",
+      "synced_time": 1736198496686,
+      "upload_date": 1736215661241,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,1,1,1,1,1,1"
+    },
+    "b7e65015-4504-4dc9-b8d1-0c6dcde3ee7a": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_A-": "node"
+      },
+      "camera_id": "-OFyW5ecusKv9GLzYe_Q",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS R100",
+      "camera_serial_number": "102031002772",
+      "date_taken": 1736198505,
+      "f_number": 4.5,
+      "filename": "IMG_1153.JPG",
+      "focal_length": 24,
+      "folder_id": "-OFyW6Fzjqy2RV2R1WOC",
+      "image_height": 6000,
+      "image_width": 4000,
+      "iso": 100,
+      "lens": "RF24-105mm F4-7.1 IS STM",
+      "name_date": "IMG_1153.JPG|1736198505",
+      "orientation": 8,
+      "original_size": 6366913,
+      "shutter_speed": 0.0125,
+      "status": "upload_complete",
+      "synced_time": 1736198505686,
+      "upload_date": 1736215661265,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,1,1,1,1,1,1"
+    },
+    "e733ae0f-3531-4698-8160-111250e63a72": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_A-": "node"
+      },
+      "camera_id": "-OFyW5ecusKv9GLzYe_Q",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS R100",
+      "camera_serial_number": "102031002772",
+      "date_taken": 1736198514,
+      "f_number": 5,
+      "filename": "IMG_1154.JPG",
+      "focal_length": 24,
+      "folder_id": "-OFyW6Fzjqy2RV2R1WOC",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "RF24-105mm F4-7.1 IS STM",
+      "name_date": "IMG_1154.JPG|1736198514",
+      "orientation": 1,
+      "original_size": 6107519,
+      "shutter_speed": 0.01,
+      "status": "upload_complete",
+      "synced_time": 1736198514686,
+      "upload_date": 1736215661857,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,1,1,1,1,1,1"
+    },
+    "053fe374-7e42-48e3-87f3-8cd826c5e4eb": {
+      "associated_locations": {
+        "-O9FdLdppqzZhkGBz_A-": "node"
+      },
+      "camera_id": "-OFyW5ecusKv9GLzYe_Q",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS R100",
+      "camera_serial_number": "102031002772",
+      "date_taken": 1736198517,
+      "f_number": 10,
+      "filename": "IMG_1155.JPG",
+      "focal_length": 24,
+      "folder_id": "-OFyW6Fzjqy2RV2R1WOC",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "RF24-105mm F4-7.1 IS STM",
+      "name_date": "IMG_1155.JPG|1736198517",
+      "orientation": 1,
+      "original_size": 6157856,
+      "shutter_speed": 0.0025,
+      "status": "upload_complete",
+      "synced_time": 1736198517686,
+      "upload_date": 1736215663505,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,1,1,1,1,1,1"
+    },
+    "60a9c3ff-1426-4a20-b08b-bf590576df2d": {
+      "associated_locations": {
+        "-OCEqHsl82UBN-ojOoAQ:midpoint_section": "section"
+      },
+      "camera_id": "-OFyW5ecusKv9GLzYe_Q",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS R100",
+      "camera_serial_number": "102031002772",
+      "date_taken": 1736198895,
+      "f_number": 8,
+      "filename": "IMG_1156.JPG",
+      "focal_length": 30,
+      "folder_id": "-OFyW6Fzjqy2RV2R1WOC",
+      "image_height": 6000,
+      "image_width": 4000,
+      "iso": 100,
+      "lens": "RF24-105mm F4-7.1 IS STM",
+      "name_date": "IMG_1156.JPG|1736198895",
+      "orientation": 8,
+      "original_size": 14356883,
+      "shutter_speed": 0.004,
+      "status": "upload_complete",
+      "synced_time": 1736198895686,
+      "upload_date": 1736215663967,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,1,1,1,1,1,1"
+    },
+    "a8ac3f64-f8aa-4aba-a9e1-ff72667a5d37": {
+      "associated_locations": {
+        "-OCEldIGfBoEUyBxlX7L:-OFxZhqdjYzjny1mUAwf": "section"
+      },
+      "camera_id": "-OFyW5ecusKv9GLzYe_Q",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS R100",
+      "camera_serial_number": "102031002772",
+      "date_taken": 1736199797,
+      "f_number": 9,
+      "filename": "IMG_1157.JPG",
+      "focal_length": 35,
+      "folder_id": "-OFyW6Fzjqy2RV2R1WOC",
+      "image_height": 6000,
+      "image_width": 4000,
+      "iso": 100,
+      "lens": "RF24-105mm F4-7.1 IS STM",
+      "name_date": "IMG_1157.JPG|1736199797",
+      "orientation": 8,
+      "original_size": 6745219,
+      "shutter_speed": 0.004,
+      "status": "upload_complete",
+      "synced_time": 1736199797686,
+      "upload_date": 1736215664297,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,1,1,1,1,1,1"
+    },
+    "85903fc2-3512-489f-9f55-8a0b2d1fde73": {
+      "associated_locations": {
+        "-OFxYvZcmtYHwknEPge7:-OFx_RFsKEpeqbOeTsHv": "section"
+      },
+      "camera_id": "-OFyW5ecusKv9GLzYe_Q",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS R100",
+      "camera_serial_number": "102031002772",
+      "date_taken": 1736199989,
+      "f_number": 9,
+      "filename": "IMG_1158.JPG",
+      "focal_length": 24,
+      "folder_id": "-OFyW6Fzjqy2RV2R1WOC",
+      "image_height": 6000,
+      "image_width": 4000,
+      "iso": 100,
+      "lens": "RF24-105mm F4-7.1 IS STM",
+      "name_date": "IMG_1158.JPG|1736199989",
+      "orientation": 8,
+      "original_size": 6221052,
+      "shutter_speed": 0.003125,
+      "status": "upload_complete",
+      "synced_time": 1736199989686,
+      "upload_date": 1736215664325,
+      "uploaded_by": "gEDsokOqmCgaCyJIQz54T9pXNVf1",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,1,1,1,1,1,1"
+    }
+  },
+  "project_folder": "deeply_digital",
+  "sharing": {
+    "deeply_digital": "write"
+  }
+}

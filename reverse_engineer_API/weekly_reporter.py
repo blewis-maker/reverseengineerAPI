@@ -122,67 +122,274 @@ def get_weekly_jobs(start_date: datetime, end_date: datetime, test_mode: bool = 
 
 class WeeklyMetrics:
     def __init__(self):
-        # User Production Metrics
-        self.user_production = {
-            'field': {},  # user_id -> {completed_poles: [], utilities: set(), dates: []}
-            'back_office': {
-                'annotation': {},  # user_id -> {completed_poles: [], jobs: [], dates: [], utilities: set()}
-                'sent_to_pe': {
-                    'jobs': [],  # [{job_id, pole_count, date, utility}]
-                    'users': {}  # user_id -> {jobs: [], pole_count: int, dates: [], utilities: set()}
-                },
-                'delivery': {
-                    'jobs': [],  # [{job_id, pole_count, date, utility}]
-                    'users': {}  # user_id -> {jobs: [], pole_count: int, dates: [], utilities: set()}
-                },
-                'emr': {
-                    'jobs': [],  # [{job_id, pole_count, date, utility}]
-                    'users': {}  # user_id -> {jobs: [], pole_count: int, dates: [], utilities: set()}
-                },
-                'approved': {
-                    'jobs': [],  # [{job_id, pole_count, date, utility}]
-                    'users': {}  # user_id -> {jobs: [], pole_count: int, dates: [], utilities: set()}
+        # Weekly metrics (updated weekly)
+        self.weekly_metrics = {
+            'user_production': {
+                'field': {},  # user_id -> {completed_poles: [], utilities: set(), dates: []}
+                'back_office': {
+                    'annotation': {},
+                    'sent_to_pe': {'jobs': [], 'users': {}},
+                    'delivery': {'jobs': [], 'users': {}},
+                    'emr': {'jobs': [], 'users': {}},
+                    'approved': {'jobs': [], 'users': {}}
+                }
+            },
+            'status_changes': {
+                'field_collection': [],
+                'annotation': [],
+                'sent_to_pe': [],
+                'delivery': [],
+                'emr': [],
+                'approved': []
+            },
+            'previous_week_metrics': None  # Will store last week's metrics for comparison
+        }
+
+        # Real-time metrics (updated with each run)
+        self.realtime_metrics = {
+            'burndown': {
+                'by_utility': {},  # utility -> {total_poles, completed_poles, run_rate, trend}
+                'by_project': {},  # project -> {total_poles, completed_poles, run_rate, trend}
+                'backlog': {
+                    'field': {'total_poles': 0, 'jobs': set(), 'utilities': set()},
+                    'back_office': {'total_poles': 0, 'jobs': set(), 'utilities': set()},
+                    'approve_construction': {'total_poles': 0, 'jobs': set(), 'utilities': set()}
+                }
+            },
+            'schedule': {
+                'projects': {},  # project_id -> {total_poles, completed_poles, resources, dependencies}
+                'resources': {
+                    'field': {},  # user_id -> {capacity, assigned_jobs}
+                    'back_office': {}  # user_id -> {capacity, assigned_jobs}
                 }
             }
         }
+
+    def update_burndown_metrics(self, job_data, timestamp):
+        """Update real-time burndown metrics"""
+        utility = job_data.get('metadata', {}).get('utility', 'Unknown')
+        project = job_data.get('metadata', {}).get('project', 'Unknown')
+        total_poles = len([n for n in job_data.get('nodes', {}).values() if self._is_pole_node(n)])
+        completed_poles = len([n for n in job_data.get('nodes', {}).values() if self._get_field_completed(n)])
+
+        # Update utility metrics
+        if utility not in self.realtime_metrics['burndown']['by_utility']:
+            self.realtime_metrics['burndown']['by_utility'][utility] = {
+                'total_poles': 0,
+                'completed_poles': 0,
+                'run_rate': 0,
+                'trend': [],
+                'history': []
+            }
+
+        utility_metrics = self.realtime_metrics['burndown']['by_utility'][utility]
+        utility_metrics['total_poles'] += total_poles
+        utility_metrics['completed_poles'] += completed_poles
+        utility_metrics['history'].append({
+            'timestamp': timestamp,
+            'completed_poles': completed_poles
+        })
         
-        # Status Change Tracking
-        self.status_changes = {
-            'field_collection': [],  # [{job_id, pole_count, date, utility}]
-            'annotation': [],  # [{job_id, pole_count, date, utility}]
-            'sent_to_pe': [],  # [{job_id, pole_count, date, utility}]
-            'delivery': [],  # [{job_id, pole_count, date, utility}]
-            'emr': [],  # [{job_id, pole_count, date, utility}]
-            'approved': []  # [{job_id, pole_count, date, utility}]
+        # Calculate run rate based on last 7 days
+        recent_history = [h for h in utility_metrics['history'] 
+                         if (timestamp - h['timestamp']).days <= 7]
+        if len(recent_history) >= 2:
+            poles_completed = recent_history[-1]['completed_poles'] - recent_history[0]['completed_poles']
+            days = (recent_history[-1]['timestamp'] - recent_history[0]['timestamp']).days
+            utility_metrics['run_rate'] = (poles_completed / days) * 7 if days > 0 else 0
+
+        # Similar update for project metrics
+        if project not in self.realtime_metrics['burndown']['by_project']:
+            self.realtime_metrics['burndown']['by_project'][project] = {
+                'total_poles': 0,
+                'completed_poles': 0,
+                'run_rate': 0,
+                'trend': [],
+                'resources': {'field': set(), 'back_office': set()},
+                'dependencies': set(),
+                'history': []
+            }
+
+        project_metrics = self.realtime_metrics['burndown']['by_project'][project]
+        project_metrics['total_poles'] += total_poles
+        project_metrics['completed_poles'] += completed_poles
+        project_metrics['history'].append({
+            'timestamp': timestamp,
+            'completed_poles': completed_poles
+        })
+
+    def calculate_schedule(self):
+        """Calculate project schedules based on current run rates and resources"""
+        for project_id, project in self.realtime_metrics['schedule']['projects'].items():
+            # Calculate resource capacity
+            field_capacity = sum(
+                self.realtime_metrics['schedule']['resources']['field'][user]['capacity']
+                for user in project['resources']['field']
+            )
+            back_office_capacity = sum(
+                self.realtime_metrics['schedule']['resources']['back_office'][user]['capacity']
+                for user in project['resources']['back_office']
+            )
+
+            # Calculate remaining work
+            remaining_poles = project['total_poles'] - project['completed_poles']
+            
+            # Calculate estimated completion time
+            if field_capacity > 0 and back_office_capacity > 0:
+                field_time = remaining_poles / field_capacity
+                back_office_time = remaining_poles / back_office_capacity
+                project['estimated_completion'] = max(field_time, back_office_time)
+            else:
+                project['estimated_completion'] = None
+
+            # Update dependencies
+            for dep_project in project['dependencies']:
+                if dep_project in self.realtime_metrics['schedule']['projects']:
+                    dep_completion = self.realtime_metrics['schedule']['projects'][dep_project]['estimated_completion']
+                    if dep_completion:
+                        project['estimated_completion'] = max(
+                            project['estimated_completion'],
+                            dep_completion
+                        ) if project['estimated_completion'] else dep_completion
+
+    def get_weekly_status(self):
+        """Get formatted weekly status metrics."""
+        # Format utility metrics
+        utility_metrics = {}
+        for utility, data in self.realtime_metrics['burndown']['by_utility'].items():
+            if utility == 'Unknown':
+                continue
+            utility_metrics[utility] = {
+                'total_poles': data['total_poles'],
+                'field_complete': data['completed_poles'],
+                'back_office_complete': data['completed_poles'],  # For now, using same value
+                'run_rate': data['run_rate'],
+                'estimated_completion': data['estimated_completion'] if 'estimated_completion' in data else None
+            }
+            
+        # Format user production metrics
+        user_production = {
+            'field': [],
+            'annotation': [],
+            'sent_to_pe': [],
+            'delivery': [],
+            'emr': [],
+            'approved': []
         }
         
-        # Backlog Metrics
-        self.backlog = {
-            'field': {
-                'total_poles': 0,
-                'jobs': set(),
-                'utilities': set()
+        # Process field users
+        for user_id, data in self.weekly_metrics['user_production']['field'].items():
+            user_production['field'].append({
+                'user': user_id,
+                'completed_poles': len(data['completed_poles']),
+                'utilities': list(data['utilities']),
+                'jobs': [{'job_id': job_id, 'pole_count': pole_count} 
+                        for job_id, pole_count in data.get('jobs', {}).items()]
+            })
+            
+        # Process back office users
+        for category in ['annotation', 'sent_to_pe', 'delivery', 'emr', 'approved']:
+            if category == 'annotation':
+                for user_id, data in self.weekly_metrics['user_production']['back_office']['annotation'].items():
+                    user_production[category].append({
+                        'user': user_id,
+                        'completed_poles': len(data['completed_poles']),
+                        'utilities': list(data['utilities']),
+                        'jobs': data.get('jobs', [])  # Already in correct format
+                    })
+            else:
+                for user_id, data in self.weekly_metrics['user_production']['back_office'][category]['users'].items():
+                    user_production[category].append({
+                        'user': user_id,
+                        'completed_poles': data['pole_count'],
+                        'utilities': list(data['utilities']),
+                        'jobs': data.get('jobs', [])  # Already in correct format
+                    })
+                    
+        # Format status changes
+        status_changes = {}
+        for status, changes in self.weekly_metrics['status_changes'].items():
+            total_poles = sum(change['pole_count'] for change in changes)
+            total_jobs = len(changes)
+            change_from_last_week = total_poles  # For now, just use total as change
+            
+            status_changes[status] = {
+                'job_count': total_jobs,
+                'pole_count': total_poles,
+                'change_from_last_week': change_from_last_week
+            }
+            
+        # Format burndown metrics
+        burndown = {
+            'master': {
+                'total_poles': sum(data['total_poles'] for data in self.realtime_metrics['burndown']['by_utility'].values()),
+                'field_complete': sum(data['completed_poles'] for data in self.realtime_metrics['burndown']['by_utility'].values()),
+                'back_office_complete': sum(data['completed_poles'] for data in self.realtime_metrics['burndown']['by_utility'].values()),
+                'run_rate': sum(data['run_rate'] for data in self.realtime_metrics['burndown']['by_utility'].values()),
+                'estimated_completion_date': None  # Will be calculated based on overall progress
             },
-            'back_office': {
-                'total_poles': 0,
-                'jobs': set(),
-                'utilities': set()
+            'by_utility': {
+                utility: {
+                    'total_poles': data['total_poles'],
+                    'field_complete': data['completed_poles'],
+                    'back_office_complete': data['completed_poles'],
+                    'run_rate': data['run_rate'],
+                    'estimated_completion': data.get('estimated_completion')
+                }
+                for utility, data in self.realtime_metrics['burndown']['by_utility'].items()
+                if utility != 'Unknown'
+            },
+            'by_project': {
+                project: {
+                    'total_poles': data['total_poles'],
+                    'field_complete': data['completed_poles'],
+                    'back_office_complete': data['completed_poles'],
+                    'run_rate': data['run_rate'],
+                    'target_date': None,  # Will be set from project data
+                    'estimated_completion': data.get('estimated_completion')
+                }
+                for project, data in self.realtime_metrics['burndown']['by_project'].items()
+                if project != 'Unknown'
             }
         }
         
-        # Project Metrics
-        self.projects = {}  # project_id -> {total_poles, completed_poles, back_office_users, field_users}
-        
-        # Initialize burndown metrics
-        self.burndown = {
-            'by_utility': {},  # utility -> {total_poles, completed_poles, run_rate, estimated_completion}
-            'by_project': {}  # project -> {total_poles, completed_poles, run_rate, estimated_completion}
+        # Calculate master burndown estimated completion date
+        total_poles = burndown['master']['total_poles']
+        completed_poles = burndown['master']['back_office_complete']
+        run_rate = burndown['master']['run_rate']
+        if total_poles > 0 and run_rate > 0:
+            remaining_poles = total_poles - completed_poles
+            days_to_completion = remaining_poles / (run_rate / 7)  # Convert weekly rate to daily
+            burndown['master']['estimated_completion_date'] = datetime.now() + timedelta(days=days_to_completion)
+            
+        # Format schedule metrics
+        schedule_metrics = {
+            'projects': []
         }
-        
-        # Schedule tracking
-        self.schedule = {
-            'projects': []  # [{project_id, start_date, end_date, status, total_poles, completed_poles}]
+        for project_id, data in self.realtime_metrics['schedule']['projects'].items():
+            if project_id == 'Unknown':
+                continue
+            schedule_metrics['projects'].append({
+                'project_id': project_id,
+                'total_poles': data.get('total_poles', 0),
+                'completed_poles': data.get('completed_poles', 0),
+                'field_users': list(data.get('resources', {}).get('field', set())),
+                'back_office_users': list(data.get('resources', {}).get('back_office', set())),
+                'end_date': data.get('estimated_completion')
+            })
+            
+        return {
+            'utility_metrics': utility_metrics,
+            'user_production': user_production,
+            'status_changes': status_changes,
+            'burndown': burndown,
+            'schedule': schedule_metrics
         }
+
+    def _load_previous_week_metrics(self, start_date, end_date):
+        """Load metrics from previous week for comparison"""
+        # TODO: Implement loading of previous week's metrics from database
+        pass
 
     def update_job_metrics(self, job_data: Dict, job_id: str, nodes: List[Dict]):
         """Update metrics based on job data."""
@@ -431,97 +638,6 @@ class WeeklyMetrics:
         logger.debug(f"Updated user production metrics for job {job_id}")
         logger.debug(f"Field users: {self.user_production['field'].keys()}")
         logger.debug(f"Back office users: {[u for c in self.user_production['back_office'].values() for u in c.get('users', {}).keys()]}")
-
-    def get_weekly_status(self):
-        """Get formatted weekly status metrics."""
-        # Format utility metrics
-        utility_metrics = {}
-        for utility, data in self.burndown['by_utility'].items():
-            if utility == 'Unknown':
-                continue
-            utility_metrics[utility] = {
-                'total_poles': data['total_poles'],
-                'field_completed': data['field_completed'],
-                'back_office_completed': data['back_office_completed'],
-                'run_rate': data['run_rate'],
-                'estimated_completion': data['estimated_completion']
-            }
-            
-        # Format user production metrics
-        user_production = {
-            'field': [],
-            'annotation': [],
-            'sent_to_pe': [],
-            'delivery': [],
-            'emr': [],
-            'approved': []
-        }
-        
-        # Process field users
-        for user_id, data in self.user_production['field'].items():
-            user_production['field'].append({
-                'user': user_id,
-                'completed_poles': len(data['completed_poles']),
-                'utilities': list(data['utilities']),
-                'jobs': [{'job_id': job_id, 'pole_count': pole_count} 
-                        for job_id, pole_count in data['jobs'].items()]
-            })
-            
-        # Process back office users
-        for category in ['annotation', 'sent_to_pe', 'delivery', 'emr', 'approved']:
-            if category == 'annotation':
-                for user_id, data in self.user_production['back_office']['annotation'].items():
-                    user_production[category].append({
-                        'user': user_id,
-                        'completed_poles': len(data['completed_poles']),
-                        'utilities': list(data['utilities']),
-                        'jobs': data['jobs']  # Already in correct format
-                    })
-            else:
-                for user_id, data in self.user_production['back_office'][category]['users'].items():
-                    user_production[category].append({
-                        'user': user_id,
-                        'completed_poles': data['pole_count'],
-                        'utilities': list(data['utilities']),
-                        'jobs': data['jobs']  # Already in correct format
-                    })
-                    
-        # Format status changes
-        status_changes = {}
-        for status, changes in self.status_changes.items():
-            total_poles = sum(change['pole_count'] for change in changes)
-            total_jobs = len(changes)
-            change_from_last_week = total_poles  # For now, just use total as change
-            
-            status_changes[status] = {
-                'job_count': total_jobs,
-                'pole_count': total_poles,
-                'change_from_last_week': change_from_last_week
-            }
-            
-        # Format schedule metrics
-        schedule_metrics = {
-            'projects': []
-        }
-        for project_id, data in self.projects.items():
-            if project_id == 'Unknown':
-                continue
-            schedule_metrics['projects'].append({
-                'project_id': project_id,
-                'total_poles': data['total_poles'],
-                'completed_poles': data['completed_poles'],
-                'field_users': list(data['field_users']),
-                'back_office_users': list(data['back_office_users']),
-                'end_date': None  # TODO: Add end date calculation
-            })
-            
-        return {
-            'utility_metrics': utility_metrics,
-            'user_production': user_production,
-            'status_changes': status_changes,
-            'burndown': self.burndown,
-            'schedule': schedule_metrics
-        }
 
 def generate_weekly_report(start_date: datetime, end_date: datetime, output_path: str, test_mode: bool = False) -> bool:
     """Generate the weekly report."""

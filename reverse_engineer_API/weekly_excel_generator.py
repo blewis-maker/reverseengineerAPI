@@ -140,189 +140,350 @@ class WeeklyReportGenerator:
         self.current_row += 2
 
     def _generate_burndown_metrics(self, worksheet, weekly_status):
-        """Generate burndown metrics section of the report."""
+        """Generate enhanced burndown metrics section with multiple views."""
         logging.info("Generating burndown metrics section")
         
-        # Set up headers for utility burndown
-        headers = ['Utility', 'Total Poles', 'Completed Poles', 'Run Rate', 'Est. Completion']
-        for col, header in enumerate(headers):
-            cell = worksheet.cell(row=self.current_row, column=col + 1)
-            cell.value = header
-            cell.font = Font(bold=True)
-            cell.fill = PatternFill(start_color='CCCCCC', end_color='CCCCCC', fill_type='solid')
-            
+        # Add master burndown header
+        self._add_section_header(worksheet, "Master Burndown", self.current_row)
         self.current_row += 1
         
-        # Add utility burndown metrics
-        burndown = weekly_status['burndown']
+        # Set up headers for master burndown
+        headers = ['Total Poles', 'Field Complete', 'Back Office Complete', 'Overall Progress', 'Current Run Rate', 'Est. Completion']
+        self._add_headers(worksheet, headers, self.current_row)
+        self.current_row += 1
+        
+        # Get master burndown metrics
+        master_metrics = weekly_status['burndown']['master']
+        total_poles = master_metrics.get('total_poles', 0)
+        field_complete = master_metrics.get('field_complete', 0)
+        back_office_complete = master_metrics.get('back_office_complete', 0)
+        overall_progress = (back_office_complete / total_poles * 100) if total_poles > 0 else 0
+        run_rate = master_metrics.get('run_rate', 0)
+        est_completion = master_metrics.get('estimated_completion_date')
+        
+        # Add master burndown row
+        row = [
+            total_poles,
+            field_complete,
+            back_office_complete,
+            f"{overall_progress:.1f}%",
+            f"{run_rate:.1f} poles/week",
+            est_completion.strftime('%Y-%m-%d') if est_completion else 'TBD'
+        ]
+        self._add_row(worksheet, row, self.current_row)
+        self.current_row += 2
+        
+        # Add utility burndown header
+        self._add_section_header(worksheet, "Utility Burndown", self.current_row)
+        self.current_row += 1
+        
+        # Set up headers for utility burndown
+        headers = ['Utility', 'Total Poles', 'Field Complete', 'Back Office Complete', 'Progress', 'Run Rate', 'Est. Completion']
+        self._add_headers(worksheet, headers, self.current_row)
+        self.current_row += 1
+        
+        # Add utility burndown data
+        utility_metrics = weekly_status['burndown']['by_utility']
         utility_start_row = self.current_row
-        for utility, metrics in burndown['by_utility'].items():
+        for utility, metrics in utility_metrics.items():
             if utility == 'Unknown':
                 continue
+                
+            progress = (metrics['back_office_complete'] / metrics['total_poles'] * 100) if metrics['total_poles'] > 0 else 0
             row = [
                 utility,
                 metrics['total_poles'],
-                metrics['completed_poles'],
+                metrics['field_complete'],
+                metrics['back_office_complete'],
+                f"{progress:.1f}%",
                 f"{metrics['run_rate']:.1f} poles/week",
-                metrics['estimated_completion'].strftime('%Y-%m-%d') if isinstance(metrics['estimated_completion'], datetime) else metrics['estimated_completion'] or 'TBD'
+                metrics['estimated_completion'].strftime('%Y-%m-%d') if metrics.get('estimated_completion') else 'TBD'
             ]
-            for col, value in enumerate(row):
-                cell = worksheet.cell(row=self.current_row, column=col + 1)
-                cell.value = value
+            self._add_row(worksheet, row, self.current_row)
             self.current_row += 1
         utility_end_row = self.current_row - 1
         
-        # Add spacing
+        # Add project burndown header
         self.current_row += 2
-        
-        # Add project burndown metrics header
-        headers = ['Project', 'Total Poles', 'Completed Poles', 'Run Rate', 'Est. Completion']
-        for col, header in enumerate(headers):
-            cell = worksheet.cell(row=self.current_row, column=col + 1)
-            cell.value = header
-            cell.font = Font(bold=True)
-            cell.fill = PatternFill(start_color='CCCCCC', end_color='CCCCCC', fill_type='solid')
-            
+        self._add_section_header(worksheet, "Project Burndown", self.current_row)
         self.current_row += 1
-        project_start_row = self.current_row
         
-        # Add project burndown metrics
-        for project, metrics in burndown['by_project'].items():
+        # Set up headers for project burndown
+        headers = ['Project', 'Total Poles', 'Field Complete', 'Back Office Complete', 'Progress', 'Run Rate', 'Target Date', 'Est. Completion', 'Status']
+        self._add_headers(worksheet, headers, self.current_row)
+        self.current_row += 1
+        
+        # Add project burndown data
+        project_metrics = weekly_status['burndown']['by_project']
+        project_start_row = self.current_row
+        for project, metrics in project_metrics.items():
             if project == 'Unknown':
                 continue
+                
+            progress = (metrics['back_office_complete'] / metrics['total_poles'] * 100) if metrics['total_poles'] > 0 else 0
+            target_date = metrics.get('target_date')
+            est_completion = metrics.get('estimated_completion')
+            
+            # Calculate status
+            status = 'Not Started'
+            status_color = 'FFFFFF'  # White
+            if est_completion:
+                if target_date:
+                    if est_completion > target_date:
+                        status = 'Behind'
+                        status_color = 'FF6B6B'  # Light red
+                    elif (est_completion - target_date).days <= -14:
+                        status = 'On Track'
+                        status_color = '90EE90'  # Light green
+                    else:
+                        status = 'At Risk'
+                        status_color = 'FFD700'  # Gold
+            
             row = [
                 project,
                 metrics['total_poles'],
-                metrics['completed_poles'],
+                metrics['field_complete'],
+                metrics['back_office_complete'],
+                f"{progress:.1f}%",
                 f"{metrics['run_rate']:.1f} poles/week",
-                metrics['estimated_completion'].strftime('%Y-%m-%d') if isinstance(metrics['estimated_completion'], datetime) else metrics['estimated_completion'] or 'TBD'
+                target_date.strftime('%Y-%m-%d') if target_date else 'TBD',
+                est_completion.strftime('%Y-%m-%d') if est_completion else 'TBD',
+                status
             ]
-            for col, value in enumerate(row):
-                cell = worksheet.cell(row=self.current_row, column=col + 1)
-                cell.value = value
+            self._add_row(worksheet, row, self.current_row, status_color=status_color)
             self.current_row += 1
         project_end_row = self.current_row - 1
         
         # Add spacing
         self.current_row += 2
         
-        # Add backlog analysis header
-        worksheet.cell(row=self.current_row, column=1).value = "Backlog Analysis"
-        worksheet.cell(row=self.current_row, column=1).font = Font(bold=True)
-        self.current_row += 1
+        # Create burndown charts
+        self._create_burndown_chart(worksheet, utility_start_row, utility_end_row, "Utility Burndown", "I2")
+        self._create_burndown_chart(worksheet, project_start_row, project_end_row, "Project Burndown", "I20")
         
-        # Set up headers for backlog
-        headers = ['Category', 'Total Poles', 'Jobs', 'Utilities']
-        for col, header in enumerate(headers):
-            cell = worksheet.cell(row=self.current_row, column=col + 1)
-            cell.value = header
-            cell.font = Font(bold=True)
-            cell.fill = PatternFill(start_color='CCCCCC', end_color='CCCCCC', fill_type='solid')
-            
-        self.current_row += 1
-        
-        # Add backlog metrics
-        backlog = burndown['backlog']
-        categories = {
-            'field': 'Field Collection',
-            'back_office': 'Back Office',
-            'approve_construction': 'Approve for Construction'
-        }
-        
-        for category, display_name in categories.items():
-            if category in backlog:
-                metrics = backlog[category]
-                utilities_list = sorted(list(metrics['utilities']))  # Convert set to sorted list
-                row = [
-                    display_name,
-                    metrics['total_poles'],
-                    len(metrics['jobs']),
-                    ', '.join(utilities_list) if utilities_list else 'None'  # Show actual utility names
-                ]
-                for col, value in enumerate(row):
-                    cell = worksheet.cell(row=self.current_row, column=col + 1)
-                    cell.value = value
-                    # Adjust column width for utilities
-                    if col == 3:  # Utilities column
-                        worksheet.column_dimensions[get_column_letter(col + 1)].width = max(15, len(str(value)))
-                self.current_row += 1
-        
-        # Generate burndown charts
-        # Utility Burndown Chart
-        utility_chart = BarChart()
-        utility_chart.title = "Utility Burndown"
-        utility_chart.style = 10
-        utility_chart.x_axis.title = "Utility"
-        utility_chart.y_axis.title = "Poles"
-        
-        data = Reference(worksheet, min_col=2, max_col=3,
-                        min_row=utility_start_row - 1, max_row=utility_end_row)
-        cats = Reference(worksheet, min_col=1, max_col=1,
-                        min_row=utility_start_row, max_row=utility_end_row)
-        
-        utility_chart.add_data(data, titles_from_data=True)
-        utility_chart.set_categories(cats)
-        
-        # Project Burndown Chart
-        project_chart = BarChart()
-        project_chart.title = "Project Burndown"
-        project_chart.style = 10
-        project_chart.x_axis.title = "Project"
-        project_chart.y_axis.title = "Poles"
-        
-        data = Reference(worksheet, min_col=2, max_col=3,
-                        min_row=project_start_row - 1, max_row=project_end_row)
-        cats = Reference(worksheet, min_col=1, max_col=1,
-                        min_row=project_start_row, max_row=project_end_row)
-        
-        project_chart.add_data(data, titles_from_data=True)
-        project_chart.set_categories(cats)
-        
-        # Add charts to worksheet
-        worksheet.add_chart(utility_chart, "G2")
-        worksheet.add_chart(project_chart, "G20")
-        
-        logging.info("Added burndown metrics and charts")
-        
-        # Add spacing
+        # Add trend analysis
         self.current_row += 2
+        self._add_section_header(worksheet, "7-Day Trend Analysis", self.current_row)
+        self.current_row += 1
+        
+        headers = ['Entity', 'Last 7 Days Progress', 'Trend', 'Projected Completion']
+        self._add_headers(worksheet, headers, self.current_row)
+        self.current_row += 1
+        
+        # Add master trend
+        master_trend = self._calculate_trend(master_metrics.get('history', []))
+        self._add_row(worksheet, [
+            'Overall',
+            f"{master_trend['progress']:.1f}%",
+            master_trend['indicator'],
+            master_trend['projection'].strftime('%Y-%m-%d') if master_trend.get('projection') else 'TBD'
+        ], self.current_row)
+        self.current_row += 1
+        
+        # Add utility trends
+        for utility, metrics in utility_metrics.items():
+            if utility == 'Unknown':
+                continue
+            trend = self._calculate_trend(metrics.get('history', []))
+            self._add_row(worksheet, [
+                utility,
+                f"{trend['progress']:.1f}%",
+                trend['indicator'],
+                trend['projection'].strftime('%Y-%m-%d') if trend.get('projection') else 'TBD'
+            ], self.current_row)
+            self.current_row += 1
+        
+        # Add project trends
+        for project, metrics in project_metrics.items():
+            if project == 'Unknown':
+                continue
+            trend = self._calculate_trend(metrics.get('history', []))
+            self._add_row(worksheet, [
+                project,
+                f"{trend['progress']:.1f}%",
+                trend['indicator'],
+                trend['projection'].strftime('%Y-%m-%d') if trend.get('projection') else 'TBD'
+            ], self.current_row)
+            self.current_row += 1
+
+    def _calculate_trend(self, history):
+        """Calculate trend from historical data."""
+        if not history or len(history) < 2:
+            return {'progress': 0, 'indicator': '→', 'projection': None}
+        
+        # Sort history by timestamp
+        history = sorted(history, key=lambda x: x['timestamp'])
+        
+        # Get last 7 days of data
+        week_ago = history[-1]['timestamp'] - timedelta(days=7)
+        week_data = [h for h in history if h['timestamp'] >= week_ago]
+        
+        if not week_data:
+            return {'progress': 0, 'indicator': '→', 'projection': None}
+        
+        # Calculate progress
+        start_complete = week_data[0]['completed_poles']
+        end_complete = week_data[-1]['completed_poles']
+        progress = ((end_complete - start_complete) / start_complete * 100) if start_complete > 0 else 0
+        
+        # Determine trend
+        if progress > 5:
+            indicator = '↑'  # Increasing
+        elif progress < -5:
+            indicator = '↓'  # Decreasing
+        else:
+            indicator = '→'  # Stable
+        
+        # Calculate projection
+        if len(week_data) >= 2:
+            daily_rate = (end_complete - start_complete) / 7
+            if daily_rate > 0:
+                remaining = history[-1]['total_poles'] - end_complete
+                days_to_complete = remaining / daily_rate
+                projection = history[-1]['timestamp'] + timedelta(days=days_to_complete)
+            else:
+                projection = None
+        else:
+            projection = None
+        
+        return {
+            'progress': progress,
+            'indicator': indicator,
+            'projection': projection
+        }
 
     def _generate_schedule_metrics(self, worksheet, weekly_status):
-        """Generate schedule metrics section of the report."""
+        """Generate enhanced schedule metrics section."""
         logging.info("Generating schedule metrics section")
         
-        # Set up headers
-        headers = ['Project', 'Total Poles', 'Completed Poles', 'Progress', 'Field Users', 'Back Office Users', 'End Date']
-        for col, header in enumerate(headers):
-            cell = worksheet.cell(row=self.current_row, column=col + 1)
-            cell.value = header
-            cell.font = Font(bold=True)
-            cell.fill = PatternFill(start_color='CCCCCC', end_color='CCCCCC', fill_type='solid')
-            
+        # Add schedule header
+        self._add_section_header(worksheet, "Project Schedule", self.current_row)
         self.current_row += 1
         
-        # Add project metrics
+        # Set up headers
+        headers = [
+            'Project', 'Total Poles', 'Progress', 'Field Resources', 'Back Office Resources',
+            'Current Run Rate', 'Required Run Rate', 'Target Date', 'Projected End Date', 'Status'
+        ]
+        self._add_headers(worksheet, headers, self.current_row)
+        self.current_row += 1
+        
+        # Add project schedule data
         schedule = weekly_status['schedule']
         for project in schedule['projects']:
             progress = (project['completed_poles'] / project['total_poles'] * 100) if project['total_poles'] > 0 else 0
+            
+            # Calculate required run rate
+            if project.get('target_date'):
+                remaining_poles = project['total_poles'] - project['completed_poles']
+                remaining_weeks = (project['target_date'] - datetime.now()).days / 7
+                required_rate = remaining_poles / remaining_weeks if remaining_weeks > 0 else float('inf')
+            else:
+                required_rate = 0
+            
+            # Determine status
+            status = project.get('status', 'Not Started')
+            status_color = {
+                'On Track': '90EE90',  # Light green
+                'At Risk': 'FFD700',   # Gold
+                'Behind': 'FF6B6B',    # Light red
+                'Not Started': 'FFFFFF' # White
+            }.get(status, 'FFFFFF')
+            
             row = [
                 project['project_id'],
                 project['total_poles'],
-                project['completed_poles'],
                 f"{progress:.1f}%",
-                len(project['field_users']),
-                len(project['back_office_users']),
-                project.get('end_date', 'TBD')
+                len(project['resources']['field']),
+                len(project['resources']['back_office']),
+                f"{project['run_rate']:.1f} poles/week",
+                f"{required_rate:.1f} poles/week",
+                project['target_date'].strftime('%Y-%m-%d') if project.get('target_date') else 'TBD',
+                project['estimated_completion'].strftime('%Y-%m-%d') if project.get('estimated_completion') else 'TBD',
+                status
             ]
-            for col, value in enumerate(row):
-                cell = worksheet.cell(row=self.current_row, column=col + 1)
-                cell.value = value
+            self._add_row(worksheet, row, self.current_row, status_color=status_color)
             self.current_row += 1
-            
-        logging.info("Added schedule metrics")
         
-        # Add spacing
+        # Create Gantt chart
+        self._create_gantt_chart(worksheet, schedule['projects'])
+
+    def _create_gantt_chart(self, worksheet, projects):
+        """Create a Gantt chart for project schedule visualization."""
+        # Start Gantt chart 2 rows below current position
         self.current_row += 2
+        self._add_section_header(worksheet, "Project Timeline (Gantt Chart)", self.current_row)
+        self.current_row += 1
+        
+        # Calculate date range
+        start_date = min((p['start_date'] for p in projects if p.get('start_date')), default=datetime.now())
+        end_date = max((p['estimated_completion'] for p in projects if p.get('estimated_completion')), 
+                      default=datetime.now() + timedelta(days=90))
+        
+        # Create timeline header
+        timeline_start = start_date.replace(day=1)
+        timeline_end = (end_date.replace(day=1) + timedelta(days=32)).replace(day=1)
+        current_date = timeline_start
+        col = 2
+        
+        while current_date < timeline_end:
+            cell = worksheet.cell(row=self.current_row, column=col)
+            cell.value = current_date.strftime('%Y-%m')
+            cell.font = Font(bold=True)
+            current_date = (current_date + timedelta(days=32)).replace(day=1)
+            col += 1
+        
+        self.current_row += 1
+        
+        # Add project timelines
+        for project in projects:
+            # Project name
+            worksheet.cell(row=self.current_row, column=1).value = project['project_id']
+            
+            if project.get('start_date') and project.get('estimated_completion'):
+                start_col = 2 + (project['start_date'].year - timeline_start.year) * 12 + \
+                           (project['start_date'].month - timeline_start.month)
+                duration_months = (project['estimated_completion'].year - project['start_date'].year) * 12 + \
+                                (project['estimated_completion'].month - project['start_date'].month) + 1
+                
+                # Draw progress bar
+                for i in range(duration_months):
+                    cell = worksheet.cell(row=self.current_row, column=start_col + i)
+                    cell.fill = PatternFill(start_color='4472C4', end_color='4472C4', fill_type='solid')
+                    
+                    # Add completion percentage if applicable
+                    if project['total_poles'] > 0:
+                        progress = project['completed_poles'] / project['total_poles']
+                        if i < int(duration_months * progress):
+                            cell.fill = PatternFill(start_color='90EE90', end_color='90EE90', fill_type='solid')
+            
+            self.current_row += 1
+
+    def _add_section_header(self, worksheet, title, row):
+        """Add a section header with consistent formatting."""
+        cell = worksheet.cell(row=row, column=1)
+        cell.value = title
+        cell.font = Font(bold=True, size=12)
+        cell.fill = PatternFill(start_color='CCCCCC', end_color='CCCCCC', fill_type='solid')
+        worksheet.merge_cells(start_row=row, start_column=1, end_row=row, end_column=8)
+
+    def _add_headers(self, worksheet, headers, row):
+        """Add headers with consistent formatting."""
+        for col, header in enumerate(headers, 1):
+            cell = worksheet.cell(row=row, column=col)
+            cell.value = header
+            cell.font = Font(bold=True)
+            cell.fill = PatternFill(start_color='CCCCCC', end_color='CCCCCC', fill_type='solid')
+            cell.alignment = Alignment(horizontal='center')
+
+    def _add_row(self, worksheet, values, row, status_color=None):
+        """Add a row with consistent formatting."""
+        for col, value in enumerate(values, 1):
+            cell = worksheet.cell(row=row, column=col)
+            cell.value = value
+            cell.alignment = Alignment(horizontal='center')
+            if status_color and col == len(values):  # Color the status column if color provided
+                cell.fill = PatternFill(start_color=status_color, end_color=status_color, fill_type='solid')
 
     def _generate_utility_progress(self, worksheet, weekly_status):
         """Generate utility progress section."""
@@ -435,3 +596,27 @@ class WeeklyReportGenerator:
         for row in ws.rows:
             for cell in row:
                 cell.alignment = Alignment(horizontal='center') 
+
+    def _create_burndown_chart(self, worksheet, start_row, end_row, title, position):
+        """Create a burndown chart for visualization."""
+        chart = BarChart()
+        chart.title = title
+        chart.style = 10
+        chart.x_axis.title = "Entity"
+        chart.y_axis.title = "Poles"
+        
+        # Add data series for total and completed poles
+        data = Reference(worksheet, min_col=2, max_col=4,  # Include field and back office completion
+                        min_row=start_row - 1, max_row=end_row)
+        cats = Reference(worksheet, min_col=1, max_col=1,
+                        min_row=start_row, max_row=end_row)
+        
+        chart.add_data(data, titles_from_data=True)
+        chart.set_categories(cats)
+        
+        # Set colors for the series
+        chart.series[0].graphicalProperties.solidFill = "4472C4"  # Total poles - blue
+        chart.series[1].graphicalProperties.solidFill = "ED7D31"  # Field complete - orange
+        chart.series[2].graphicalProperties.solidFill = "90EE90"  # Back office complete - green
+        
+        worksheet.add_chart(chart, position) 

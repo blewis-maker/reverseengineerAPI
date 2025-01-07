@@ -8,7 +8,7 @@ import time
 import socket
 import re
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timedelta
 from openpyxl import Workbook
 from openpyxl.utils.dataframe import dataframe_to_rows
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
@@ -36,6 +36,7 @@ warnings.filterwarnings('ignore')
 # Add to imports at the top
 from arcgis_updater import ArcGISUpdater
 from database.metrics_recorder import metrics_recorder
+from database.db import db
 
 app = Flask(__name__)
 
@@ -52,7 +53,11 @@ load_dotenv()
 # Toggle to enable/disable testing a specific job
 TEST_ONLY_SPECIFIC_JOB = True  # Changed to True to only process test jobs
 
-# IDs of the test jobs
+# Add test mode configuration for date range
+TEST_DATE_RANGE = True  # Set to True to use date range in test mode
+TEST_DAYS = 7  # Number of days to look back
+
+# IDs of the test jobs - expanded to include more jobs for better testing
 TEST_JOB_IDS = [
     "-O-nlOLQbPIYhHwJCPDN",
     "-Nvs8uA2MHZB5NdTK2_p",
@@ -91,50 +96,86 @@ def getJobList():
     """Get list of jobs from KatapultPro API"""
     if TEST_ONLY_SPECIFIC_JOB:
         logging.info("Test mode: Only retrieving specific test jobs")
-        test_jobs = []
-        for job_id in TEST_JOB_IDS:
+        
+        if TEST_DATE_RANGE:
+            # Calculate date range for last 7 days
+            end_date = datetime.now()
+            start_date = end_date - timedelta(days=TEST_DAYS)
+            
+            # Format dates for API (MM/DD/YY format)
+            from_date = start_date.strftime('%-m/%-d/%y')
+            to_date = end_date.strftime('%-m/%-d/%y')
+            
+            logging.info(f"Getting jobs updated between {from_date} and {to_date}")
+            
+            test_jobs = []
+            conn = None
+            
             try:
-                # Get individual job data directly
+                # Use updatedjobslist endpoint to get jobs in date range
                 conn = http.client.HTTPSConnection("katapultpro.com", timeout=30)
-                conn.request("GET", f"/api/v2/jobs/{job_id}?api_key={CONFIG['API_KEY']}")
+                url_path = f"/api/v2/updatedjobslist?fromDate={from_date}&toDate={to_date}&useToday=true&api_key={CONFIG['API_KEY']}"
+                
+                conn.request("GET", url_path)
                 res = conn.getresponse()
                 data = res.read().decode("utf-8")
-                job_data = json.loads(data)
                 
-                # Extract job name with detailed logging
-                job_name = None
-                metadata = job_data.get('metadata', {})
-                
-                # Try metadata name first
-                if metadata and metadata.get('name'):
-                    job_name = metadata.get('name')
-                    logging.info(f"Found name in metadata for job {job_id}: {job_name}")
-                
-                # If no metadata name, try direct name field
-                if not job_name and job_data.get('name'):
-                    job_name = job_data.get('name')
-                    logging.info(f"Found name in job data for job {job_id}: {job_name}")
-                
-                # If still no name, use job ID
-                if not job_name:
-                    job_name = f"Job {job_id}"
-                    logging.warning(f"No name found for job {job_id}, using ID as name")
-                
-                test_jobs.append({
-                    'id': job_id,
-                    'name': job_name
-                })
-                logging.info(f"Added test job: ID={job_id}, Name={job_name}")
-                time.sleep(1)  # Small delay between requests
-                
+                if res.status == 200:
+                    updated_jobs = json.loads(data)
+                    logging.info(f"Found {len(updated_jobs)} jobs in date range")
+                    
+                    for job in updated_jobs:
+                        job_id = job.get('jobId')
+                        if job_id:
+                            try:
+                                # Get individual job data
+                                conn.request("GET", f"/api/v2/jobs/{job_id}?api_key={CONFIG['API_KEY']}")
+                                job_res = conn.getresponse()
+                                job_data = json.loads(job_res.read().decode("utf-8"))
+                                
+                                # Extract job name
+                                job_name = None
+                                metadata = job_data.get('metadata', {})
+                                
+                                if metadata and metadata.get('name'):
+                                    job_name = metadata.get('name')
+                                elif job_data.get('name'):
+                                    job_name = job_data.get('name')
+                                else:
+                                    job_name = f"Job {job_id}"
+                                
+                                test_jobs.append({
+                                    'id': job_id,
+                                    'name': job_name
+                                })
+                                logging.info(f"Added job: ID={job_id}, Name={job_name}")
+                                time.sleep(1)  # Small delay between requests
+                                
+                            except Exception as e:
+                                logging.error(f"Error retrieving job {job_id}: {str(e)}")
+                                continue
+                else:
+                    logging.error(f"Failed to get jobs in date range. Status: {res.status}")
+                    # Fall back to TEST_JOB_IDS
+                    return getTestJobs()
+                    
             except Exception as e:
-                logging.error(f"Error retrieving test job {job_id}: {str(e)}")
-                continue
+                logging.error(f"Error getting jobs in date range: {str(e)}")
+                # Fall back to TEST_JOB_IDS
+                return getTestJobs()
+                
             finally:
-                if 'conn' in locals():
+                if conn:
                     conn.close()
-        
-        return test_jobs
+                    
+            if test_jobs:
+                return test_jobs
+            else:
+                logging.warning("No jobs found in date range, falling back to TEST_JOB_IDS")
+                return getTestJobs()
+        else:
+            # Use original test jobs if not using date range
+            return getTestJobs()
     
     # Original implementation for non-test mode
     URL_PATH = '/api/v2/jobs'
@@ -238,6 +279,53 @@ def getJobList():
                     pass
 
     return all_jobs
+
+def getTestJobs():
+    """Helper function to get test jobs using TEST_JOB_IDS"""
+    test_jobs = []
+    for job_id in TEST_JOB_IDS:
+        try:
+            # Get individual job data directly
+            conn = http.client.HTTPSConnection("katapultpro.com", timeout=30)
+            conn.request("GET", f"/api/v2/jobs/{job_id}?api_key={CONFIG['API_KEY']}")
+            res = conn.getresponse()
+            data = res.read().decode("utf-8")
+            job_data = json.loads(data)
+            
+            # Extract job name with detailed logging
+            job_name = None
+            metadata = job_data.get('metadata', {})
+            
+            # Try metadata name first
+            if metadata and metadata.get('name'):
+                job_name = metadata.get('name')
+                logging.info(f"Found name in metadata for job {job_id}: {job_name}")
+            
+            # If no metadata name, try direct name field
+            if not job_name and job_data.get('name'):
+                job_name = job_data.get('name')
+                logging.info(f"Found name in job data for job {job_id}: {job_name}")
+            
+            # If still no name, use job ID
+            if not job_name:
+                job_name = f"Job {job_id}"
+                logging.warning(f"No name found for job {job_id}, using ID as name")
+            
+            test_jobs.append({
+                'id': job_id,
+                'name': job_name
+            })
+            logging.info(f"Added test job: ID={job_id}, Name={job_name}")
+            time.sleep(1)  # Small delay between requests
+            
+        except Exception as e:
+            logging.error(f"Error retrieving test job {job_id}: {str(e)}")
+            continue
+        finally:
+            if 'conn' in locals():
+                conn.close()
+    
+    return test_jobs
 
 # Function to get job data from KatapultPro API
 def getJobData(job_id):
@@ -2377,8 +2465,8 @@ def run_job():
         # Get all jobs
         jobs = getJobList()
         if not jobs:
-            logging.error("No jobs retrieved")
-            return
+            logging.warning("No jobs available to process")
+            return False
         
         # Get user list for mapping
         user_map = getUserList()
@@ -2398,6 +2486,7 @@ def run_job():
                 # Get detailed job data
                 job_data = getJobData(job_id)
                 if not job_data or not validateJobData(job_data):
+                    logging.warning(f"Job {job_name} (ID: {job_id}) has invalid or missing data - skipping")
                     continue
                 
                 # Extract nodes, connections, and anchors
@@ -2411,7 +2500,10 @@ def run_job():
                     job_data['id'] = job_id
                     metrics_recorder.record_job_metrics(job_data, current_timestamp)
                 except Exception as e:
-                    logging.error(f"Failed to record metrics for job {job_name} (ID: {job_id}): {str(e)}")
+                    logging.error(f"Metrics recording error for job {job_name} (ID: {job_id}): {str(e)}")
+                    if "status_change_log" in str(e):
+                        logging.error("Status change trigger error - check trigger function and job_id values")
+                    logging.debug(f"Stack trace: {traceback.format_exc()}")
                     # Continue processing even if metrics recording fails
                 
                 processed_jobs.append({
@@ -2420,9 +2512,10 @@ def run_job():
                     'anchors': anchors,
                     'job_data': job_data
                 })
-                
+
             except Exception as e:
                 logging.error(f"Error processing job {job_name} (ID: {job_id}): {str(e)}")
+                logging.debug(f"Stack trace: {traceback.format_exc()}")
                 continue
         
         if processed_jobs:
@@ -2436,35 +2529,54 @@ def run_job():
                 all_connections.extend(job['connections'])
                 all_anchors.extend(job['anchors'])
             
-            # Update ArcGIS features
-            update_arcgis_features(all_nodes, all_connections, all_anchors)
-            
-            # Update SharePoint tracker
-            create_report(processed_jobs)
-            
             # Update daily summaries and burndown metrics
             try:
-                # Get unique utilities from processed jobs
-                utilities = {job['job_data'].get('metadata', {}).get('utility') 
-                           for job in processed_jobs 
-                           if job['job_data'].get('metadata', {}).get('utility')}
-                
-                # Update daily summaries
                 metrics_recorder.update_daily_summary(current_timestamp)
+                logging.info("Updated daily summary metrics")
                 
                 # Update burndown metrics for each utility
+                utilities = set(node.get('utility', 'Unknown') for node in all_nodes)
                 for utility in utilities:
-                    if utility:
+                    if utility != 'Unknown':
                         metrics_recorder.update_burndown_metrics(utility, current_timestamp)
-                
+                logging.info("Updated burndown metrics")
             except Exception as e:
-                logging.error(f"Failed to update summary metrics: {str(e)}")
+                logging.error(f"Error updating summary metrics: {str(e)}")
+                logging.debug(f"Stack trace: {traceback.format_exc()}")
+            
+            # Update ArcGIS if not in test mode
+            if not TEST_ONLY_SPECIFIC_JOB:
+                try:
+                    update_arcgis_features(all_nodes, all_connections, all_anchors)
+                except Exception as e:
+                    logging.error(f"ArcGIS update error: {str(e)}")
+                    logging.debug(f"Stack trace: {traceback.format_exc()}")
+            else:
+                logging.info("Skipping ArcGIS update - Test mode enabled")
+            
+            # Update SharePoint tracker if not in test mode
+            if not TEST_ONLY_SPECIFIC_JOB:
+                try:
+                    create_report(processed_jobs)
+                except Exception as e:
+                    logging.error(f"SharePoint report error: {str(e)}")
+                    logging.debug(f"Stack trace: {traceback.format_exc()}")
+            else:
+                logging.info("Skipping SharePoint update - Test mode enabled")
+            
+        # Log final summary
+        logging.info("\n=== Job Run Summary ===")
+        logging.info(f"Total jobs processed: {len(processed_jobs)}")
+        logging.info(f"Total nodes: {sum(len(job['nodes']) for job in processed_jobs)}")
+        logging.info(f"Mode: {'TEST' if TEST_ONLY_SPECIFIC_JOB else 'PRODUCTION'}")
+        logging.info("======================\n")
         
-        logging.info("Job run completed successfully")
-        return True
+        # Return True if any jobs were processed successfully
+        return len(processed_jobs) > 0
         
     except Exception as e:
-        logging.error(f"Failed to run job: {str(e)}")
+        logging.error(f"Critical system error: {str(e)}")
+        logging.debug(f"Stack trace: {traceback.format_exc()}")
         return False
 
 @app.route('/', methods=['POST'])
@@ -2472,14 +2584,35 @@ def handle_request():
     """Handle incoming HTTP POST requests"""
     try:
         result = run_job()
-        return jsonify(result)
+        if result:
+            logging.info("Job run completed successfully")
+            return jsonify({
+                "status": "success",
+                "message": "Job run completed successfully"
+            }), 200
+        else:
+            logging.info("Job run completed with no jobs processed")
+            return jsonify({
+                "status": "warning",
+                "message": "Job completed but no jobs were processed"
+            }), 200
     except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
+        error_msg = str(e)
+        logging.error(f"System error in request handler: {error_msg}")
+        logging.debug(f"Stack trace: {traceback.format_exc()}")
+        return jsonify({
+            "status": "error",
+            "message": "System error occurred - check application logs",
+            "error": error_msg
+        }), 500
 
 @app.route('/', methods=['GET'])
 def health_check():
     """Handle health check requests"""
-    return jsonify({"status": "healthy"}), 200
+    return jsonify({
+        "status": "healthy",
+        "message": "Service is running"
+    }), 200
 
 if __name__ == '__main__':
     # Get port from environment variable or default to 8080

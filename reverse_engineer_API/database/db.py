@@ -4,6 +4,10 @@ from psycopg2.extras import RealDictCursor
 from contextlib import contextmanager
 import logging
 from typing import Optional
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -21,13 +25,14 @@ class DatabaseConnection:
         try:
             if not self.connection or self.connection.closed:
                 self.connection = psycopg2.connect(
-                    dbname="metrics_db",
-                    user="postgres",
-                    password="metrics_db_password",
-                    host="localhost",
-                    port="5432"
+                    dbname=os.getenv('DB_NAME', 'metrics_db'),
+                    user=os.getenv('DB_USER', 'postgres'),
+                    password=os.getenv('DB_PASS', 'metrics_db_password'),
+                    host=os.getenv('DB_HOST', 'localhost'),
+                    port=os.getenv('DB_PORT', '5432')
                 )
                 logging.info("Successfully connected to database")
+                return self.connection
         except Exception as e:
             logging.error(f"Database connection error: {str(e)}")
             raise

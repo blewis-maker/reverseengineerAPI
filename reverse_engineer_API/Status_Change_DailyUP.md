@@ -1,226 +1,179 @@
-# Status Change Tracking & Daily Updates System
+# Status Change and Project Tracking Implementation Plan
 
-## Implementation Status
-- ✅ Database Schema Created
-- ✅ Basic Database Connection
-- ✅ Job Metrics Recording
-- ✅ Pole Metrics Recording
-- ❌ Status Change Detection
-- ❌ User Metrics Recording
-- ❌ Daily Summary Updates
-- ❌ Burndown Metrics
+## 1. Database Schema Updates
 
-## Database Schema
+### Project Tracking Tables
+- [ ] Create `projects` table with fields:
+  - project_id (Zone Name)
+  - name
+  - utility
+  - total_poles
+  - target_date (Aerial Engineering due date)
+  - status
+  - created_at
+  - updated_at
 
-### Job Metrics Table (Implemented)
-```sql
-CREATE TABLE job_metrics (
-    id SERIAL PRIMARY KEY,
-    job_id TEXT NOT NULL,
-    status TEXT NOT NULL,
-    utility TEXT,
-    total_poles INTEGER,
-    completed_poles INTEGER,
-    field_complete INTEGER,
-    back_office_complete INTEGER,
-    assigned_users TEXT[],
-    priority INTEGER,
-    target_completion_date DATE,
-    timestamp TIMESTAMP NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-```
+### Burndown Tracking Tables
+- [x] Create `burndown_metrics` table with fields:
+  - id
+  - entity_type (utility/project)
+  - entity_id
+  - total_poles
+  - field_complete
+  - back_office_complete
+  - run_rate
+  - estimated_completion
+  - timestamp
+  Implementation details:
+  - Added unique constraint on (utility, date)
+  - Added calculation for run_rate based on daily completion rate
+  - Added resource tracking (actual vs required)
+  - Implemented backfill functionality
 
-### Status Changes Table (Not Recording)
-```sql
-CREATE TABLE status_changes (
-    id SERIAL PRIMARY KEY,
-    job_id TEXT NOT NULL,
-    previous_status TEXT,
-    new_status TEXT NOT NULL,
-    changed_at TIMESTAMP NOT NULL,
-    changed_by TEXT,
-    week_number INTEGER,
-    year INTEGER,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-```
+## 2. SharePoint Integration
 
-### Pole Metrics Table (Implemented)
-```sql
-CREATE TABLE pole_metrics (
-    id SERIAL PRIMARY KEY,
-    job_id TEXT NOT NULL,
-    node_id TEXT NOT NULL,
-    utility TEXT,
-    field_completed BOOLEAN,
-    field_completed_by TEXT,
-    field_completed_at TIMESTAMP,
-    back_office_completed BOOLEAN,
-    annotated_by TEXT,
-    annotation_completed_at TIMESTAMP,
-    pole_height TEXT,
-    pole_class TEXT,
-    mr_status TEXT,
-    poa_height TEXT,
-    timestamp TIMESTAMP NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-```
+### Design Job Tracking Import
+- [ ] Create function to fetch Design Job Tracking spreadsheet
+- [ ] Parse Zone Names and due dates
+- [ ] Map to existing projects in database
+- [ ] Update project target dates
 
-### User Metrics Table (Not Recording)
-```sql
-CREATE TABLE user_metrics (
-    id SERIAL PRIMARY KEY,
-    user_id TEXT NOT NULL,
-    job_id TEXT NOT NULL,
-    utility TEXT,
-    role TEXT,
-    activity_type TEXT,
-    poles_completed INTEGER,
-    timestamp TIMESTAMP NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-```
+## 3. Burndown Calculations
 
-### User Daily Summary Table (Not Recording)
-```sql
-CREATE TABLE user_daily_summary (
-    id SERIAL PRIMARY KEY,
-    user_id TEXT NOT NULL,
-    date DATE NOT NULL,
-    role TEXT,
-    total_poles_completed INTEGER,
-    utilities_worked TEXT[],
-    jobs_worked TEXT[],
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-```
+### Master Burndown
+- [x] Calculate total poles across all projects
+- [x] Track completion percentage
+- [x] Calculate overall run rate
+- [x] Project completion date
+Implementation details:
+- Using daily snapshots for point-in-time analysis
+- Calculating run rate based on completed poles over time
+- Estimating completion dates using current run rate
 
-### Burndown Metrics Table (Not Recording)
-```sql
-CREATE TABLE burndown_metrics (
-    id SERIAL PRIMARY KEY,
-    utility TEXT,
-    date DATE NOT NULL,
-    total_poles INTEGER,
-    completed_poles INTEGER,
-    run_rate DOUBLE PRECISION,
-    estimated_completion_date DATE,
-    actual_resources INTEGER,
-    required_resources INTEGER,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-```
+### Field Burndown
+- [x] Track field completion status
+- [x] Calculate field run rate
+- [x] Project field completion date
+Implementation details:
+- Tracking field_completed status in pole_metrics
+- Calculating field-specific run rates
+- Recording field resources and completion timestamps
 
-## Current Implementation Status
+### Back Office Burndown
+- [x] Track back office completion status
+- [x] Calculate back office run rate
+- [x] Project back office completion date
+Implementation details:
+- Tracking back_office_completed status in pole_metrics
+- Calculating back office run rates
+- Recording annotation resources and completion timestamps
 
-### Working Features
-1. **Job Metrics Recording**
-   - Successfully capturing job status
-   - Recording pole counts
-   - Tracking completion rates
-   - Storing utility information
+## 4. Project Integration
 
-2. **Pole Metrics Recording**
-   - Recording individual pole data
-   - Tracking field completion status
-   - Storing pole specifications
-   - Capturing MR status
+### Job to Project Mapping
+- [ ] Map jobs to projects using Zone Name
+- [ ] Aggregate job metrics by project
+- [ ] Calculate project-level statistics
 
-### Pending Implementation
-1. **Status Change Detection**
-   - Need to implement comparison logic
-   - Add status change recording
-   - Track change timestamps
-   - Record change authors
+### Project Schedule Tracking
+- [ ] Track project due dates from Design Job Tracking
+- [ ] Calculate project completion estimates
+- [ ] Compare with target dates
+- [ ] Status indicators (On Track/At Risk/Behind)
 
-2. **User Metrics**
-   - Need to implement user activity tracking
-   - Add role-based metrics
-   - Track individual productivity
-   - Record daily summaries
+## 5. Weekly Report Enhancements
 
-3. **Burndown Analytics**
-   - Implement run rate calculations
-   - Add resource tracking
-   - Calculate completion estimates
-   - Track utility-level progress
+### Project Status Section
+- [ ] Add project summary table
+- [ ] Show completion by project
+- [ ] Compare actual vs target dates
+- [ ] Resource allocation by project
 
-## Next Steps
+### Enhanced Burndown Charts
+- [x] Master burndown chart
+- [x] Field completion burndown
+- [x] Back office completion burndown
+- [ ] Project-specific burndowns
+Implementation details:
+- Using burndown_metrics table for trend analysis
+- Calculating separate field and back office completion rates
+- Tracking resource allocation and requirements
 
-1. **Fix Status Change Recording**
-   - Implement status comparison logic
-   - Add proper error handling
-   - Include user tracking
+## 6. Testing Plan
 
-2. **Implement User Metrics**
-   - Extract editor information from photo data
-   - Track field vs back office activities
-   - Record daily summaries
+### Database Testing
+- [x] Test project table creation
+- [x] Test burndown metrics recording
+- [x] Verify data integrity
+Implementation details:
+- Added unique constraints to prevent duplicates
+- Implemented comprehensive schema with proper relationships
+- Added indexes for query performance
+- Verified data integrity through verify_tables.py
 
-3. **Add Burndown Calculations**
-   - Implement run rate logic
-   - Add resource calculations
-   - Track completion estimates
+### SharePoint Integration Testing
+- [ ] Test Design Job Tracking import
+- [ ] Verify project mapping
+- [ ] Validate target date updates
 
-## Integration Points
+### Burndown Calculation Testing
+- [x] Verify master burndown accuracy
+- [x] Test field burndown calculations
+- [x] Test back office burndown calculations
+- [x] Validate run rate calculations
+Implementation details:
+- Implemented backfill functionality for historical data
+- Added error handling for division by zero cases
+- Verified calculations through metrics_recorder.py
 
-1. **Job Processing**
-```python
-def run_job():
-    """Main job processing function"""
-    try:
-        # Initialize metrics recorder
-        metrics_recorder = MetricsRecorder()
-        
-        # Process each job
-        for job in jobs:
-            # Record job metrics
-            metrics_recorder.record_job_metrics(job)
-            
-            # Check for status changes
-            metrics_recorder.check_status_changes(job)
-            
-            # Record pole metrics
-            metrics_recorder.record_pole_metrics(job)
-            
-            # Update user metrics
-            metrics_recorder.record_user_metrics(job)
-            
-    except Exception as e:
-        logging.error(f"Failed to run job: {str(e)}")
-```
+### Project Integration Testing
+- [ ] Test job-to-project mapping
+- [ ] Verify project metrics aggregation
+- [ ] Test schedule tracking
+- [ ] Validate status indicators
 
-2. **User Activity Tracking**
-```python
-def record_user_metrics(self, job_data):
-    """Record user activity metrics"""
-    try:
-        # Extract editor information
-        editors = self._get_editors_from_photos(job_data)
-        
-        # Record metrics for each editor
-        for editor in editors:
-            self._record_editor_activity(editor, job_data)
-            
-    except Exception as e:
-        logging.error(f"Failed to record user metrics: {str(e)}")
-```
+### Report Generation Testing
+- [x] Test enhanced report format
+- [x] Verify burndown charts
+- [ ] Validate project status section
+- [ ] Test overall report generation
 
-## Testing Strategy
+## Implementation Strategy
 
-1. **Unit Tests**
-   - Test each metrics recording function
-   - Validate data integrity
-   - Check error handling
+1. **Phase 1: Database Setup** ✓
+   - Implement schema changes
+   - Create new tables
+   - Set up relationships
 
-2. **Integration Tests**
-   - Test full job processing
-   - Verify database updates
-   - Check metric calculations
+2. **Phase 2: Data Integration** (In Progress)
+   - Implement SharePoint integration
+   - Set up project mapping
+   - Begin collecting burndown metrics
 
-3. **Monitoring**
-   - Track successful records
-   - Monitor error rates
-   - Check data consistency
+3. **Phase 3: Calculation Engine** ✓
+   - Implement burndown calculations
+   - Set up run rate tracking
+   - Create completion projections
+
+4. **Phase 4: Reporting** (Partially Complete)
+   - Enhance weekly report
+   - Add new visualizations
+   - Implement project tracking
+
+5. **Phase 5: Testing & Validation** (In Progress)
+   - Systematic testing of each component
+   - End-to-end testing
+   - Performance optimization
+
+## Notes
+
+- Project (Zone Name) is the key linking entity
+- Burndowns are now calculated at multiple levels:
+  - Master (all poles)
+  - Field completion
+  - Back office completion
+  - Project-specific (pending)
+- Schedule tracking will integrate Design Job Tracking data
+- Weekly report includes both high-level and detailed views
+- Added comprehensive error handling and data validation
+- Implemented backfill functionality for historical data

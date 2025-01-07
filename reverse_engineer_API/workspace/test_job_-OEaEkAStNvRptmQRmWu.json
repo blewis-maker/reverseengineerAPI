@@ -1,0 +1,1439 @@
+{
+  "connections": {
+    "-O5OlVEiGIXIIl8oaHnE": {
+      "_created": {
+        "method": "desktop",
+        "timestamp": 1724861776878,
+        "uid": "Jv8lBg0YSFeqGimebhrbBuVKKF43"
+      },
+      "attributes": {
+        "connection_type": {
+          "button_added": "aerial cable"
+        }
+      },
+      "button": "join_osp_aerial",
+      "node_id_1": "-O2WuIbyXkpuxRc5wZn_",
+      "node_id_2": "-O2WuIbxcWmifl53xTgr"
+    },
+    "-O5OlVVVmDBuce453dVU": {
+      "_created": {
+        "method": "desktop",
+        "timestamp": 1724861777952,
+        "uid": "Jv8lBg0YSFeqGimebhrbBuVKKF43"
+      },
+      "attributes": {
+        "connection_type": {
+          "button_added": "aerial cable"
+        }
+      },
+      "button": "join_osp_aerial",
+      "node_id_1": "-O2WuIbyXkpuxRc5wZna",
+      "node_id_2": "-O2WuIbyXkpuxRc5wZn_"
+    },
+    "-O5OlVmQ3k9fHjF9RAwq": {
+      "_created": {
+        "method": "desktop",
+        "timestamp": 1724861779099,
+        "uid": "Jv8lBg0YSFeqGimebhrbBuVKKF43"
+      },
+      "attributes": {
+        "connection_type": {
+          "button_added": "aerial cable"
+        }
+      },
+      "button": "join_osp_aerial",
+      "node_id_1": "-O2WuIbyXkpuxRc5wZnb",
+      "node_id_2": "-O2WuIbyXkpuxRc5wZna"
+    },
+    "-O5OlW4hLX1NDQHf0GM9": {
+      "_created": {
+        "method": "desktop",
+        "timestamp": 1724861780333,
+        "uid": "Jv8lBg0YSFeqGimebhrbBuVKKF43"
+      },
+      "attributes": {
+        "connection_type": {
+          "button_added": "aerial cable"
+        }
+      },
+      "button": "join_osp_aerial",
+      "node_id_1": "-O2WuIbyXkpuxRc5wZnc",
+      "node_id_2": "-O2WuIbyXkpuxRc5wZnb"
+    },
+    "-O5OlWIWqE2x8-QVH6SK": {
+      "_created": {
+        "method": "desktop",
+        "timestamp": 1724861781217,
+        "uid": "Jv8lBg0YSFeqGimebhrbBuVKKF43"
+      },
+      "attributes": {
+        "connection_type": {
+          "button_added": "aerial cable"
+        }
+      },
+      "button": "join_osp_aerial",
+      "node_id_1": "-O2WuIbyXkpuxRc5wZnd",
+      "node_id_2": "-O2WuIbyXkpuxRc5wZnc"
+    },
+    "-O5OlWYNVsCf1x9slxJB": {
+      "_created": {
+        "method": "desktop",
+        "timestamp": 1724861782232,
+        "uid": "Jv8lBg0YSFeqGimebhrbBuVKKF43"
+      },
+      "attributes": {
+        "connection_type": {
+          "button_added": "aerial cable"
+        }
+      },
+      "button": "join_osp_aerial",
+      "node_id_1": "-O2WuIbyXkpuxRc5wZne",
+      "node_id_2": "-O2WuIbyXkpuxRc5wZnd"
+    }
+  },
+  "date_created": 1734734709489,
+  "geohash": {
+    "-O2WuIbyXkpuxRc5wZne": {
+      "c": "#f00",
+      "g": "9wekrn8jjf",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.346148828712835,
+        -107.6218224
+      ],
+      "n": {
+        "-O5OlWYNVsCf1x9slxJB": 1
+      },
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-O5OlWYNVsCf1x9slxJB~1": {
+      "c": "#0f0",
+      "d": 263.8,
+      "g": "9wekrn8jjf",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        37.346148828712835,
+        -107.6218224
+      ],
+      "l2": [
+        37.346769854343805,
+        -107.6213584
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    },
+    "-O2WuIbyXkpuxRc5wZnd": {
+      "c": "#f00",
+      "g": "9wekrnb88w",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.346769854343805,
+        -107.6213584
+      ],
+      "n": {
+        "-O5OlWIWqE2x8-QVH6SK": 1,
+        "-O5OlWYNVsCf1x9slxJB": 2
+      },
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-O5OlWIWqE2x8-QVH6SK~1": {
+      "c": "#0f0",
+      "d": 263.6,
+      "g": "9wekrnb88w",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        37.346769854343805,
+        -107.6213584
+      ],
+      "l2": [
+        37.347332342129135,
+        -107.6207894
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    },
+    "-O5OlWYNVsCf1x9slxJB~2": {
+      "c": "#0f0",
+      "d": 263.8,
+      "g": "9wekrnb88w",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        37.346769854343805,
+        -107.6213584
+      ],
+      "l2": [
+        37.346148828712835,
+        -107.6218224
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    },
+    "-O2WuIbyXkpuxRc5wZnc": {
+      "c": "#f00",
+      "g": "9wekrnbgvz",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.347332342129135,
+        -107.6207894
+      ],
+      "n": {
+        "-O5OlW4hLX1NDQHf0GM9": 1,
+        "-O5OlWIWqE2x8-QVH6SK": 2
+      },
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-O5OlW4hLX1NDQHf0GM9~1": {
+      "c": "#0f0",
+      "d": 245,
+      "g": "9wekrnbgvz",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        37.347332342129135,
+        -107.6207894
+      ],
+      "l2": [
+        37.34799655283384,
+        -107.6206707
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    },
+    "-O5OlWIWqE2x8-QVH6SK~2": {
+      "c": "#0f0",
+      "d": 263.6,
+      "g": "9wekrnbgvz",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        37.347332342129135,
+        -107.6207894
+      ],
+      "l2": [
+        37.346769854343805,
+        -107.6213584
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    },
+    "-O2WuIbyXkpuxRc5wZnb": {
+      "c": "#f00",
+      "g": "9wekrncpbe",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.34799655283384,
+        -107.6206707
+      ],
+      "n": {
+        "-O5OlVmQ3k9fHjF9RAwq": 1,
+        "-O5OlW4hLX1NDQHf0GM9": 2
+      },
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-O5OlVmQ3k9fHjF9RAwq~1": {
+      "c": "#0f0",
+      "d": 167.7,
+      "g": "9wekrncpbe",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        37.34799655283384,
+        -107.6206707
+      ],
+      "l2": [
+        37.348453588749805,
+        -107.6206149
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    },
+    "-O5OlW4hLX1NDQHf0GM9~2": {
+      "c": "#0f0",
+      "d": 245,
+      "g": "9wekrncpbe",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        37.34799655283384,
+        -107.6206707
+      ],
+      "l2": [
+        37.347332342129135,
+        -107.6207894
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    },
+    "-O2WuIbxcWmifl53xTgr": {
+      "c": "#f00",
+      "g": "9wekrp0krm",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.348779719101,
+        -107.6214156
+      ],
+      "n": {
+        "-O5OlVEiGIXIIl8oaHnE": 2
+      },
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-O5OlVEiGIXIIl8oaHnE~2": {
+      "c": "#0f0",
+      "d": 246.8,
+      "g": "9wekrp0krm",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        37.348779719101,
+        -107.6214156
+      ],
+      "l2": [
+        37.3484859143419,
+        -107.6206502
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    },
+    "-O2WuIbyXkpuxRc5wZna": {
+      "c": "#f00",
+      "g": "9wekrp149b",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.348453588749805,
+        -107.6206149
+      ],
+      "n": {
+        "-O5OlVVVmDBuce453dVU": 1,
+        "-O5OlVmQ3k9fHjF9RAwq": 2
+      },
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-O5OlVVVmDBuce453dVU~1": {
+      "c": "#0f0",
+      "d": 15.6,
+      "g": "9wekrp149b",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        37.348453588749805,
+        -107.6206149
+      ],
+      "l2": [
+        37.3484859143419,
+        -107.6206502
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    },
+    "-O5OlVmQ3k9fHjF9RAwq~2": {
+      "c": "#0f0",
+      "d": 167.7,
+      "g": "9wekrp149b",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        37.348453588749805,
+        -107.6206149
+      ],
+      "l2": [
+        37.34799655283384,
+        -107.6206707
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    },
+    "-O2WuIbyXkpuxRc5wZn_": {
+      "c": "#f00",
+      "g": "9wekrp149n",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#f00",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i21",
+          "z": 19
+        }
+      ],
+      "l": [
+        37.3484859143419,
+        -107.6206502
+      ],
+      "n": {
+        "-O5OlVEiGIXIIl8oaHnE": 1,
+        "-O5OlVVVmDBuce453dVU": 2
+      },
+      "s": 14,
+      "t": "n",
+      "u": "i21",
+      "z": 19
+    },
+    "-O5OlVEiGIXIIl8oaHnE~1": {
+      "c": "#0f0",
+      "d": 246.8,
+      "g": "9wekrp149n",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        37.3484859143419,
+        -107.6206502
+      ],
+      "l2": [
+        37.348779719101,
+        -107.6214156
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    },
+    "-O5OlVVVmDBuce453dVU~2": {
+      "c": "#0f0",
+      "d": 15.6,
+      "g": "9wekrp149n",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        37.3484859143419,
+        -107.6206502
+      ],
+      "l2": [
+        37.348453588749805,
+        -107.6206149
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    }
+  },
+  "job_creator": "deeply_digital_FEUS_OCalc_integrated_model",
+  "job_owner": "deeply_digital",
+  "map_styles": {
+    "default": {
+      "_counter": 55,
+      "_default_published": true,
+      "_name": "Default",
+      "_note": "style arrays prioritize earlier items",
+      "connections": [
+        {
+          "attribute": "connection_type",
+          "color": "#0f0",
+          "comparator": "equals",
+          "id": "i0",
+          "pattern": "solid",
+          "value": "aerial cable",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#05f",
+          "comparator": "equals",
+          "id": "i1",
+          "pattern": "solid",
+          "value": "overlash",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#ff5722",
+          "comparator": "equals",
+          "id": "i2",
+          "pattern": "solid",
+          "value": "slack span",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#fa0",
+          "comparator": "equals",
+          "id": "i3",
+          "pattern": "solid",
+          "value": "overhead guy",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#050",
+          "comparator": "equals",
+          "id": "i4",
+          "pattern": "solid",
+          "value": "pole to pole guy",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#f00",
+          "comparator": "equals",
+          "id": "i5",
+          "pattern": "dashed",
+          "value": "underground cable",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#faf",
+          "comparator": "equals",
+          "id": "i7",
+          "pattern": "solid",
+          "value": "down guy",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#00f",
+          "comparator": "equals",
+          "id": "i8",
+          "pattern": "solid",
+          "value": "pushbrace",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#a0f",
+          "comparator": "equals",
+          "id": "i9",
+          "pattern": "solid",
+          "value": "misc",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#f00",
+          "comparator": "equals",
+          "id": "i10",
+          "pattern": "solid",
+          "value": "distribution fiber",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#00f",
+          "comparator": "equals",
+          "id": "i11",
+          "pattern": "solid",
+          "value": "access fiber",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#ff0",
+          "comparator": "equals",
+          "id": "i12",
+          "pattern": "solid",
+          "value": "strand only",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#508",
+          "comparator": "equals",
+          "id": "i13",
+          "pattern": "solid",
+          "value": "drop fiber",
+          "width": 2
+        },
+        {
+          "attribute": "reference_type",
+          "color": "rgba(136,0,136,1)",
+          "comparator": "equals",
+          "id": "i14",
+          "pattern": "solid",
+          "value": "power reference",
+          "width": 7
+        },
+        {
+          "attribute": "reference_type",
+          "color": "rgba(255,0,255,1)",
+          "comparator": "equals",
+          "id": "i51",
+          "pattern": "solid",
+          "value": "com reference",
+          "width": 7
+        },
+        {
+          "attribute": "reference_type",
+          "color": "rgba(255,170,255,1)",
+          "comparator": "equals",
+          "id": "i52",
+          "pattern": "solid",
+          "value": "guy reference",
+          "width": 7
+        }
+      ],
+      "nodes": [
+        {
+          "attribute": "node_type",
+          "color": "#FA0101",
+          "comparator": "equals",
+          "icon": "katapult-map:multiply",
+          "id": "i54",
+          "size": 15,
+          "stackable": false,
+          "value": "crossover"
+        },
+        {
+          "attribute": "verify_location_in_field",
+          "color": "rgba(255,0,0,1)",
+          "comparator": "equals",
+          "icon": "katapult-map:gps",
+          "id": "i49",
+          "size": "27",
+          "value": false
+        },
+        {
+          "attribute": "pickup_required",
+          "color": "#ff0000",
+          "comparator": "equals",
+          "icon": "maps:directions-car",
+          "id": "i45",
+          "size": "30",
+          "value": "field visit required"
+        },
+        {
+          "attribute": "pickup_required",
+          "color": "#0000ff",
+          "comparator": "equals",
+          "icon": "maps:directions-car",
+          "id": "i46",
+          "size": "30",
+          "value": "fielding complete"
+        },
+        {
+          "attribute": "node_type",
+          "color": "rgba(2,255,255,1)",
+          "comparator": "equals",
+          "icon": "katapult-map:circle",
+          "id": "i16",
+          "size": "14",
+          "value": "spatial note"
+        },
+        {
+          "attribute": "note_type",
+          "color": "#338833",
+          "comparator": "equals",
+          "icon": "katapult-map:circle",
+          "id": "i17",
+          "size": 12,
+          "value": "Address Point"
+        },
+        {
+          "attribute": "warning",
+          "color": "#f80",
+          "comparator": "has",
+          "icon": "katapult-map:circle",
+          "id": "i18",
+          "size": 16,
+          "value": "!null"
+        },
+        {
+          "attribute": "mr_state",
+          "color": "rgba(255,0,0,1)",
+          "comparator": "equals",
+          "icon": "icons:error",
+          "id": "i42",
+          "size": "22",
+          "value": "MR Unresolved"
+        },
+        {
+          "attribute": "mr_state",
+          "color": "#fff176",
+          "comparator": "equals",
+          "icon": "katapult-map:bullseye",
+          "id": "i43",
+          "size": "16",
+          "value": "MR Resolved"
+        },
+        {
+          "attribute": "mr_state",
+          "color": "#4caf50",
+          "comparator": "equals",
+          "icon": "katapult-map:bullseye",
+          "id": "i44",
+          "size": "16",
+          "value": "No MR"
+        },
+        {
+          "attribute": "flag_for_review",
+          "color": "#ff0",
+          "comparator": "equals",
+          "icon": "katapult-map:circle",
+          "id": "i19",
+          "size": 14,
+          "value": true
+        },
+        {
+          "attribute": "done",
+          "color": "#0f0",
+          "comparator": "equals",
+          "icon": "katapult-map:circle",
+          "id": "i20",
+          "size": 14,
+          "value": true
+        },
+        {
+          "attribute": "field_completed",
+          "color": "rgba(33,150,243,1)",
+          "comparator": "equals",
+          "icon": "katapult-map:hexagon",
+          "id": "i50",
+          "size": "17",
+          "value": true
+        },
+        {
+          "attribute": "done",
+          "color": "#f00",
+          "comparator": "equals",
+          "icon": "katapult-map:circle",
+          "id": "i21",
+          "size": 14,
+          "value": false
+        },
+        {
+          "attribute": "node_type",
+          "color": "#000",
+          "comparator": "equals",
+          "icon": "katapult-map:circle",
+          "id": "i22",
+          "size": 6,
+          "value": "pole"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#f00",
+          "comparator": "equals",
+          "icon": "icons:report",
+          "id": "i23",
+          "size": 15,
+          "value": "obstacle"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#2ff",
+          "comparator": "equals",
+          "icon": "image:crop-landscape",
+          "id": "i24",
+          "size": 20,
+          "value": "handhole"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#6ff",
+          "comparator": "equals",
+          "icon": "icons:settings-input-svideo",
+          "id": "i25",
+          "size": 20,
+          "value": "manhole"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#000",
+          "comparator": "equals",
+          "icon": "katapult-map:multiply",
+          "id": "i26",
+          "size": 8,
+          "value": "break point"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#26c6da",
+          "comparator": "equals",
+          "icon": "katapult-map:bullseye",
+          "id": "i27",
+          "size": 17,
+          "value": "map note"
+        },
+        {
+          "attribute": "node_type",
+          "color": "magenta",
+          "comparator": "equals",
+          "icon": "katapult-map:circle-small",
+          "id": "i28",
+          "size": 9,
+          "value": "pushbrace"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#faf",
+          "comparator": "equals",
+          "icon": "katapult-map:triangle-down",
+          "id": "i29",
+          "size": 16,
+          "value": "existing anchor"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#8bc34a",
+          "comparator": "equals",
+          "icon": "katapult-map:triangle-down",
+          "id": "i30",
+          "size": 16,
+          "value": "new anchor"
+        },
+        {
+          "attribute": "node_type",
+          "color": "magenta",
+          "comparator": "equals",
+          "icon": "katapult-map:circle-small",
+          "id": "i31",
+          "size": 9,
+          "value": "doublewood pole"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#f00",
+          "comparator": "equals",
+          "icon": "katapult-map:multiply",
+          "id": "i32",
+          "size": 14,
+          "value": "crossover"
+        },
+        {
+          "attribute": "node_type",
+          "color": "magenta",
+          "comparator": "equals",
+          "icon": "katapult-map:circle-small",
+          "id": "i33",
+          "size": 9,
+          "value": "midspan takeoff"
+        },
+        {
+          "attribute": "node_type",
+          "color": "magenta",
+          "comparator": "equals",
+          "icon": "katapult-map:circle-small",
+          "id": "i34",
+          "size": 9,
+          "value": "bridge attachment"
+        },
+        {
+          "attribute": "node_type",
+          "color": "magenta",
+          "comparator": "equals",
+          "icon": "katapult-map:circle-small",
+          "id": "i35",
+          "size": 9,
+          "value": "building attachment"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#f0f",
+          "comparator": "equals",
+          "icon": "katapult-map:asterisk",
+          "id": "i36",
+          "size": 11,
+          "value": "reference"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#0f0",
+          "comparator": "equals",
+          "icon": "icons:add-circle",
+          "id": "i37",
+          "size": 20,
+          "value": "slack loop"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#0f0",
+          "comparator": "equals",
+          "icon": "icons:link",
+          "id": "i38",
+          "size": 20,
+          "value": "splice"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#e53935",
+          "comparator": "equals",
+          "icon": "katapult-map:hexagon",
+          "id": "i39",
+          "size": "17",
+          "value": "No Access"
+        }
+      ],
+      "sections": [
+        {
+          "attribute": "warning",
+          "color": "#f80",
+          "comparator": "has",
+          "icon": "katapult-map:triangle-up",
+          "id": "i40",
+          "size": "24",
+          "value": "!null"
+        },
+        {
+          "attribute": "pickup_required",
+          "color": "#ff0000",
+          "comparator": "equals",
+          "icon": "maps:directions-car",
+          "id": "i47",
+          "size": "34",
+          "value": "field visit required"
+        },
+        {
+          "attribute": "pickup_required",
+          "color": "#0000ff",
+          "comparator": "equals",
+          "icon": "maps:directions-car",
+          "id": "i48",
+          "size": "34",
+          "value": "fielding complete"
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "assigned_OSP": "Zac M.",
+    "job_status": "Pending Field Collection",
+    "project": "LP_CPF"
+  },
+  "name": "Vallecito_MidMile_Extras",
+  "nodes": {
+    "-O2WuIbxcWmifl53xTgr": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "internal_note": {
+          "auto_note": "Node copied from LP_CPF_Vallecito_MidMile"
+        },
+        "load_case": {
+          "-O7dJ_6P8kRNI1cjJe3c": "NESC - 250B - Heavy - C - Elsewhere",
+          "-ODIPPgbxbXT1LlUcl8p": "NESC - 250B - Heavy - C - Elsewhere"
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "6"
+        },
+        "pole_height": {
+          "-Imported": "35"
+        },
+        "pole_spec": {
+          "button_calced": "35-6 SOUTHERN PINE",
+          "one": ""
+        },
+        "pole_species": {
+          "-O7dJif0f8k0XaNuxDiE": "Southern Pine"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P26012"
+          }
+        },
+        "scid": {
+          "multi_added": ""
+        }
+      },
+      "key": "-O2WuIbxcWmifl53xTgr",
+      "latitude": 37.348779719101,
+      "longitude": -107.6214156
+    },
+    "-O2WuIbyXkpuxRc5wZn_": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "internal_note": {
+          "auto_note": "Node copied from LP_CPF_Vallecito_MidMile"
+        },
+        "load_case": {
+          "-O7dJ_6P8kRNI1cjJe3d": "NESC - 250B - Heavy - C - Elsewhere",
+          "-ODIPPgbxbXT1LlUcl8q": "NESC - 250B - Heavy - C - Elsewhere"
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "5"
+        },
+        "pole_height": {
+          "-Imported": "35"
+        },
+        "pole_spec": {
+          "button_calced": "35-5 SOUTHERN PINE",
+          "one": ""
+        },
+        "pole_species": {
+          "-O7dJif0f8k0XaNuxDiF": "Southern Pine"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P26013"
+          }
+        },
+        "scid": {
+          "multi_added": ""
+        }
+      },
+      "key": "-O2WuIbyXkpuxRc5wZn_",
+      "latitude": 37.3484859143419,
+      "longitude": -107.6206502
+    },
+    "-O2WuIbyXkpuxRc5wZna": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "internal_note": {
+          "auto_note": "Node copied from LP_CPF_Vallecito_MidMile"
+        },
+        "load_case": {
+          "-O7dJ_6P8kRNI1cjJe3e": "NESC - 250B - Heavy - C - Elsewhere",
+          "-ODIPPgbxbXT1LlUcl8r": "NESC - 250B - Heavy - C - Elsewhere"
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "5"
+        },
+        "pole_height": {
+          "-Imported": "35"
+        },
+        "pole_spec": {
+          "button_calced": "35-5 SOUTHERN PINE",
+          "one": ""
+        },
+        "pole_species": {
+          "-O7dJif0f8k0XaNuxDiG": "Southern Pine"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P26014"
+          }
+        },
+        "scid": {
+          "multi_added": ""
+        }
+      },
+      "key": "-O2WuIbyXkpuxRc5wZna",
+      "latitude": 37.348453588749805,
+      "longitude": -107.6206149
+    },
+    "-O2WuIbyXkpuxRc5wZnb": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "internal_note": {
+          "auto_note": "Node copied from LP_CPF_Vallecito_MidMile"
+        },
+        "load_case": {
+          "-O7dJ_6P8kRNI1cjJe3f": "NESC - 250B - Heavy - C - Elsewhere",
+          "-ODIPPgbxbXT1LlUcl8s": "NESC - 250B - Heavy - C - Elsewhere"
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "5"
+        },
+        "pole_height": {
+          "-Imported": "35"
+        },
+        "pole_spec": {
+          "button_calced": "35-5 SOUTHERN PINE",
+          "one": ""
+        },
+        "pole_species": {
+          "-O7dJif0f8k0XaNuxDiH": "Southern Pine"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P26015"
+          }
+        },
+        "scid": {
+          "multi_added": ""
+        }
+      },
+      "key": "-O2WuIbyXkpuxRc5wZnb",
+      "latitude": 37.34799655283384,
+      "longitude": -107.6206707
+    },
+    "-O2WuIbyXkpuxRc5wZnc": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "internal_note": {
+          "auto_note": "Node copied from LP_CPF_Vallecito_MidMile"
+        },
+        "load_case": {
+          "-O7dJ_6P8kRNI1cjJe3g": "NESC - 250B - Heavy - C - Elsewhere",
+          "-ODIPPgbxbXT1LlUcl8t": "NESC - 250B - Heavy - C - Elsewhere"
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "5"
+        },
+        "pole_height": {
+          "-Imported": "35"
+        },
+        "pole_spec": {
+          "button_calced": "35-5 SOUTHERN PINE",
+          "one": ""
+        },
+        "pole_species": {
+          "-O7dJif0f8k0XaNuxDiI": "Southern Pine"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P26016"
+          }
+        },
+        "scid": {
+          "multi_added": ""
+        }
+      },
+      "key": "-O2WuIbyXkpuxRc5wZnc",
+      "latitude": 37.347332342129135,
+      "longitude": -107.6207894
+    },
+    "-O2WuIbyXkpuxRc5wZnd": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "internal_note": {
+          "auto_note": "Node copied from LP_CPF_Vallecito_MidMile"
+        },
+        "load_case": {
+          "-O7dJ_6P8kRNI1cjJe3h": "NESC - 250B - Heavy - C - Elsewhere",
+          "-ODIPPgbxbXT1LlUcl8u": "NESC - 250B - Heavy - C - Elsewhere"
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "5"
+        },
+        "pole_height": {
+          "-Imported": "35"
+        },
+        "pole_spec": {
+          "button_calced": "35-5 SOUTHERN PINE",
+          "one": ""
+        },
+        "pole_species": {
+          "-O7dJif0f8k0XaNuxDiJ": "Southern Pine"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P26017"
+          }
+        },
+        "scid": {
+          "multi_added": ""
+        }
+      },
+      "key": "-O2WuIbyXkpuxRc5wZnd",
+      "latitude": 37.346769854343805,
+      "longitude": -107.6213584
+    },
+    "-O2WuIbyXkpuxRc5wZne": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "-Imported": false
+        },
+        "internal_note": {
+          "auto_note": "Node copied from LP_CPF_Vallecito_MidMile"
+        },
+        "load_case": {
+          "-O7dJ_6P8kRNI1cjJe3i": "NESC - 250B - Heavy - C - Elsewhere",
+          "-ODIPPgbxbXT1LlUcl8v": "NESC - 250B - Heavy - C - Elsewhere"
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "5"
+        },
+        "pole_height": {
+          "-Imported": "35"
+        },
+        "pole_spec": {
+          "button_calced": "35-5 SOUTHERN PINE",
+          "one": ""
+        },
+        "pole_species": {
+          "-O7dJif0f8k0XaNuxDiK": "Southern Pine"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P26018"
+          }
+        },
+        "scid": {
+          "multi_added": ""
+        }
+      },
+      "key": "-O2WuIbyXkpuxRc5wZne",
+      "latitude": 37.346148828712835,
+      "longitude": -107.6218224
+    }
+  },
+  "numAssociated": 0,
+  "numPhotos": 0,
+  "numTagged": 0,
+  "numUploaded": 0,
+  "project_folder": "deeply_digital",
+  "sharing": {
+    "deeply_digital": "write"
+  }
+}

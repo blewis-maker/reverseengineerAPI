@@ -1,0 +1,2360 @@
+{
+  "connections": {
+    "-O509Xpmh1gyqPhjwWjK": {
+      "_created": {
+        "method": "desktop",
+        "timestamp": 1724448910706,
+        "uid": "Jv8lBg0YSFeqGimebhrbBuVKKF43"
+      },
+      "attributes": {
+        "connection_type": {
+          "button_added": "aerial cable"
+        }
+      },
+      "button": "join_osp_aerial",
+      "node_id_1": "-O2V8oHC3UhxIjYbY7yc",
+      "node_id_2": "-O2V8oHC3UhxIjYbY7yd"
+    },
+    "-O509Y6Q1mMUU6Zfdhau": {
+      "_created": {
+        "method": "desktop",
+        "timestamp": 1724448911835,
+        "uid": "Jv8lBg0YSFeqGimebhrbBuVKKF43"
+      },
+      "attributes": {
+        "connection_type": {
+          "button_added": "aerial cable"
+        }
+      },
+      "button": "join_osp_aerial",
+      "node_id_1": "-O2V8oHC3UhxIjYbY7yb",
+      "node_id_2": "-O2V8oHC3UhxIjYbY7yc"
+    },
+    "-O509YM84I-J7PcdMHJi": {
+      "_created": {
+        "method": "desktop",
+        "timestamp": 1724448912841,
+        "uid": "Jv8lBg0YSFeqGimebhrbBuVKKF43"
+      },
+      "attributes": {
+        "connection_type": {
+          "button_added": "aerial cable"
+        }
+      },
+      "button": "join_osp_aerial",
+      "node_id_1": "-O2V8oHC3UhxIjYbY7ya",
+      "node_id_2": "-O2V8oHC3UhxIjYbY7yb"
+    },
+    "-O509YaBP6w__SmtwuZZ": {
+      "_created": {
+        "method": "desktop",
+        "timestamp": 1724448913804,
+        "uid": "Jv8lBg0YSFeqGimebhrbBuVKKF43"
+      },
+      "attributes": {
+        "connection_type": {
+          "button_added": "aerial cable"
+        }
+      },
+      "button": "join_osp_aerial",
+      "node_id_1": "-O2V8oHC3UhxIjYbY7y_",
+      "node_id_2": "-O2V8oHC3UhxIjYbY7ya"
+    },
+    "-O509YuodJNMdTE4oAPi": {
+      "_created": {
+        "method": "desktop",
+        "timestamp": 1724448915124,
+        "uid": "Jv8lBg0YSFeqGimebhrbBuVKKF43"
+      },
+      "attributes": {
+        "connection_type": {
+          "button_added": "aerial cable"
+        }
+      },
+      "button": "join_osp_aerial",
+      "node_id_1": "-O2V8oH-uNSMW4I5It_-",
+      "node_id_2": "-O2V8oHC3UhxIjYbY7y_"
+    },
+    "-O509Z9FXVE1b5b_4TRl": {
+      "_created": {
+        "method": "desktop",
+        "timestamp": 1724448916112,
+        "uid": "Jv8lBg0YSFeqGimebhrbBuVKKF43"
+      },
+      "attributes": {
+        "connection_type": {
+          "button_added": "aerial cable"
+        }
+      },
+      "button": "join_osp_aerial",
+      "node_id_1": "-O2V8oGz4O_wPaFnclYp",
+      "node_id_2": "-O2V8oH-uNSMW4I5It_-"
+    },
+    "-O509asAuuFcQCoUBH4m": {
+      "_created": {
+        "method": "desktop",
+        "timestamp": 1724448927243,
+        "uid": "Jv8lBg0YSFeqGimebhrbBuVKKF43"
+      },
+      "attributes": {
+        "connection_type": {
+          "button_added": "aerial cable"
+        },
+        "tracing_complete": {
+          "auto": true
+        }
+      },
+      "button": "join_osp_aerial",
+      "node_id_1": "-O2V8oGz4O_wPaFnclYo",
+      "node_id_2": "-O2V8oGz4O_wPaFnclYp",
+      "sections": {
+        "-O8nX9KnEpwuuTNY4uMv": {
+          "_created": {
+            "method": "mobile",
+            "timestamp": 1728515188204,
+            "uid": "aVauRnoTTjhMoXuUzNm04iMcEyV2"
+          },
+          "latitude": 37.42735732162843,
+          "longitude": -107.5594686822881,
+          "multi_attributes": {
+            "field_completed": {
+              "value": true
+            },
+            "time_bucket": {
+              "-O8nX9KnEpwuuTNY4uMu": {
+                "start": 1728515180551,
+                "stop": 1728515188204,
+                "uid": "aVauRnoTTjhMoXuUzNm04iMcEyV2"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "date_created": 1735837484164,
+  "geohash": {
+    "-O2V8oHC3UhxIjYbY7yc": {
+      "c": "#0f0",
+      "g": "9wesbm37fy",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#0f0",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i20",
+          "z": 21
+        }
+      ],
+      "l": [
+        37.42698092711985,
+        -107.5652934
+      ],
+      "n": {
+        "-O509Xpmh1gyqPhjwWjK": 1,
+        "-O509Y6Q1mMUU6Zfdhau": 2
+      },
+      "s": 14,
+      "t": "n",
+      "u": "i20",
+      "z": 21
+    },
+    "-O509Xpmh1gyqPhjwWjK~1": {
+      "c": "#0f0",
+      "d": 256.2,
+      "g": "9wesbm37fy",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        37.42698092711985,
+        -107.5652934
+      ],
+      "l2": [
+        37.427594928146526,
+        -107.5657204
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    },
+    "-O509Y6Q1mMUU6Zfdhau~2": {
+      "c": "#0f0",
+      "d": 225.7,
+      "g": "9wesbm37fy",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        37.42698092711985,
+        -107.5652934
+      ],
+      "l2": [
+        37.426972928014365,
+        -107.5645154
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    },
+    "-O2V8oHC3UhxIjYbY7yb": {
+      "c": "#0f0",
+      "g": "9wesbm3gvj",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#0f0",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i20",
+          "z": 21
+        }
+      ],
+      "l": [
+        37.426972928014365,
+        -107.5645154
+      ],
+      "n": {
+        "-O509Y6Q1mMUU6Zfdhau": 1,
+        "-O509YM84I-J7PcdMHJi": 2
+      },
+      "s": 14,
+      "t": "n",
+      "u": "i20",
+      "z": 21
+    },
+    "-O509Y6Q1mMUU6Zfdhau~1": {
+      "c": "#0f0",
+      "d": 225.7,
+      "g": "9wesbm3gvj",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        37.426972928014365,
+        -107.5645154
+      ],
+      "l2": [
+        37.42698092711985,
+        -107.5652934
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    },
+    "-O509YM84I-J7PcdMHJi~2": {
+      "c": "#0f0",
+      "d": 251.5,
+      "g": "9wesbm3gvj",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        37.426972928014365,
+        -107.5645154
+      ],
+      "l2": [
+        37.427028642804395,
+        -107.5636511
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    },
+    "-O2V8oHC3UhxIjYbY7yd": {
+      "c": "#0f0",
+      "g": "9wesbm3p91",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#0f0",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i20",
+          "z": 21
+        }
+      ],
+      "l": [
+        37.427594928146526,
+        -107.5657204
+      ],
+      "n": {
+        "-O509Xpmh1gyqPhjwWjK": 2
+      },
+      "s": 14,
+      "t": "n",
+      "u": "i20",
+      "z": 21
+    },
+    "-O509Xpmh1gyqPhjwWjK~2": {
+      "c": "#0f0",
+      "d": 256.2,
+      "g": "9wesbm3p91",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        37.427594928146526,
+        -107.5657204
+      ],
+      "l2": [
+        37.42698092711985,
+        -107.5652934
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    },
+    "-O2V8oHC3UhxIjYbY7ya": {
+      "c": "#0f0",
+      "g": "9wesbm6s1r",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#0f0",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i20",
+          "z": 21
+        }
+      ],
+      "l": [
+        37.427028642804395,
+        -107.5636511
+      ],
+      "n": {
+        "-O509YM84I-J7PcdMHJi": 1,
+        "-O509YaBP6w__SmtwuZZ": 2
+      },
+      "s": 14,
+      "t": "n",
+      "u": "i20",
+      "z": 21
+    },
+    "-O509YM84I-J7PcdMHJi~1": {
+      "c": "#0f0",
+      "d": 251.5,
+      "g": "9wesbm6s1r",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        37.427028642804395,
+        -107.5636511
+      ],
+      "l2": [
+        37.426972928014365,
+        -107.5645154
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    },
+    "-O509YaBP6w__SmtwuZZ~2": {
+      "c": "#0f0",
+      "d": 211.4,
+      "g": "9wesbm6s1r",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        37.427028642804395,
+        -107.5636511
+      ],
+      "l2": [
+        37.427054910066445,
+        -107.5629231
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    },
+    "-O2V8oHC3UhxIjYbY7y_": {
+      "c": "#0f0",
+      "g": "9wesbm7h6h",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#0f0",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i20",
+          "z": 21
+        }
+      ],
+      "l": [
+        37.427054910066445,
+        -107.5629231
+      ],
+      "n": {
+        "-O509YaBP6w__SmtwuZZ": 1,
+        "-O509YuodJNMdTE4oAPi": 2
+      },
+      "s": 14,
+      "t": "n",
+      "u": "i20",
+      "z": 21
+    },
+    "-O509YaBP6w__SmtwuZZ~1": {
+      "c": "#0f0",
+      "d": 211.4,
+      "g": "9wesbm7h6h",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        37.427054910066445,
+        -107.5629231
+      ],
+      "l2": [
+        37.427028642804395,
+        -107.5636511
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    },
+    "-O509YuodJNMdTE4oAPi~2": {
+      "c": "#0f0",
+      "d": 217.2,
+      "g": "9wesbm7h6h",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        37.427054910066445,
+        -107.5629231
+      ],
+      "l2": [
+        37.42699092796232,
+        -107.5621784
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    },
+    "-O2V8oH-uNSMW4I5It_-": {
+      "c": "#0f0",
+      "g": "9wesbm7s58",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#0f0",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i20",
+          "z": 21
+        }
+      ],
+      "l": [
+        37.42699092796232,
+        -107.5621784
+      ],
+      "n": {
+        "-O509YuodJNMdTE4oAPi": 1,
+        "-O509Z9FXVE1b5b_4TRl": 2
+      },
+      "s": 14,
+      "t": "n",
+      "u": "i20",
+      "z": 21
+    },
+    "-O509YuodJNMdTE4oAPi~1": {
+      "c": "#0f0",
+      "d": 217.2,
+      "g": "9wesbm7s58",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        37.42699092796232,
+        -107.5621784
+      ],
+      "l2": [
+        37.427054910066445,
+        -107.5629231
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    },
+    "-O509Z9FXVE1b5b_4TRl~2": {
+      "c": "#0f0",
+      "d": 334.4,
+      "g": "9wesbm7s58",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        37.42699092796232,
+        -107.5621784
+      ],
+      "l2": [
+        37.427155927759415,
+        -107.5610444
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    },
+    "-O2V8oGz4O_wPaFnclYp": {
+      "c": "#0f0",
+      "g": "9wesbmkkyp",
+      "i": "katapult-map:circle",
+      "is": [
+        {
+          "c": "#0f0",
+          "i": "katapult-map:circle",
+          "s": 14,
+          "u": "i20",
+          "z": 21
+        }
+      ],
+      "l": [
+        37.427155927759415,
+        -107.5610444
+      ],
+      "n": {
+        "-O509Z9FXVE1b5b_4TRl": 1,
+        "-O509asAuuFcQCoUBH4m": 2
+      },
+      "s": 14,
+      "t": "n",
+      "u": "i20",
+      "z": 21
+    },
+    "-O509Z9FXVE1b5b_4TRl~1": {
+      "c": "#0f0",
+      "d": 334.4,
+      "g": "9wesbmkkyp",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        37.427155927759415,
+        -107.5610444
+      ],
+      "l2": [
+        37.42699092796232,
+        -107.5621784
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    },
+    "-O509asAuuFcQCoUBH4m~2": {
+      "c": "#0f0",
+      "d": 487.1,
+      "g": "9wesbmkkyp",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        37.427155927759415,
+        -107.5610444
+      ],
+      "l2": [
+        37.427367853984464,
+        -107.55938627177562
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    },
+    "-O509asAuuFcQCoUBH4m:-O8nX9KnEpwuuTNY4uMv": {
+      "c": "#0ff",
+      "g": "9wesbmmw4t",
+      "i": "katapult-map:triangle-up",
+      "l": [
+        37.42735732162843,
+        -107.5594686822881
+      ],
+      "m": 1,
+      "s": 18,
+      "t": "s",
+      "u": "ms",
+      "z": 1
+    },
+    "-O2V8oGz4O_wPaFnclYo": {
+      "c": "#4caf50",
+      "g": "9wesbmmwhx",
+      "i": "katapult-map:bullseye",
+      "is": [
+        {
+          "c": "#4caf50",
+          "i": "katapult-map:bullseye",
+          "m": 1,
+          "s": "16",
+          "u": "i44",
+          "z": 23
+        }
+      ],
+      "l": [
+        37.427367853984464,
+        -107.55938627177562
+      ],
+      "m": 1,
+      "n": {
+        "-O509asAuuFcQCoUBH4m": 1
+      },
+      "s": "16",
+      "t": "n",
+      "u": "i44",
+      "z": 23
+    },
+    "-O509asAuuFcQCoUBH4m~1": {
+      "c": "#0f0",
+      "d": 487.1,
+      "g": "9wesbmmwhx",
+      "is": [
+        {
+          "c": "#0f0",
+          "o": 0.7,
+          "p": "solid",
+          "u": "i0",
+          "w": 7,
+          "z": 16
+        }
+      ],
+      "l": [
+        37.427367853984464,
+        -107.55938627177562
+      ],
+      "l2": [
+        37.427155927759415,
+        -107.5610444
+      ],
+      "o": 0.7,
+      "p": "solid",
+      "t": "c",
+      "u": "i0",
+      "w": 7,
+      "z": 16
+    }
+  },
+  "job_creator": "deeply_digital_FEUS_OCalc_integrated_model",
+  "job_owner": "deeply_digital",
+  "last_upload": 1728536382327,
+  "map_styles": {
+    "default": {
+      "_counter": 55,
+      "_default_published": true,
+      "_name": "Default",
+      "_note": "style arrays prioritize earlier items",
+      "connections": [
+        {
+          "attribute": "connection_type",
+          "color": "#0f0",
+          "comparator": "equals",
+          "id": "i0",
+          "pattern": "solid",
+          "value": "aerial cable",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#05f",
+          "comparator": "equals",
+          "id": "i1",
+          "pattern": "solid",
+          "value": "overlash",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#ff5722",
+          "comparator": "equals",
+          "id": "i2",
+          "pattern": "solid",
+          "value": "slack span",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#fa0",
+          "comparator": "equals",
+          "id": "i3",
+          "pattern": "solid",
+          "value": "overhead guy",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#050",
+          "comparator": "equals",
+          "id": "i4",
+          "pattern": "solid",
+          "value": "pole to pole guy",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#f00",
+          "comparator": "equals",
+          "id": "i5",
+          "pattern": "dashed",
+          "value": "underground cable",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#faf",
+          "comparator": "equals",
+          "id": "i7",
+          "pattern": "solid",
+          "value": "down guy",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#00f",
+          "comparator": "equals",
+          "id": "i8",
+          "pattern": "solid",
+          "value": "pushbrace",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#a0f",
+          "comparator": "equals",
+          "id": "i9",
+          "pattern": "solid",
+          "value": "misc",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#f00",
+          "comparator": "equals",
+          "id": "i10",
+          "pattern": "solid",
+          "value": "distribution fiber",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#00f",
+          "comparator": "equals",
+          "id": "i11",
+          "pattern": "solid",
+          "value": "access fiber",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#ff0",
+          "comparator": "equals",
+          "id": "i12",
+          "pattern": "solid",
+          "value": "strand only",
+          "width": 7
+        },
+        {
+          "attribute": "connection_type",
+          "color": "#508",
+          "comparator": "equals",
+          "id": "i13",
+          "pattern": "solid",
+          "value": "drop fiber",
+          "width": 2
+        },
+        {
+          "attribute": "reference_type",
+          "color": "rgba(136,0,136,1)",
+          "comparator": "equals",
+          "id": "i14",
+          "pattern": "solid",
+          "value": "power reference",
+          "width": 7
+        },
+        {
+          "attribute": "reference_type",
+          "color": "rgba(255,0,255,1)",
+          "comparator": "equals",
+          "id": "i51",
+          "pattern": "solid",
+          "value": "com reference",
+          "width": 7
+        },
+        {
+          "attribute": "reference_type",
+          "color": "rgba(255,170,255,1)",
+          "comparator": "equals",
+          "id": "i52",
+          "pattern": "solid",
+          "value": "guy reference",
+          "width": 7
+        }
+      ],
+      "nodes": [
+        {
+          "attribute": "node_type",
+          "color": "#FA0101",
+          "comparator": "equals",
+          "icon": "katapult-map:multiply",
+          "id": "i54",
+          "size": 15,
+          "stackable": false,
+          "value": "crossover"
+        },
+        {
+          "attribute": "verify_location_in_field",
+          "color": "rgba(255,0,0,1)",
+          "comparator": "equals",
+          "icon": "katapult-map:gps",
+          "id": "i49",
+          "size": "27",
+          "value": false
+        },
+        {
+          "attribute": "pickup_required",
+          "color": "#ff0000",
+          "comparator": "equals",
+          "icon": "maps:directions-car",
+          "id": "i45",
+          "size": "30",
+          "value": "field visit required"
+        },
+        {
+          "attribute": "pickup_required",
+          "color": "#0000ff",
+          "comparator": "equals",
+          "icon": "maps:directions-car",
+          "id": "i46",
+          "size": "30",
+          "value": "fielding complete"
+        },
+        {
+          "attribute": "node_type",
+          "color": "rgba(2,255,255,1)",
+          "comparator": "equals",
+          "icon": "katapult-map:circle",
+          "id": "i16",
+          "size": "14",
+          "value": "spatial note"
+        },
+        {
+          "attribute": "note_type",
+          "color": "#338833",
+          "comparator": "equals",
+          "icon": "katapult-map:circle",
+          "id": "i17",
+          "size": 12,
+          "value": "Address Point"
+        },
+        {
+          "attribute": "warning",
+          "color": "#f80",
+          "comparator": "has",
+          "icon": "katapult-map:circle",
+          "id": "i18",
+          "size": 16,
+          "value": "!null"
+        },
+        {
+          "attribute": "mr_state",
+          "color": "rgba(255,0,0,1)",
+          "comparator": "equals",
+          "icon": "icons:error",
+          "id": "i42",
+          "size": "22",
+          "value": "MR Unresolved"
+        },
+        {
+          "attribute": "mr_state",
+          "color": "#fff176",
+          "comparator": "equals",
+          "icon": "katapult-map:bullseye",
+          "id": "i43",
+          "size": "16",
+          "value": "MR Resolved"
+        },
+        {
+          "attribute": "mr_state",
+          "color": "#4caf50",
+          "comparator": "equals",
+          "icon": "katapult-map:bullseye",
+          "id": "i44",
+          "size": "16",
+          "value": "No MR"
+        },
+        {
+          "attribute": "flag_for_review",
+          "color": "#ff0",
+          "comparator": "equals",
+          "icon": "katapult-map:circle",
+          "id": "i19",
+          "size": 14,
+          "value": true
+        },
+        {
+          "attribute": "done",
+          "color": "#0f0",
+          "comparator": "equals",
+          "icon": "katapult-map:circle",
+          "id": "i20",
+          "size": 14,
+          "value": true
+        },
+        {
+          "attribute": "field_completed",
+          "color": "rgba(33,150,243,1)",
+          "comparator": "equals",
+          "icon": "katapult-map:hexagon",
+          "id": "i50",
+          "size": "17",
+          "value": true
+        },
+        {
+          "attribute": "done",
+          "color": "#f00",
+          "comparator": "equals",
+          "icon": "katapult-map:circle",
+          "id": "i21",
+          "size": 14,
+          "value": false
+        },
+        {
+          "attribute": "node_type",
+          "color": "#000",
+          "comparator": "equals",
+          "icon": "katapult-map:circle",
+          "id": "i22",
+          "size": 6,
+          "value": "pole"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#f00",
+          "comparator": "equals",
+          "icon": "icons:report",
+          "id": "i23",
+          "size": 15,
+          "value": "obstacle"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#2ff",
+          "comparator": "equals",
+          "icon": "image:crop-landscape",
+          "id": "i24",
+          "size": 20,
+          "value": "handhole"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#6ff",
+          "comparator": "equals",
+          "icon": "icons:settings-input-svideo",
+          "id": "i25",
+          "size": 20,
+          "value": "manhole"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#000",
+          "comparator": "equals",
+          "icon": "katapult-map:multiply",
+          "id": "i26",
+          "size": 8,
+          "value": "break point"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#26c6da",
+          "comparator": "equals",
+          "icon": "katapult-map:bullseye",
+          "id": "i27",
+          "size": 17,
+          "value": "map note"
+        },
+        {
+          "attribute": "node_type",
+          "color": "magenta",
+          "comparator": "equals",
+          "icon": "katapult-map:circle-small",
+          "id": "i28",
+          "size": 9,
+          "value": "pushbrace"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#faf",
+          "comparator": "equals",
+          "icon": "katapult-map:triangle-down",
+          "id": "i29",
+          "size": 16,
+          "value": "existing anchor"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#8bc34a",
+          "comparator": "equals",
+          "icon": "katapult-map:triangle-down",
+          "id": "i30",
+          "size": 16,
+          "value": "new anchor"
+        },
+        {
+          "attribute": "node_type",
+          "color": "magenta",
+          "comparator": "equals",
+          "icon": "katapult-map:circle-small",
+          "id": "i31",
+          "size": 9,
+          "value": "doublewood pole"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#f00",
+          "comparator": "equals",
+          "icon": "katapult-map:multiply",
+          "id": "i32",
+          "size": 14,
+          "value": "crossover"
+        },
+        {
+          "attribute": "node_type",
+          "color": "magenta",
+          "comparator": "equals",
+          "icon": "katapult-map:circle-small",
+          "id": "i33",
+          "size": 9,
+          "value": "midspan takeoff"
+        },
+        {
+          "attribute": "node_type",
+          "color": "magenta",
+          "comparator": "equals",
+          "icon": "katapult-map:circle-small",
+          "id": "i34",
+          "size": 9,
+          "value": "bridge attachment"
+        },
+        {
+          "attribute": "node_type",
+          "color": "magenta",
+          "comparator": "equals",
+          "icon": "katapult-map:circle-small",
+          "id": "i35",
+          "size": 9,
+          "value": "building attachment"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#f0f",
+          "comparator": "equals",
+          "icon": "katapult-map:asterisk",
+          "id": "i36",
+          "size": 11,
+          "value": "reference"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#0f0",
+          "comparator": "equals",
+          "icon": "icons:add-circle",
+          "id": "i37",
+          "size": 20,
+          "value": "slack loop"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#0f0",
+          "comparator": "equals",
+          "icon": "icons:link",
+          "id": "i38",
+          "size": 20,
+          "value": "splice"
+        },
+        {
+          "attribute": "node_type",
+          "color": "#e53935",
+          "comparator": "equals",
+          "icon": "katapult-map:hexagon",
+          "id": "i39",
+          "size": "17",
+          "value": "No Access"
+        }
+      ],
+      "sections": [
+        {
+          "attribute": "warning",
+          "color": "#f80",
+          "comparator": "has",
+          "icon": "katapult-map:triangle-up",
+          "id": "i40",
+          "size": "24",
+          "value": "!null"
+        },
+        {
+          "attribute": "pickup_required",
+          "color": "#ff0000",
+          "comparator": "equals",
+          "icon": "maps:directions-car",
+          "id": "i47",
+          "size": "34",
+          "value": "field visit required"
+        },
+        {
+          "attribute": "pickup_required",
+          "color": "#0000ff",
+          "comparator": "equals",
+          "icon": "maps:directions-car",
+          "id": "i48",
+          "size": "34",
+          "value": "fielding complete"
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "assigned_OSP": "Anthony",
+    "comments": "scid 76 through 82 need pickups",
+    "job_status": "Pending Photo Annotation"
+  },
+  "name": "LP_CPF_Vallecito_S5.2",
+  "nodes": {
+    "-O2V8oGz4O_wPaFnclYo": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "multi_added": true
+        },
+        "field_completed": {
+          "value": true
+        },
+        "internal_note": {
+          "auto_note": "Node copied from LP_CPF_Valecito_Master"
+        },
+        "load_case": {
+          "multi_added": "NESC - 250B - Heavy - C - Elsewhere"
+        },
+        "mr_state": {
+          "auto_calced": "No MR"
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "5"
+        },
+        "pole_height": {
+          "-Imported": "35"
+        },
+        "pole_spec": {
+          "button_calced": "35-5 DOUGLAS FIR (NESC Standard)"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "LPEA",
+            "owner": true,
+            "tagtext": "P50260"
+          }
+        },
+        "scid": {
+          "auto_button": "075"
+        },
+        "time_bucket": {
+          "-O8nX7TFC6vajCodqlvE": {
+            "start": 1728515120907,
+            "stop": 1728515180551,
+            "uid": "aVauRnoTTjhMoXuUzNm04iMcEyV2"
+          }
+        }
+      },
+      "key": "-O2V8oGz4O_wPaFnclYo",
+      "latitude": 37.427367853984464,
+      "longitude": -107.55938627177562,
+      "photos": {
+        "03b50cf5-b3d7-46c6-aa66-a1a09c956b78": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "32165df3-4377-4e7f-88ea-4fc996464936": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "33fba6ff-a2a8-42b8-a39a-51d1e0ed6e2b": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "7568d943-04bf-48ec-b4b2-d9cfeb3983ef": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "bb3a62c0-929e-4e6e-b299-1b8c9ad9d546": {
+          "association": true,
+          "association_type": "auto"
+        },
+        "cc603c71-4bdd-4c67-b4d0-9633a166d82a": {
+          "association": "main",
+          "association_type": "auto"
+        }
+      }
+    },
+    "-O2V8oGz4O_wPaFnclYp": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "multi_added": true
+        },
+        "internal_note": {
+          "auto_note": "Node copied from LP_CPF_Vallecito_S5"
+        },
+        "load_case": {
+          "multi_added": "NESC - 250B - Heavy - C - Elsewhere"
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "5"
+        },
+        "pole_height": {
+          "-Imported": "35"
+        },
+        "pole_spec": {
+          "button_calced": "35-5 PONDEROSA PINE"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "",
+            "owner": true,
+            "tagtext": "P50268"
+          }
+        },
+        "scid": {
+          "auto_button": "076"
+        }
+      },
+      "key": "-O2V8oGz4O_wPaFnclYp",
+      "latitude": 37.427155927759415,
+      "longitude": -107.5610444
+    },
+    "-O2V8oH-uNSMW4I5It_-": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "multi_added": true
+        },
+        "internal_note": {
+          "auto_note": "Node copied from LP_CPF_Vallecito_S5"
+        },
+        "load_case": {
+          "multi_added": "NESC - 250B - Heavy - C - Elsewhere"
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "5"
+        },
+        "pole_height": {
+          "-Imported": "35"
+        },
+        "pole_spec": {
+          "button_calced": "35-5 PONDEROSA PINE"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "",
+            "owner": true,
+            "tagtext": "P51103"
+          }
+        },
+        "scid": {
+          "auto_button": "077"
+        }
+      },
+      "key": "-O2V8oH-uNSMW4I5It_-",
+      "latitude": 37.42699092796232,
+      "longitude": -107.5621784
+    },
+    "-O2V8oHC3UhxIjYbY7y_": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "multi_added": true
+        },
+        "internal_note": {
+          "auto_note": "Node copied from LP_CPF_Vallecito_S5"
+        },
+        "load_case": {
+          "multi_added": "NESC - 250B - Heavy - C - Elsewhere"
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "5"
+        },
+        "pole_height": {
+          "-Imported": "35"
+        },
+        "pole_spec": {
+          "button_calced": "35-5 PONDEROSA PINE"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "",
+            "owner": true,
+            "tagtext": "P51104"
+          }
+        },
+        "scid": {
+          "auto_button": "078"
+        }
+      },
+      "key": "-O2V8oHC3UhxIjYbY7y_",
+      "latitude": 37.427054910066445,
+      "longitude": -107.5629231
+    },
+    "-O2V8oHC3UhxIjYbY7ya": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "multi_added": true
+        },
+        "internal_note": {
+          "auto_note": "Node copied from LP_CPF_Vallecito_S5"
+        },
+        "load_case": {
+          "multi_added": "NESC - 250B - Heavy - C - Elsewhere"
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "5"
+        },
+        "pole_height": {
+          "-Imported": "35"
+        },
+        "pole_spec": {
+          "button_calced": "35-5 PONDEROSA PINE"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "",
+            "owner": true,
+            "tagtext": "P51105"
+          }
+        },
+        "scid": {
+          "auto_button": "079"
+        }
+      },
+      "key": "-O2V8oHC3UhxIjYbY7ya",
+      "latitude": 37.427028642804395,
+      "longitude": -107.5636511
+    },
+    "-O2V8oHC3UhxIjYbY7yb": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "multi_added": true
+        },
+        "internal_note": {
+          "auto_note": "Node copied from LP_CPF_Vallecito_S5"
+        },
+        "load_case": {
+          "multi_added": "NESC - 250B - Heavy - C - Elsewhere"
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "5"
+        },
+        "pole_height": {
+          "-Imported": "35"
+        },
+        "pole_spec": {
+          "button_calced": "35-5 PONDEROSA PINE"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "",
+            "owner": true,
+            "tagtext": "P51106"
+          }
+        },
+        "scid": {
+          "auto_button": "080"
+        }
+      },
+      "key": "-O2V8oHC3UhxIjYbY7yb",
+      "latitude": 37.426972928014365,
+      "longitude": -107.5645154
+    },
+    "-O2V8oHC3UhxIjYbY7yc": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "multi_added": true
+        },
+        "internal_note": {
+          "auto_note": "Node copied from LP_CPF_Vallecito_S5"
+        },
+        "load_case": {
+          "multi_added": "NESC - 250B - Heavy - C - Elsewhere"
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "5"
+        },
+        "pole_height": {
+          "-Imported": "40"
+        },
+        "pole_spec": {
+          "button_calced": "40-5 PONDEROSA PINE"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "",
+            "owner": true,
+            "tagtext": "P51107"
+          }
+        },
+        "scid": {
+          "auto_button": "081"
+        }
+      },
+      "key": "-O2V8oHC3UhxIjYbY7yc",
+      "latitude": 37.42698092711985,
+      "longitude": -107.5652934
+    },
+    "-O2V8oHC3UhxIjYbY7yd": {
+      "attributes": {
+        "company": {
+          "-Imported": "LPEA"
+        },
+        "done": {
+          "multi_added": true
+        },
+        "internal_note": {
+          "auto_note": "Node copied from LP_CPF_Vallecito_S5"
+        },
+        "load_case": {
+          "multi_added": "NESC - 250B - Heavy - C - Elsewhere"
+        },
+        "node_type": {
+          "-Imported": "pole"
+        },
+        "pole_class": {
+          "-Imported": "5"
+        },
+        "pole_height": {
+          "-Imported": "35"
+        },
+        "pole_spec": {
+          "button_calced": "35-5 PONDEROSA PINE"
+        },
+        "pole_tag": {
+          "-Imported": {
+            "company": "",
+            "owner": true,
+            "tagtext": "P51108"
+          }
+        },
+        "scid": {
+          "auto_button": "082"
+        }
+      },
+      "key": "-O2V8oHC3UhxIjYbY7yd",
+      "latitude": 37.427594928146526,
+      "longitude": -107.5657204
+    }
+  },
+  "numAssociated": 6,
+  "numPhotos": 6,
+  "numTagged": 1,
+  "numUploaded": 6,
+  "photo_folders": {
+    "-O8oiIVI6amLfHfggMSP": {
+      "cameras": {
+        "-O8oiI-6Ro-i0Pd1158F": {
+          "date_created": 1735837540316,
+          "numAssociated": 3,
+          "numPhotos": 3,
+          "numTagged": 1,
+          "numUploaded": 3
+        },
+        "-O8oiI-YZTHmXjXybqRW": {
+          "date_created": 1735837540316,
+          "numAssociated": 3,
+          "numPhotos": 3,
+          "numTagged": 0,
+          "numUploaded": 3
+        }
+      },
+      "date_created": 1728535149016,
+      "done": false,
+      "job_id": "-OFbyVFsePQ9-xo08_6k",
+      "last_upload": 1728536382327,
+      "numAssociated": 6,
+      "numPhotos": 6,
+      "numTagged": 1,
+      "numUploaded": 6,
+      "status": "Uploading"
+    }
+  },
+  "photo_summary": {
+    "03b50cf5-b3d7-46c6-aa66-a1a09c956b78": {
+      "associated": true,
+      "camera_id": "-O8oiI-YZTHmXjXybqRW",
+      "name": "RIMG4438.JPG"
+    },
+    "32165df3-4377-4e7f-88ea-4fc996464936": {
+      "associated": true,
+      "camera_id": "-O8oiI-YZTHmXjXybqRW",
+      "name": "RIMG4439.JPG"
+    },
+    "33fba6ff-a2a8-42b8-a39a-51d1e0ed6e2b": {
+      "associated": true,
+      "camera_id": "-O8oiI-YZTHmXjXybqRW",
+      "name": "RIMG4441.JPG"
+    },
+    "7568d943-04bf-48ec-b4b2-d9cfeb3983ef": {
+      "associated": true,
+      "camera_id": "-O8oiI-6Ro-i0Pd1158F",
+      "name": "IMG_9148.JPG"
+    },
+    "bb3a62c0-929e-4e6e-b299-1b8c9ad9d546": {
+      "associated": true,
+      "camera_id": "-O8oiI-6Ro-i0Pd1158F",
+      "name": "IMG_9149.JPG"
+    },
+    "cc603c71-4bdd-4c67-b4d0-9633a166d82a": {
+      "associated": true,
+      "camera_id": "-O8oiI-6Ro-i0Pd1158F",
+      "data": true,
+      "height": true,
+      "name": "IMG_9150.JPG"
+    }
+  },
+  "photos": {
+    "03b50cf5-b3d7-46c6-aa66-a1a09c956b78": {
+      "associated_locations": {
+        "-O2V8oGz4O_wPaFnclYo": "node"
+      },
+      "camera_id": "-O8oiI-YZTHmXjXybqRW",
+      "camera_make": "RICOH IMAGING COMPANY, LTD.",
+      "camera_model": "RICOH WG-80",
+      "date_taken": 1728515177,
+      "f_number": 4.2,
+      "filename": "RIMG4438.JPG",
+      "focal_length": 5,
+      "focal_length_35mm": 28,
+      "folder_id": "-O8oiIVI6amLfHfggMSP",
+      "image_height": 2592,
+      "image_software": "RICOH WG-80 Ver. 1.00",
+      "image_width": 4608,
+      "iso": 125,
+      "name_date": "RIMG4438.JPG|1728515177",
+      "orientation": 1,
+      "original_size": 2146234,
+      "shutter_speed": 0.005,
+      "status": "upload_complete",
+      "synced_time": 1728515137956,
+      "upload_date": 1728536375733,
+      "uploaded_by": "aVauRnoTTjhMoXuUzNm04iMcEyV2"
+    },
+    "32165df3-4377-4e7f-88ea-4fc996464936": {
+      "associated_locations": {
+        "-O2V8oGz4O_wPaFnclYo": "node"
+      },
+      "camera_id": "-O8oiI-YZTHmXjXybqRW",
+      "camera_make": "RICOH IMAGING COMPANY, LTD.",
+      "camera_model": "RICOH WG-80",
+      "date_taken": 1728515190,
+      "f_number": 3.5,
+      "filename": "RIMG4439.JPG",
+      "focal_length": 5,
+      "focal_length_35mm": 28,
+      "folder_id": "-O8oiIVI6amLfHfggMSP",
+      "image_height": 2592,
+      "image_software": "RICOH WG-80 Ver. 1.00",
+      "image_width": 4608,
+      "iso": 125,
+      "name_date": "RIMG4439.JPG|1728515190",
+      "orientation": 1,
+      "original_size": 2136083,
+      "shutter_speed": 0.01,
+      "status": "upload_complete",
+      "synced_time": 1728515150956,
+      "upload_date": 1728536376065,
+      "uploaded_by": "aVauRnoTTjhMoXuUzNm04iMcEyV2"
+    },
+    "33fba6ff-a2a8-42b8-a39a-51d1e0ed6e2b": {
+      "associated_locations": {
+        "-O2V8oGz4O_wPaFnclYo": "node"
+      },
+      "camera_id": "-O8oiI-YZTHmXjXybqRW",
+      "camera_make": "RICOH IMAGING COMPANY, LTD.",
+      "camera_model": "RICOH WG-80",
+      "date_taken": 1728515213,
+      "f_number": 3.5,
+      "filename": "RIMG4441.JPG",
+      "focal_length": 5,
+      "focal_length_35mm": 28,
+      "folder_id": "-O8oiIVI6amLfHfggMSP",
+      "image_height": 2592,
+      "image_software": "RICOH WG-80 Ver. 1.00",
+      "image_width": 4608,
+      "iso": 125,
+      "name_date": "RIMG4441.JPG|1728515213",
+      "orientation": 1,
+      "original_size": 2248919,
+      "shutter_speed": 0.022222222222222223,
+      "status": "upload_complete",
+      "synced_time": 1728515173956,
+      "upload_date": 1728536376507,
+      "uploaded_by": "aVauRnoTTjhMoXuUzNm04iMcEyV2"
+    },
+    "7568d943-04bf-48ec-b4b2-d9cfeb3983ef": {
+      "associated_locations": {
+        "-O2V8oGz4O_wPaFnclYo": "node"
+      },
+      "camera_id": "-O8oiI-6Ro-i0Pd1158F",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS R100",
+      "camera_serial_number": "102031002772",
+      "date_taken": 1728515124,
+      "f_number": 9,
+      "filename": "IMG_9148.JPG",
+      "focal_length": 63,
+      "folder_id": "-O8oiIVI6amLfHfggMSP",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "RF24-105mm F4-7.1 IS STM",
+      "name_date": "IMG_9148.JPG|1728515124",
+      "orientation": 1,
+      "original_size": 5882819,
+      "shutter_speed": 0.004,
+      "status": "upload_complete",
+      "synced_time": 1728515124956,
+      "upload_date": 1728535252727,
+      "uploaded_by": "aVauRnoTTjhMoXuUzNm04iMcEyV2",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,1,1,1,1,1,1"
+    },
+    "bb3a62c0-929e-4e6e-b299-1b8c9ad9d546": {
+      "associated_locations": {
+        "-O2V8oGz4O_wPaFnclYo": "node"
+      },
+      "camera_id": "-O8oiI-6Ro-i0Pd1158F",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS R100",
+      "camera_serial_number": "102031002772",
+      "date_taken": 1728515125,
+      "f_number": 9,
+      "filename": "IMG_9149.JPG",
+      "focal_length": 24,
+      "folder_id": "-O8oiIVI6amLfHfggMSP",
+      "image_height": 4000,
+      "image_width": 6000,
+      "iso": 100,
+      "lens": "RF24-105mm F4-7.1 IS STM",
+      "name_date": "IMG_9149.JPG|1728515125",
+      "orientation": 1,
+      "original_size": 5714677,
+      "shutter_speed": 0.003125,
+      "status": "upload_complete",
+      "synced_time": 1728515125956,
+      "upload_date": 1728535252739,
+      "uploaded_by": "aVauRnoTTjhMoXuUzNm04iMcEyV2",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,1,1,1,1,1,1"
+    },
+    "cc603c71-4bdd-4c67-b4d0-9633a166d82a": {
+      "associated_locations": {
+        "-O2V8oGz4O_wPaFnclYo": "node"
+      },
+      "camera_id": "-O8oiI-6Ro-i0Pd1158F",
+      "camera_make": "Canon",
+      "camera_model": "Canon EOS R100",
+      "camera_serial_number": "102031002772",
+      "date_taken": 1728515131,
+      "f_number": 9,
+      "filename": "IMG_9150.JPG",
+      "focal_length": 24,
+      "folder_id": "-O8oiIVI6amLfHfggMSP",
+      "image_height": 6000,
+      "image_width": 4000,
+      "iso": 100,
+      "lens": "RF24-105mm F4-7.1 IS STM",
+      "name_date": "IMG_9150.JPG|1728515131",
+      "orientation": 8,
+      "original_size": 7110467,
+      "photofirst_data": {
+        "_editors": {
+          "WCdvKbXlvHhNEEhkYsb9pEEGriy1": 1735333200239
+        },
+        "anchor_calibration": {
+          "-OF8uodfJbsvcCppIJ7y": {
+            "_routine_instance_id": "-OF8uns2qAWutNe7hEGH",
+            "_score": 0.9999071005284892,
+            "height": 16.5,
+            "pixel_selection": [
+              {
+                "percentX": 48.539737282171245,
+                "percentY": 41.00417544024514
+              }
+            ]
+          },
+          "-OF8upAYNvRptmQRmWsv": {
+            "_routine_instance_id": "-OF8uns2qAWutNe7hEGH",
+            "_score": 0.9998292943172229,
+            "height": 14.5,
+            "pixel_selection": [
+              {
+                "percentX": 48.67165382967381,
+                "percentY": 47.61256629608799
+              }
+            ]
+          },
+          "-OF8upzJv6PLXW9JstxB": {
+            "_routine_instance_id": "-OF8uns2qAWutNe7hEGH",
+            "_score": 0.9998909863367506,
+            "height": 10.5,
+            "pixel_selection": [
+              {
+                "percentX": 48.93548692467895,
+                "percentY": 61.28163331349682
+              }
+            ]
+          },
+          "-OF8uqWI2yBZ03t5lKsG": {
+            "_routine_instance_id": "-OF8uns2qAWutNe7hEGH",
+            "_score": 0.9999687920294484,
+            "height": 6.5,
+            "pixel_selection": [
+              {
+                "percentX": 49.255855682899465,
+                "percentY": 75.65425525091928
+              }
+            ]
+          }
+        },
+        "arm": {
+          "-OF8x4cgVALUKU_wy7fD": {
+            "_children": {
+              "equipment": {
+                "-OF8xBYRYgnmTeiS9w-w": {
+                  "_exists": true,
+                  "_routine_instance_id": "-OF8xBYRYgnmTeiS9w-u",
+                  "_trace": "-OF8xBYT9uz7yfGgQmbs",
+                  "equipment_type": "Disconnect Switch 1"
+                }
+              },
+              "insulator": {
+                "-OF8x7x7x1b3GgfNcq-O": {
+                  "_children": {
+                    "wire": {
+                      "-OF8x7x7x1b3GgfNcq-Q": {
+                        "_exists": true,
+                        "_trace": "-OF8x7x7x1b3GgfNcq-S"
+                      }
+                    }
+                  },
+                  "_exists": true,
+                  "bearing": 80.9,
+                  "insulator_spec": "Deadend Insulator"
+                },
+                "-OF8x9FYXyFdNJp4W_dJ": {
+                  "_children": {
+                    "wire": {
+                      "-OF8x9FYXyFdNJp4W_dL": {
+                        "_exists": true,
+                        "_trace": "-OF8x9FYXyFdNJp4W_dN"
+                      }
+                    }
+                  },
+                  "_exists": true,
+                  "bearing": 80.9,
+                  "insulator_spec": "Deadend Insulator"
+                }
+              }
+            },
+            "_measured_height": 312.85,
+            "_routine_instance_id": "-OF8x4cfFoJu_7GxYy4K",
+            "arm_spec": "CROSSARM 3-1/2 X 4-1/2 X  8",
+            "bearing": "81",
+            "pixel_selection": [
+              {
+                "percentX": 47.71830181415894,
+                "percentY": 11.601524396830877
+              }
+            ]
+          }
+        },
+        "guying": {
+          "-OF8wlr1-k9f2lFNok83": {
+            "_measured_height": 227.97,
+            "_trace": "-OF8wlr1-k9f2lFNok84",
+            "anchor_id": "-OF8wTzQYO7IelXycaXB",
+            "guying_type": "down guy",
+            "pixel_selection": [
+              {
+                "percentX": 49.37953671430548,
+                "percentY": 33.00153954143451
+              }
+            ],
+            "wire_spec": "EHS 5/16"
+          },
+          "-OF8xFrMJ3O0vNQx3u1r": {
+            "_measured_height": 301.14,
+            "_routine_instance_id": "-OF8xFrMJ3O0vNQx3u1p",
+            "_trace": "-OF8xFrOLVD0MT1ZEI3m",
+            "anchor_id": "-O8nX0h7vhDCRH4q_Xp5",
+            "guying_type": "down guy",
+            "pixel_selection": [
+              {
+                "percentX": 47.73198280880817,
+                "percentY": 14.445672313278447
+              }
+            ],
+            "wire_spec": "EHS 7/16"
+          }
+        },
+        "insulator": {
+          "-OF8v1A1xkrSMliae_Ci": {
+            "_children": {
+              "wire": {
+                "-OF8v1A1xkrSMliae_Cj": {
+                  "_exists": true,
+                  "_trace": "-OF8uCI8RH39MR5xU7oK"
+                }
+              }
+            },
+            "_measured_height": 335.81,
+            "bearing": 6.8,
+            "insulator_spec": "Deadend Insulator",
+            "pixel_selection": [
+              {
+                "percentX": 46.713513866280636,
+                "percentY": 6.114004118279597
+              }
+            ]
+          },
+          "-OF8v5AdmRxEXii4KVwF": {
+            "_children": {
+              "wire": {
+                "-OF8v5AdmRxEXii4KVwG": {
+                  "_exists": true,
+                  "_trace": "-OF8u6Zpe2-1hCqg8HYf"
+                }
+              }
+            },
+            "_measured_height": 280.88,
+            "bearing": 6.8,
+            "insulator_spec": "Deadend Insulator",
+            "pixel_selection": [
+              {
+                "percentX": 47.065447346740605,
+                "percentY": 19.448372655707843
+              }
+            ]
+          }
+        },
+        "poleHeight": {
+          "-OF8unrwtWoMnZbvD1n7": true
+        },
+        "pole_top": {
+          "-OF8us7mfa4KsgbIdQ89": {
+            "_measured_height": 343.1,
+            "_routine_instance_id": "-OF8uns2qAWutNe7hEGH",
+            "pixel_selection": [
+              {
+                "percentX": 46.92122041879679,
+                "percentY": 4.397030036318376
+              }
+            ],
+            "pole_top_extension": false
+          }
+        },
+        "wire": {
+          "-OF8w6vJTCCc_0awA9vB": {
+            "_measured_height": 223.53,
+            "_trace": "-OF8w1xRyu-_SCodv2Ll",
+            "pixel_selection": [
+              {
+                "percentX": 49.03193167064042,
+                "percentY": 34.17229547523176
+              }
+            ]
+          },
+          "-OF8wfKPCr3csQpNJNK3": {
+            "_measured_height": 228.48,
+            "_trace": "-OF8wfKPCr3csQpNJNK5",
+            "pixel_selection": [
+              {
+                "percentX": 48.08014526263534,
+                "percentY": 32.86826862331449
+              }
+            ]
+          }
+        }
+      },
+      "pla": {
+        "version": {
+          "2-0-2": "2024-12-31"
+        }
+      },
+      "shutter_speed": 0.003125,
+      "status": "upload_complete",
+      "stick_align": {
+        "A": -0.0049934506696509805,
+        "B": 30.14967326482433,
+        "C": 3.3465748577034445e-05,
+        "aD": 0,
+        "bD": 0,
+        "cD": -0.002,
+        "dD": 1.002,
+        "error": 0.999703428835562,
+        "errorMessages": [
+          {
+            "type": "AnchorScore",
+            "value": {
+              "anchorFit": 3.120797055159475e-05,
+              "x": 1970.2342273159784,
+              "y": 4539.255315055157
+            }
+          },
+          {
+            "type": "AnchorScore",
+            "value": {
+              "anchorFit": 0.00010901366324941623,
+              "x": 1957.4194769871579,
+              "y": 3676.897998809809
+            }
+          },
+          {
+            "type": "AnchorScore",
+            "value": {
+              "anchorFit": 0.00017070568277709913,
+              "x": 1946.8661531869523,
+              "y": 2856.7539777652796
+            }
+          },
+          {
+            "type": "AnchorScore",
+            "value": {
+              "anchorFit": 9.289947151081674e-05,
+              "x": 1941.58949128685,
+              "y": 2460.2505264147085
+            }
+          },
+          {
+            "type": "PassedNormalized",
+            "value": 0.999703428835562
+          },
+          {
+            "type": "Perspective",
+            "value": 0.025930257374762296
+          }
+        ],
+        "height": 6000,
+        "otherAligns": [
+          {
+            "A": -0.005007705017632168,
+            "B": 30.30373460731363,
+            "C": 3.628593118648257e-05,
+            "aD": 0,
+            "bD": 0,
+            "cD": -0.002,
+            "dD": 1.002,
+            "error": 2.8751752718687023e-08,
+            "height": 6000,
+            "stickBottomX": 1941.58949128685,
+            "stickBottomY": 2461.257273459153,
+            "stickTopX": 1907.6538576659684,
+            "stickTopY": 0,
+            "width": 4000
+          },
+          {
+            "A": -0.005007705017632168,
+            "B": 30.30373460731363,
+            "C": 3.628593118648257e-05,
+            "aD": 0,
+            "bD": 0,
+            "cD": -0.002,
+            "dD": 1.002,
+            "error": 2.8751752718687023e-08,
+            "height": 6000,
+            "stickBottomX": 1941.58949128685,
+            "stickBottomY": 2461.257273459153,
+            "stickTopX": 1907.6538576659684,
+            "stickTopY": 0,
+            "width": 4000
+          },
+          {
+            "A": -0.004979428006368882,
+            "B": 29.99800489108806,
+            "C": 3.068852656471898e-05,
+            "aD": 0,
+            "bD": 0,
+            "cD": -0.002,
+            "dD": 1.002,
+            "error": 1.0271897940209453e-06,
+            "height": 6000,
+            "stickBottomX": 1941.58949128685,
+            "stickBottomY": 2459.243779370264,
+            "stickTopX": 1907.6366060323905,
+            "stickTopY": 0,
+            "width": 4000
+          },
+          {
+            "A": -0.004979428006368882,
+            "B": 29.99800489108806,
+            "C": 3.068852656471898e-05,
+            "aD": 0,
+            "bD": 0,
+            "cD": -0.002,
+            "dD": 1.002,
+            "error": 1.0271897940209453e-06,
+            "height": 6000,
+            "stickBottomX": 1941.58949128685,
+            "stickBottomY": 2459.243779370264,
+            "stickTopX": 1907.6366060323905,
+            "stickTopY": 0,
+            "width": 4000
+          }
+        ],
+        "stickBottomX": 1941.58949128685,
+        "stickBottomY": 2460.2505264147085,
+        "stickTopX": 1907.6451554564462,
+        "stickTopY": 0,
+        "type": "RF24_105",
+        "width": 4000
+      },
+      "synced_time": 1728515131956,
+      "upload_date": 1728535252759,
+      "uploaded_by": "aVauRnoTTjhMoXuUzNm04iMcEyV2",
+      "vignetting_correction": "13900",
+      "vignetting_correction_2": "40,0,1,0,1,1,1,1,1,1"
+    }
+  },
+  "project_folder": "deeply_digital",
+  "sharing": {
+    "deeply_digital": "write"
+  },
+  "traces": {
+    "trace_data": {
+      "-OF8u6Zpe2-1hCqg8HYf": {
+        "_trace_type": "cable",
+        "cable_type": "Neutral",
+        "company": "LPEA",
+        "label": ""
+      },
+      "-OF8uCI8RH39MR5xU7oK": {
+        "_trace_type": "cable",
+        "cable_type": "Primary",
+        "company": "LPEA",
+        "label": ""
+      },
+      "-OF8w1xRyu-_SCodv2Ll": {
+        "_trace_type": "cable",
+        "cable_type": "Fiber Optic Com",
+        "company": "Clearnetworx",
+        "label": "",
+        "proposed": true
+      },
+      "-OF8wfKPCr3csQpNJNK5": {
+        "_trace_type": "cable",
+        "cable_type": "Fiber Optic Com",
+        "company": "Clearnetworx",
+        "label": "",
+        "proposed": true
+      },
+      "-OF8wlr1-k9f2lFNok84": {
+        "_trace_type": "down_guy",
+        "company": "Clearnetworx",
+        "proposed": true
+      },
+      "-OF8x7x7x1b3GgfNcq-S": {
+        "_trace_type": "cable",
+        "cable_type": "Primary",
+        "company": "LPEA",
+        "label": ""
+      },
+      "-OF8x9FYXyFdNJp4W_dN": {
+        "_trace_type": "cable",
+        "cable_type": "Neutral",
+        "company": "LPEA",
+        "label": ""
+      },
+      "-OF8xBYT9uz7yfGgQmbs": {
+        "_trace_type": "equipment",
+        "company": "LPEA",
+        "label": ""
+      },
+      "-OF8xFrOLVD0MT1ZEI3m": {
+        "_trace_type": "down_guy",
+        "company": "LPEA",
+        "label": ""
+      }
+    },
+    "trace_items": {
+      "-OF8u6Zpe2-1hCqg8HYf": {
+        "8428ca47-c8b1-4845-8c4a-f78b6426be17": {
+          "insulator": {
+            "-OF8u6Zpe2-1hCqg8HYb:_children:wire:-OF8u6Zpe2-1hCqg8HYd": true
+          }
+        },
+        "bfedaf13-e50c-4d07-bc96-082614e01618": {
+          "wire": {
+            "-OF8v47JD0tc7AYYME06": true
+          }
+        },
+        "cc603c71-4bdd-4c67-b4d0-9633a166d82a": {
+          "insulator": {
+            "-OF8v5AdmRxEXii4KVwF:_children:wire:-OF8v5AdmRxEXii4KVwG": true
+          }
+        }
+      },
+      "-OF8uCI8RH39MR5xU7oK": {
+        "8428ca47-c8b1-4845-8c4a-f78b6426be17": {
+          "insulator": {
+            "-OF8uCI70t8_1UXufoDL:_children:wire:-OF8uCI8RH39MR5xU7oI": true
+          }
+        },
+        "bfedaf13-e50c-4d07-bc96-082614e01618": {
+          "wire": {
+            "-OF8v0PPz4RhmIWXj6KZ": true
+          }
+        },
+        "cc603c71-4bdd-4c67-b4d0-9633a166d82a": {
+          "insulator": {
+            "-OF8v1A1xkrSMliae_Ci:_children:wire:-OF8v1A1xkrSMliae_Cj": true
+          }
+        }
+      },
+      "-OF8w1xRyu-_SCodv2Ll": {
+        "8428ca47-c8b1-4845-8c4a-f78b6426be17": {
+          "wire": {
+            "-OF8w1xRyu-_SCodv2Lj": true
+          }
+        },
+        "bfedaf13-e50c-4d07-bc96-082614e01618": {
+          "wire": {
+            "-OF8w6vHpyFoqXaDTAnk": true
+          }
+        },
+        "cc603c71-4bdd-4c67-b4d0-9633a166d82a": {
+          "wire": {
+            "-OF8w6vJTCCc_0awA9vB": true
+          }
+        }
+      },
+      "-OF8wfKPCr3csQpNJNK5": {
+        "307989db-31b3-42d5-83e4-747b6107d76d": {
+          "wire": {
+            "-OF8zxCM8eHXROqAWutO": true
+          }
+        },
+        "cc603c71-4bdd-4c67-b4d0-9633a166d82a": {
+          "wire": {
+            "-OF8wfKPCr3csQpNJNK3": true
+          }
+        }
+      },
+      "-OF8wlr1-k9f2lFNok84": {
+        "cc603c71-4bdd-4c67-b4d0-9633a166d82a": {
+          "guying": {
+            "-OF8wlr1-k9f2lFNok83": true
+          }
+        }
+      },
+      "-OF8x7x7x1b3GgfNcq-S": {
+        "307989db-31b3-42d5-83e4-747b6107d76d": {
+          "wire": {
+            "-OF8yOojsW3ENR9sA8lm": true
+          }
+        },
+        "cc603c71-4bdd-4c67-b4d0-9633a166d82a": {
+          "arm": {
+            "-OF8x4cgVALUKU_wy7fD:_children:insulator:-OF8x7x7x1b3GgfNcq-O:_children:wire:-OF8x7x7x1b3GgfNcq-Q": true
+          }
+        }
+      },
+      "-OF8x9FYXyFdNJp4W_dN": {
+        "307989db-31b3-42d5-83e4-747b6107d76d": {
+          "wire": {
+            "-OF8yOojsW3ENR9sA8ln": true
+          }
+        },
+        "cc603c71-4bdd-4c67-b4d0-9633a166d82a": {
+          "arm": {
+            "-OF8x4cgVALUKU_wy7fD:_children:insulator:-OF8x9FYXyFdNJp4W_dJ:_children:wire:-OF8x9FYXyFdNJp4W_dL": true
+          }
+        }
+      },
+      "-OF8xBYT9uz7yfGgQmbs": {
+        "cc603c71-4bdd-4c67-b4d0-9633a166d82a": {
+          "arm": {
+            "-OF8x4cgVALUKU_wy7fD:_children:equipment:-OF8xBYRYgnmTeiS9w-w": true
+          }
+        }
+      },
+      "-OF8xFrOLVD0MT1ZEI3m": {
+        "cc603c71-4bdd-4c67-b4d0-9633a166d82a": {
+          "guying": {
+            "-OF8xFrMJ3O0vNQx3u1r": true
+          }
+        }
+      }
+    }
+  }
+}

@@ -55,6 +55,56 @@ class MetricsRecorder:
             
             logging.info(f"Recording metrics for job {job_id}")
             
+            # Extract utility from all possible sources
+            utility = "Unknown"
+            
+            # First try metadata
+            if isinstance(metadata, dict):
+                metadata_utility = metadata.get('utility')
+                if metadata_utility:
+                    utility = metadata_utility
+                    logging.info(f"Found utility in metadata: {utility}")
+            
+            # If not found in metadata, try pole tags and company attributes
+            if utility == "Unknown":
+                utility_counts = {}
+                for node_data in nodes.values():
+                    if isinstance(node_data, dict):
+                        attributes = node_data.get('attributes', {})
+                        if isinstance(attributes, dict):
+                            # First try pole_tag
+                            pole_tag = attributes.get('pole_tag', {})
+                            company = pole_tag.get('-Imported', {}).get('company') or pole_tag.get('button_added', {}).get('company')
+                            
+                            # If not found in pole_tag, look for company in any direct child of pole_tag
+                            if not company:
+                                for key, value in pole_tag.items():
+                                    if isinstance(value, dict) and 'company' in value:
+                                        company = value['company']
+                                        logging.debug(f"Found company in pole_tag.{key}: {company}")
+                                        break
+                            
+                            # If still not found, check direct company attribute
+                            if not company:
+                                company_attr = attributes.get('company', {})
+                                for source in ['-Imported', 'button_added', 'value', 'auto_calced']:
+                                    company = company_attr.get(source)
+                                    if company:
+                                        logging.debug(f"Found company in attributes.company.{source}: {company}")
+                                        break
+                            
+                            if company and company != "Unknown":
+                                if company not in utility_counts:
+                                    utility_counts[company] = 0
+                                utility_counts[company] += 1
+                
+                # Use the most common utility if found
+                if utility_counts:
+                    utility = max(utility_counts.items(), key=lambda x: x[1])[0]
+                    logging.info(f"Found utilities in nodes: {utility_counts}, using most common: {utility}")
+            
+            logging.info(f"Final utility selection: {utility}")
+            
             # Calculate metrics with type checking
             total_poles = len([n for n in nodes.values() 
                              if isinstance(n, (dict, list)) and  # Handle both dict and list
@@ -77,7 +127,7 @@ class MetricsRecorder:
                 self._create_daily_snapshot(
                     job_id=job_id,
                     status=str(metadata.get('job_status', 'Unknown')),
-                    utility=str(metadata.get('utility', 'Unknown')),
+                    utility=utility,
                     total_poles=int(total_poles),
                     field_complete=int(field_complete),
                     back_office_complete=int(back_office_complete),
@@ -91,7 +141,7 @@ class MetricsRecorder:
                 self._insert_job_metrics(
                     job_id=job_id,
                     status=str(metadata.get('job_status', 'Unknown')),
-                    utility=str(metadata.get('utility', 'Unknown')),
+                    utility=utility,
                     total_poles=int(total_poles),
                     completed_poles=int(field_complete),
                     field_complete=int(field_complete),
@@ -138,7 +188,7 @@ class MetricsRecorder:
                     logging.error(f"Failed to record user metrics for job {job_id}: {str(e)}")
             
         except Exception as e:
-            logger.error(f"Failed to record metrics for job {job_data.get('id', 'unknown')}: {str(e)}")
+            logger.error(f"Error recording metrics in database for job {job_data.get('id', 'unknown')}: {str(e)}")
             raise
 
     def _create_daily_snapshot(self, job_id: str, status: str, utility: str,
@@ -230,7 +280,7 @@ class MetricsRecorder:
                     raise
                 
         except Exception as e:
-            logging.error(f"Error checking status changes for job {job_id}: {str(e)}")
+            logging.error(f"Error recording status change in database for job {job_id}: {str(e)}")
             raise
 
     def _record_status_change(self, job_id: str, previous_status: Optional[str],
@@ -239,6 +289,7 @@ class MetricsRecorder:
                             duration_hours: Optional[float] = None) -> None:
         """Record a status change with duration tracking"""
         try:
+            # Record in status_changes table
             query = """
             INSERT INTO status_changes (
                 job_id, previous_status, new_status, changed_at,
@@ -257,26 +308,62 @@ class MetricsRecorder:
                 week_number = EXCLUDED.week_number,
                 year = EXCLUDED.year
             """
+            
+            # Also update the status_change_log for temporal history
+            log_query = """
+            INSERT INTO status_change_log (
+                job_id, entity_type, entity_id, field_name,
+                old_value, new_value, changed_at, changed_by,
+                change_reason
+            ) VALUES (
+                %s, 'job', %s, 'status',
+                %s, %s, %s, %s,
+                CASE 
+                    WHEN %s IS NOT NULL THEN 'OSP Assignment: ' || %s
+                    ELSE NULL
+                END
+            )
+            ON CONFLICT (entity_type, entity_id, field_name, changed_at)
+            DO UPDATE SET
+                old_value = EXCLUDED.old_value,
+                new_value = EXCLUDED.new_value,
+                changed_by = EXCLUDED.changed_by,
+                change_reason = EXCLUDED.change_reason
+            """
+            
             with self.db.get_cursor() as cursor:
+                # Record in status_changes
                 cursor.execute(query, (
                     job_id, previous_status, new_status, timestamp,
                     changed_by, duration_hours, timestamp, timestamp
                 ))
                 
-                # Also update the status_change_log for temporal history
-                log_query = """
-                INSERT INTO status_change_log (
-                    job_id, entity_type, entity_id, field_name,
-                    old_value, new_value, changed_at, changed_by
-                ) VALUES (
-                    %s, 'job', %s, 'status',
-                    %s, %s, %s, %s
-                )
-                """
+                # Record in status_change_log with OSP assignment tracking
                 cursor.execute(log_query, (
                     job_id, job_id, previous_status,
-                    new_status, timestamp, changed_by
+                    new_status, timestamp, changed_by,
+                    changed_by, changed_by
                 ))
+                
+                # If this is an OSP assignment, record it separately
+                if changed_by:
+                    osp_query = """
+                    INSERT INTO status_change_log (
+                        job_id, entity_type, entity_id, field_name,
+                        old_value, new_value, changed_at, changed_by
+                    ) VALUES (
+                        %s, 'job', %s, 'assigned_osp',
+                        NULL, %s, %s, %s
+                    )
+                    ON CONFLICT (entity_type, entity_id, field_name, changed_at)
+                    DO UPDATE SET
+                        new_value = EXCLUDED.new_value,
+                        changed_by = EXCLUDED.changed_by
+                    """
+                    cursor.execute(osp_query, (
+                        job_id, job_id, changed_by,
+                        timestamp, changed_by
+                    ))
         except Exception as e:
             logging.error(f"Failed to record status change for job {job_id}: {str(e)}")
             raise
@@ -320,7 +407,12 @@ class MetricsRecorder:
                 if not self._is_pole_node(node_data):
                     continue
                     
+                # Extract utility from pole tag company information
+                attributes = node_data.get('attributes', {})
+                utility = attributes.get('pole_tag', {}).get('-Imported', {}).get('company', 'Unknown')
+                
                 pole_data = self._extract_pole_data(node_data, photo_data)
+                pole_data['utility'] = utility  # Override utility with the one from pole tag
                 pole_count += 1
                 
                 try:
